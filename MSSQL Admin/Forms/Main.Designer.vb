@@ -26,15 +26,16 @@ Partial Class MainForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.MyMenuStrip = New System.Windows.Forms.MenuStrip()
         Me.tsmiFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnExport = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnSaveSql = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnClear = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnClearOutput = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnClearXpath = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiEdit = New System.Windows.Forms.ToolStripMenuItem()
@@ -44,12 +45,13 @@ Partial Class MainForm
         Me.btnCut = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnCopy = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnPaste = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnSelectAll = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnFind = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnReplace = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiServer = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnCloseConnection = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.leftPanel = New System.Windows.Forms.Panel()
+        Me.btnDisconnect = New System.Windows.Forms.Button()
         Me.btnSubmit = New System.Windows.Forms.Button()
         Me.lblTables = New System.Windows.Forms.Label()
         Me.lblServer = New System.Windows.Forms.Label()
@@ -68,8 +70,11 @@ Partial Class MainForm
         Me.splitter2 = New System.Windows.Forms.Splitter()
         Me.bottomPanel = New System.Windows.Forms.Panel()
         Me.xpathTextBox = New System.Windows.Forms.RichTextBox()
+        Me.xpathEvaluatorPanel = New System.Windows.Forms.Panel()
+        Me.btnExecuteXpath = New System.Windows.Forms.Button()
+        Me.xpathExpression = New System.Windows.Forms.TextBox()
         Me.outputTextBox = New System.Windows.Forms.RichTextBox()
-        Me.MyBottomBar = New System.Windows.Forms.ToolStrip()
+        Me.MyToolStrip = New System.Windows.Forms.ToolStrip()
         Me.lblConnStatus = New System.Windows.Forms.ToolStripLabel()
         Me.btnOutput = New System.Windows.Forms.ToolStripButton()
         Me.tsSeparator4 = New System.Windows.Forms.ToolStripSeparator()
@@ -83,7 +88,8 @@ Partial Class MainForm
         Me.leftPanel.SuspendLayout()
         Me.topPanel.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
-        Me.MyBottomBar.SuspendLayout()
+        Me.xpathEvaluatorPanel.SuspendLayout()
+        Me.MyToolStrip.SuspendLayout()
         Me.mainPanel.SuspendLayout()
         CType(Me.dgv, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -91,7 +97,7 @@ Partial Class MainForm
         'MyMenuStrip
         '
         Me.MyMenuStrip.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
-        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile, Me.tsmiEdit, Me.tsmiServer})
+        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile, Me.tsmiEdit, Me.ToolStripMenuItem1})
         Me.MyMenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MyMenuStrip.Name = "MyMenuStrip"
         Me.MyMenuStrip.Padding = New System.Windows.Forms.Padding(0)
@@ -101,7 +107,7 @@ Partial Class MainForm
         '
         'tsmiFile
         '
-        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnExport, Me.btnSaveSql, Me.btnClear, Me.tsSeparator1, Me.btnExit})
+        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnExport, Me.btnSaveSql, Me.btnClearOutput, Me.btnClearXpath, Me.tsSeparator1, Me.btnExit})
         Me.tsmiFile.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsmiFile.ForeColor = System.Drawing.Color.LightSlateGray
         Me.tsmiFile.Name = "tsmiFile"
@@ -129,15 +135,26 @@ Partial Class MainForm
         Me.btnSaveSql.Size = New System.Drawing.Size(250, 24)
         Me.btnSaveSql.Text = "Save Query As SQL..."
         '
-        'btnClear
+        'btnClearOutput
         '
-        Me.btnClear.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
-        Me.btnClear.ForeColor = System.Drawing.Color.White
-        Me.btnClear.Name = "btnClear"
-        Me.btnClear.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnClear.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
-        Me.btnClear.Size = New System.Drawing.Size(250, 24)
-        Me.btnClear.Text = "Clear output"
+        Me.btnClearOutput.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnClearOutput.ForeColor = System.Drawing.Color.White
+        Me.btnClearOutput.Name = "btnClearOutput"
+        Me.btnClearOutput.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnClearOutput.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
+        Me.btnClearOutput.Size = New System.Drawing.Size(250, 24)
+        Me.btnClearOutput.Text = "Clear output"
+        '
+        'btnClearXpath
+        '
+        Me.btnClearXpath.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnClearXpath.ForeColor = System.Drawing.Color.White
+        Me.btnClearXpath.Name = "btnClearXpath"
+        Me.btnClearXpath.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnClearXpath.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Alt) _
+            Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
+        Me.btnClearXpath.Size = New System.Drawing.Size(250, 24)
+        Me.btnClearXpath.Text = "Clear XPath"
         '
         'tsSeparator1
         '
@@ -158,7 +175,7 @@ Partial Class MainForm
         '
         'tsmiEdit
         '
-        Me.tsmiEdit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnUndo, Me.btnRedo, Me.tsSeparator2, Me.btnCut, Me.btnCopy, Me.btnPaste, Me.tsSeparator3, Me.btnFind, Me.btnReplace})
+        Me.tsmiEdit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnUndo, Me.btnRedo, Me.tsSeparator2, Me.btnCut, Me.btnCopy, Me.btnPaste, Me.btnSelectAll, Me.tsSeparator3, Me.btnFind, Me.btnReplace})
         Me.tsmiEdit.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsmiEdit.ForeColor = System.Drawing.Color.LightSlateGray
         Me.tsmiEdit.Name = "tsmiEdit"
@@ -173,7 +190,7 @@ Partial Class MainForm
         Me.btnUndo.Name = "btnUndo"
         Me.btnUndo.Padding = New System.Windows.Forms.Padding(2)
         Me.btnUndo.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Z), System.Windows.Forms.Keys)
-        Me.btnUndo.Size = New System.Drawing.Size(174, 24)
+        Me.btnUndo.Size = New System.Drawing.Size(181, 24)
         Me.btnUndo.Text = "Undo"
         '
         'btnRedo
@@ -183,7 +200,7 @@ Partial Class MainForm
         Me.btnRedo.Name = "btnRedo"
         Me.btnRedo.Padding = New System.Windows.Forms.Padding(2)
         Me.btnRedo.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Y), System.Windows.Forms.Keys)
-        Me.btnRedo.Size = New System.Drawing.Size(174, 24)
+        Me.btnRedo.Size = New System.Drawing.Size(181, 24)
         Me.btnRedo.Text = "Redo"
         '
         'tsSeparator2
@@ -192,7 +209,7 @@ Partial Class MainForm
         Me.tsSeparator2.ForeColor = System.Drawing.Color.White
         Me.tsSeparator2.Name = "tsSeparator2"
         Me.tsSeparator2.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator2.Size = New System.Drawing.Size(167, 6)
+        Me.tsSeparator2.Size = New System.Drawing.Size(174, 6)
         '
         'btnCut
         '
@@ -201,7 +218,7 @@ Partial Class MainForm
         Me.btnCut.Name = "btnCut"
         Me.btnCut.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCut.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.btnCut.Size = New System.Drawing.Size(174, 24)
+        Me.btnCut.Size = New System.Drawing.Size(181, 24)
         Me.btnCut.Text = "Cut"
         '
         'btnCopy
@@ -211,7 +228,7 @@ Partial Class MainForm
         Me.btnCopy.Name = "btnCopy"
         Me.btnCopy.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCopy.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.C), System.Windows.Forms.Keys)
-        Me.btnCopy.Size = New System.Drawing.Size(174, 24)
+        Me.btnCopy.Size = New System.Drawing.Size(181, 24)
         Me.btnCopy.Text = "Copy"
         '
         'btnPaste
@@ -221,8 +238,18 @@ Partial Class MainForm
         Me.btnPaste.Name = "btnPaste"
         Me.btnPaste.Padding = New System.Windows.Forms.Padding(2)
         Me.btnPaste.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.V), System.Windows.Forms.Keys)
-        Me.btnPaste.Size = New System.Drawing.Size(174, 24)
+        Me.btnPaste.Size = New System.Drawing.Size(181, 24)
         Me.btnPaste.Text = "Paste"
+        '
+        'btnSelectAll
+        '
+        Me.btnSelectAll.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnSelectAll.ForeColor = System.Drawing.Color.White
+        Me.btnSelectAll.Name = "btnSelectAll"
+        Me.btnSelectAll.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnSelectAll.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.A), System.Windows.Forms.Keys)
+        Me.btnSelectAll.Size = New System.Drawing.Size(181, 24)
+        Me.btnSelectAll.Text = "Select All"
         '
         'tsSeparator3
         '
@@ -230,7 +257,7 @@ Partial Class MainForm
         Me.tsSeparator3.ForeColor = System.Drawing.Color.White
         Me.tsSeparator3.Name = "tsSeparator3"
         Me.tsSeparator3.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator3.Size = New System.Drawing.Size(167, 6)
+        Me.tsSeparator3.Size = New System.Drawing.Size(174, 6)
         '
         'btnFind
         '
@@ -239,7 +266,7 @@ Partial Class MainForm
         Me.btnFind.Name = "btnFind"
         Me.btnFind.Padding = New System.Windows.Forms.Padding(2)
         Me.btnFind.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.btnFind.Size = New System.Drawing.Size(174, 24)
+        Me.btnFind.Size = New System.Drawing.Size(181, 24)
         Me.btnFind.Text = "Find"
         '
         'btnReplace
@@ -249,31 +276,22 @@ Partial Class MainForm
         Me.btnReplace.Name = "btnReplace"
         Me.btnReplace.Padding = New System.Windows.Forms.Padding(2)
         Me.btnReplace.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
-        Me.btnReplace.Size = New System.Drawing.Size(174, 24)
+        Me.btnReplace.Size = New System.Drawing.Size(181, 24)
         Me.btnReplace.Text = "Replace"
         '
-        'tsmiServer
+        'ToolStripMenuItem1
         '
-        Me.tsmiServer.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnCloseConnection})
-        Me.tsmiServer.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tsmiServer.ForeColor = System.Drawing.Color.LightSlateGray
-        Me.tsmiServer.Name = "tsmiServer"
-        Me.tsmiServer.Padding = New System.Windows.Forms.Padding(4)
-        Me.tsmiServer.Size = New System.Drawing.Size(59, 29)
-        Me.tsmiServer.Text = "Server"
-        '
-        'btnCloseConnection
-        '
-        Me.btnCloseConnection.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
-        Me.btnCloseConnection.ForeColor = System.Drawing.Color.White
-        Me.btnCloseConnection.Name = "btnCloseConnection"
-        Me.btnCloseConnection.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnCloseConnection.Size = New System.Drawing.Size(185, 24)
-        Me.btnCloseConnection.Text = "Close Connection"
+        Me.ToolStripMenuItem1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ToolStripMenuItem1.ForeColor = System.Drawing.Color.LightSlateGray
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Padding = New System.Windows.Forms.Padding(4)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(69, 29)
+        Me.ToolStripMenuItem1.Text = "Settings"
         '
         'leftPanel
         '
         Me.leftPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.leftPanel.Controls.Add(Me.btnDisconnect)
         Me.leftPanel.Controls.Add(Me.btnSubmit)
         Me.leftPanel.Controls.Add(Me.lblTables)
         Me.leftPanel.Controls.Add(Me.lblServer)
@@ -293,6 +311,24 @@ Partial Class MainForm
         Me.leftPanel.Size = New System.Drawing.Size(269, 710)
         Me.leftPanel.TabIndex = 1
         '
+        'btnDisconnect
+        '
+        Me.btnDisconnect.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDisconnect.BackColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.btnDisconnect.Enabled = False
+        Me.btnDisconnect.FlatAppearance.BorderSize = 0
+        Me.btnDisconnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDisconnect.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDisconnect.ForeColor = System.Drawing.Color.White
+        Me.btnDisconnect.Location = New System.Drawing.Point(138, 663)
+        Me.btnDisconnect.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
+        Me.btnDisconnect.Name = "btnDisconnect"
+        Me.btnDisconnect.Size = New System.Drawing.Size(117, 30)
+        Me.btnDisconnect.TabIndex = 9
+        Me.btnDisconnect.Text = "DISCONNECT"
+        Me.btnDisconnect.UseVisualStyleBackColor = False
+        '
         'btnSubmit
         '
         Me.btnSubmit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -302,11 +338,11 @@ Partial Class MainForm
         Me.btnSubmit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnSubmit.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSubmit.ForeColor = System.Drawing.Color.White
-        Me.btnSubmit.Location = New System.Drawing.Point(139, 68)
+        Me.btnSubmit.Location = New System.Drawing.Point(138, 68)
         Me.btnSubmit.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
         Me.btnSubmit.Name = "btnSubmit"
         Me.btnSubmit.Size = New System.Drawing.Size(117, 30)
-        Me.btnSubmit.TabIndex = 13
+        Me.btnSubmit.TabIndex = 3
         Me.btnSubmit.Text = "SUBMIT"
         Me.btnSubmit.UseVisualStyleBackColor = False
         '
@@ -388,7 +424,7 @@ Partial Class MainForm
         Me.btnExecute.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnExecute.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnExecute.ForeColor = System.Drawing.Color.White
-        Me.btnExecute.Location = New System.Drawing.Point(11, 68)
+        Me.btnExecute.Location = New System.Drawing.Point(15, 68)
         Me.btnExecute.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
         Me.btnExecute.Name = "btnExecute"
         Me.btnExecute.Size = New System.Drawing.Size(117, 30)
@@ -407,11 +443,11 @@ Partial Class MainForm
         Me.lbTableList.ForeColor = System.Drawing.Color.LightGray
         Me.lbTableList.FormattingEnabled = True
         Me.lbTableList.ItemHeight = 17
-        Me.lbTableList.Location = New System.Drawing.Point(10, 141)
+        Me.lbTableList.Location = New System.Drawing.Point(15, 141)
         Me.lbTableList.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lbTableList.Name = "lbTableList"
-        Me.lbTableList.Size = New System.Drawing.Size(246, 306)
-        Me.lbTableList.TabIndex = 3
+        Me.lbTableList.Size = New System.Drawing.Size(240, 306)
+        Me.lbTableList.TabIndex = 4
         '
         'tbServer
         '
@@ -422,11 +458,11 @@ Partial Class MainForm
         Me.tbServer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tbServer.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tbServer.ForeColor = System.Drawing.Color.LightGray
-        Me.tbServer.Location = New System.Drawing.Point(11, 498)
-        Me.tbServer.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
+        Me.tbServer.Location = New System.Drawing.Point(15, 498)
+        Me.tbServer.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.tbServer.Name = "tbServer"
-        Me.tbServer.Size = New System.Drawing.Size(246, 25)
-        Me.tbServer.TabIndex = 4
+        Me.tbServer.Size = New System.Drawing.Size(240, 25)
+        Me.tbServer.TabIndex = 5
         '
         'tbUser
         '
@@ -437,11 +473,11 @@ Partial Class MainForm
         Me.tbUser.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tbUser.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tbUser.ForeColor = System.Drawing.Color.LightGray
-        Me.tbUser.Location = New System.Drawing.Point(11, 563)
-        Me.tbUser.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
+        Me.tbUser.Location = New System.Drawing.Point(15, 563)
+        Me.tbUser.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.tbUser.Name = "tbUser"
-        Me.tbUser.Size = New System.Drawing.Size(246, 25)
-        Me.tbUser.TabIndex = 5
+        Me.tbUser.Size = New System.Drawing.Size(240, 25)
+        Me.tbUser.TabIndex = 6
         '
         'btnConnect
         '
@@ -452,11 +488,11 @@ Partial Class MainForm
         Me.btnConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnConnect.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnConnect.ForeColor = System.Drawing.Color.White
-        Me.btnConnect.Location = New System.Drawing.Point(11, 663)
+        Me.btnConnect.Location = New System.Drawing.Point(15, 663)
         Me.btnConnect.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.btnConnect.Name = "btnConnect"
-        Me.btnConnect.Size = New System.Drawing.Size(246, 30)
-        Me.btnConnect.TabIndex = 7
+        Me.btnConnect.Size = New System.Drawing.Size(117, 30)
+        Me.btnConnect.TabIndex = 8
         Me.btnConnect.Text = "CONNECT"
         Me.btnConnect.UseVisualStyleBackColor = False
         '
@@ -469,11 +505,11 @@ Partial Class MainForm
         Me.tbPass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tbPass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tbPass.ForeColor = System.Drawing.Color.LightGray
-        Me.tbPass.Location = New System.Drawing.Point(11, 628)
-        Me.tbPass.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
+        Me.tbPass.Location = New System.Drawing.Point(15, 628)
+        Me.tbPass.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.tbPass.Name = "tbPass"
-        Me.tbPass.Size = New System.Drawing.Size(246, 25)
-        Me.tbPass.TabIndex = 6
+        Me.tbPass.Size = New System.Drawing.Size(240, 25)
+        Me.tbPass.TabIndex = 7
         Me.tbPass.UseSystemPasswordChar = True
         '
         'cbDatabases
@@ -486,10 +522,10 @@ Partial Class MainForm
         Me.cbDatabases.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cbDatabases.ForeColor = System.Drawing.Color.LightGoldenrodYellow
         Me.cbDatabases.FormattingEnabled = True
-        Me.cbDatabases.Location = New System.Drawing.Point(11, 30)
+        Me.cbDatabases.Location = New System.Drawing.Point(15, 30)
         Me.cbDatabases.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
         Me.cbDatabases.Name = "cbDatabases"
-        Me.cbDatabases.Size = New System.Drawing.Size(246, 25)
+        Me.cbDatabases.Size = New System.Drawing.Size(240, 25)
         Me.cbDatabases.TabIndex = 1
         '
         'MyScintilla
@@ -499,7 +535,7 @@ Partial Class MainForm
         Me.MyScintilla.Location = New System.Drawing.Point(0, 20)
         Me.MyScintilla.Name = "MyScintilla"
         Me.MyScintilla.Size = New System.Drawing.Size(953, 264)
-        Me.MyScintilla.TabIndex = 8
+        Me.MyScintilla.TabIndex = 14
         Me.MyScintilla.WrapMode = ScintillaNET.WrapMode.Word
         '
         'topPanel
@@ -527,6 +563,7 @@ Partial Class MainForm
         '
         Me.bottomPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.bottomPanel.Controls.Add(Me.xpathTextBox)
+        Me.bottomPanel.Controls.Add(Me.xpathEvaluatorPanel)
         Me.bottomPanel.Controls.Add(Me.outputTextBox)
         Me.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.bottomPanel.Location = New System.Drawing.Point(0, 511)
@@ -545,13 +582,63 @@ Partial Class MainForm
         Me.xpathTextBox.Dock = System.Windows.Forms.DockStyle.Fill
         Me.xpathTextBox.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.xpathTextBox.ForeColor = System.Drawing.Color.LightGray
-        Me.xpathTextBox.Location = New System.Drawing.Point(10, 10)
+        Me.xpathTextBox.Location = New System.Drawing.Point(10, 42)
         Me.xpathTextBox.Name = "xpathTextBox"
-        Me.xpathTextBox.Size = New System.Drawing.Size(933, 153)
-        Me.xpathTextBox.TabIndex = 3
-        Me.xpathTextBox.Text = "Write your XPath here..."
+        Me.xpathTextBox.ReadOnly = True
+        Me.xpathTextBox.Size = New System.Drawing.Size(933, 121)
+        Me.xpathTextBox.TabIndex = 13
+        Me.xpathTextBox.TabStop = False
+        Me.xpathTextBox.Text = ""
         Me.xpathTextBox.Visible = False
         Me.xpathTextBox.WordWrap = False
+        '
+        'xpathEvaluatorPanel
+        '
+        Me.xpathEvaluatorPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.xpathEvaluatorPanel.Controls.Add(Me.btnExecuteXpath)
+        Me.xpathEvaluatorPanel.Controls.Add(Me.xpathExpression)
+        Me.xpathEvaluatorPanel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.xpathEvaluatorPanel.Location = New System.Drawing.Point(10, 10)
+        Me.xpathEvaluatorPanel.Name = "xpathEvaluatorPanel"
+        Me.xpathEvaluatorPanel.Padding = New System.Windows.Forms.Padding(2)
+        Me.xpathEvaluatorPanel.Size = New System.Drawing.Size(933, 32)
+        Me.xpathEvaluatorPanel.TabIndex = 14
+        Me.xpathEvaluatorPanel.Visible = False
+        '
+        'btnExecuteXpath
+        '
+        Me.btnExecuteXpath.BackColor = System.Drawing.Color.MediumSeaGreen
+        Me.btnExecuteXpath.Dock = System.Windows.Forms.DockStyle.Left
+        Me.btnExecuteXpath.FlatAppearance.BorderSize = 0
+        Me.btnExecuteXpath.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnExecuteXpath.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnExecuteXpath.ForeColor = System.Drawing.Color.White
+        Me.btnExecuteXpath.Location = New System.Drawing.Point(2, 2)
+        Me.btnExecuteXpath.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
+        Me.btnExecuteXpath.Name = "btnExecuteXpath"
+        Me.btnExecuteXpath.Size = New System.Drawing.Size(26, 26)
+        Me.btnExecuteXpath.TabIndex = 13
+        Me.btnExecuteXpath.Text = "!"
+        Me.btnExecuteXpath.UseVisualStyleBackColor = False
+        '
+        'xpathExpression
+        '
+        Me.xpathExpression.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.MyAutocompleteMenu.SetAutocompleteMenu(Me.xpathExpression, Nothing)
+        Me.xpathExpression.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.xpathExpression.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.xpathExpression.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.xpathExpression.ForeColor = System.Drawing.Color.LightGray
+        Me.xpathExpression.Location = New System.Drawing.Point(36, 6)
+        Me.xpathExpression.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
+        Me.xpathExpression.Name = "xpathExpression"
+        Me.xpathExpression.ShortcutsEnabled = False
+        Me.xpathExpression.Size = New System.Drawing.Size(889, 18)
+        Me.xpathExpression.TabIndex = 12
+        Me.xpathExpression.TabStop = False
+        Me.xpathExpression.Text = "Write your XPath here..."
+        Me.xpathExpression.WordWrap = False
         '
         'outputTextBox
         '
@@ -566,23 +653,24 @@ Partial Class MainForm
         Me.outputTextBox.Name = "outputTextBox"
         Me.outputTextBox.ReadOnly = True
         Me.outputTextBox.Size = New System.Drawing.Size(933, 153)
-        Me.outputTextBox.TabIndex = 0
+        Me.outputTextBox.TabIndex = 12
+        Me.outputTextBox.TabStop = False
         Me.outputTextBox.Text = ""
         Me.outputTextBox.WordWrap = False
         '
-        'MyBottomBar
+        'MyToolStrip
         '
-        Me.MyBottomBar.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
-        Me.MyBottomBar.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.MyBottomBar.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.MyBottomBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.MyBottomBar.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblConnStatus, Me.btnOutput, Me.tsSeparator4, Me.btnXpath})
-        Me.MyBottomBar.Location = New System.Drawing.Point(0, 684)
-        Me.MyBottomBar.Name = "MyBottomBar"
-        Me.MyBottomBar.Padding = New System.Windows.Forms.Padding(2, 2, 2, 0)
-        Me.MyBottomBar.Size = New System.Drawing.Size(953, 26)
-        Me.MyBottomBar.TabIndex = 2
-        Me.MyBottomBar.Text = "ToolStrip1"
+        Me.MyToolStrip.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.MyToolStrip.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.MyToolStrip.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.MyToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.MyToolStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblConnStatus, Me.btnOutput, Me.tsSeparator4, Me.btnXpath})
+        Me.MyToolStrip.Location = New System.Drawing.Point(0, 684)
+        Me.MyToolStrip.Name = "MyToolStrip"
+        Me.MyToolStrip.Padding = New System.Windows.Forms.Padding(2, 2, 2, 0)
+        Me.MyToolStrip.Size = New System.Drawing.Size(953, 26)
+        Me.MyToolStrip.TabIndex = 2
+        Me.MyToolStrip.Text = "ToolStrip1"
         '
         'lblConnStatus
         '
@@ -643,7 +731,7 @@ Partial Class MainForm
         Me.mainPanel.Controls.Add(Me.bottomPanel)
         Me.mainPanel.Controls.Add(Me.splitter2)
         Me.mainPanel.Controls.Add(Me.topPanel)
-        Me.mainPanel.Controls.Add(Me.MyBottomBar)
+        Me.mainPanel.Controls.Add(Me.MyToolStrip)
         Me.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.mainPanel.Location = New System.Drawing.Point(269, 29)
         Me.mainPanel.Name = "mainPanel"
@@ -657,43 +745,44 @@ Partial Class MainForm
         Me.dgv.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.dgv.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgv.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgv.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
+        DataGridViewCellStyle13.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle13.ForeColor = System.Drawing.Color.Gainsboro
+        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgv.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
         Me.dgv.ColumnHeadersHeight = 28
         Me.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.LightGray
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgv.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        DataGridViewCellStyle14.ForeColor = System.Drawing.Color.LightGray
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgv.DefaultCellStyle = DataGridViewCellStyle14
         Me.dgv.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgv.EnableHeadersVisualStyles = False
         Me.dgv.GridColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.dgv.Location = New System.Drawing.Point(0, 285)
         Me.dgv.Name = "dgv"
         Me.dgv.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.Gainsboro
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgv.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
+        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle15.ForeColor = System.Drawing.Color.Gainsboro
+        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
+        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgv.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
         Me.dgv.RowHeadersWidth = 30
         Me.dgv.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgv.RowTemplate.Height = 26
         Me.dgv.Size = New System.Drawing.Size(953, 225)
-        Me.dgv.TabIndex = 9
+        Me.dgv.TabIndex = 10
+        Me.dgv.TabStop = False
         '
         'MyAutocompleteMenu
         '
@@ -703,6 +792,7 @@ Partial Class MainForm
         Me.MyAutocompleteMenu.Font = New System.Drawing.Font("Consolas", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.MyAutocompleteMenu.ImageList = Me.MyImageList
         Me.MyAutocompleteMenu.Items = New String(-1) {}
+        Me.MyAutocompleteMenu.MinFragmentLength = 1
         Me.MyAutocompleteMenu.TargetControlWrapper = Nothing
         '
         'MyImageList
@@ -734,8 +824,10 @@ Partial Class MainForm
         Me.leftPanel.PerformLayout()
         Me.topPanel.ResumeLayout(False)
         Me.bottomPanel.ResumeLayout(False)
-        Me.MyBottomBar.ResumeLayout(False)
-        Me.MyBottomBar.PerformLayout()
+        Me.xpathEvaluatorPanel.ResumeLayout(False)
+        Me.xpathEvaluatorPanel.PerformLayout()
+        Me.MyToolStrip.ResumeLayout(False)
+        Me.MyToolStrip.PerformLayout()
         Me.mainPanel.ResumeLayout(False)
         Me.mainPanel.PerformLayout()
         CType(Me.dgv, System.ComponentModel.ISupportInitialize).EndInit()
@@ -768,8 +860,7 @@ Partial Class MainForm
     Friend WithEvents mainPanel As Panel
     Friend WithEvents dgv As DataGridView
     Friend WithEvents outputTextBox As RichTextBox
-    Friend WithEvents tsmiServer As ToolStripMenuItem
-    Friend WithEvents MyBottomBar As ToolStrip
+    Friend WithEvents MyToolStrip As ToolStrip
     Friend WithEvents lblConnStatus As ToolStripLabel
     Friend WithEvents btnOutput As ToolStripButton
     Friend WithEvents tsSeparator4 As ToolStripSeparator
@@ -778,7 +869,7 @@ Partial Class MainForm
     Friend WithEvents MyAutocompleteMenu As AutocompleteMenuNS.AutocompleteMenu
     Friend WithEvents MyImageList As ImageList
     Friend WithEvents xpathTextBox As RichTextBox
-    Friend WithEvents btnClear As ToolStripMenuItem
+    Friend WithEvents btnClearOutput As ToolStripMenuItem
     Friend WithEvents btnExport As ToolStripMenuItem
     Friend WithEvents btnExit As ToolStripMenuItem
     Friend WithEvents tsSeparator1 As ToolStripSeparator
@@ -791,7 +882,13 @@ Partial Class MainForm
     Friend WithEvents tsSeparator3 As ToolStripSeparator
     Friend WithEvents btnFind As ToolStripMenuItem
     Friend WithEvents btnReplace As ToolStripMenuItem
-    Friend WithEvents btnCloseConnection As ToolStripMenuItem
     Friend WithEvents MyFindReplace As FindReplace
     Friend WithEvents btnSaveSql As ToolStripMenuItem
+    Friend WithEvents btnDisconnect As Button
+    Friend WithEvents btnSelectAll As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents xpathEvaluatorPanel As Panel
+    Friend WithEvents xpathExpression As TextBox
+    Friend WithEvents btnExecuteXpath As Button
+    Friend WithEvents btnClearXpath As ToolStripMenuItem
 End Class

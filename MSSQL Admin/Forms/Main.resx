@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="MyMenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
+    <value>135, 17</value>
   </metadata>
   <metadata name="MyAutocompleteMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>235, 17</value>
+    <value>260, 17</value>
   </metadata>
   <data name="MyAutocompleteMenu.Colors" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
@@ -141,30 +141,30 @@
 </value>
   </data>
   <metadata name="MyImageList.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>394, 17</value>
+    <value>438, 17</value>
   </metadata>
   <data name="MyImageList.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAC
-        BQAAAk1TRnQBSQFMAgEBBAEAAZABAAGQAQABEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        BQAAAk1TRnQBSQFMAgEBBAEAAcABAAHAAQABEAEAARABAAT/ASEBAAj/AUIBTQE2BwABNgMAASgDAAFA
         AwABIAMAAQEBAAEgBgABIP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8AIgBA/wMGAQg8/wgA
-        A1UBtQz/A6sB+zwAA0cBgAT/BAADpgH6AwsBDxQAA0wBkANMAZADTAGQA0wBkANMAZADTAGQA0wBkANM
+        A1UBtQz/A5kB+zwAA0cBgAT/BAADmgH6AwsBDxQAA0wBkANMAZADTAGQA0wBkANMAZADTAGQA0wBkANM
         AZADTAGQA0wBkANMAZADTAGQA0wBkANMAZADTAGQA0wBkAQAAxkBIzj/EAADCAELCP8DWgG9MAADIwEz
-        DP8EAAj/A14BzlgAAzUBVwz/AzoBYhgAAzUBVQj/FAADXQHXCP8oAAMEAQYDewHyEP8EABD/A0cBgAgA
-        A2AB4ANgAeADYAHgA2AB4ANgAeADYAHgA2AB4ANgAeADYAHgA2AB4ANgAeAgAANRAaAM/wMUARwUAAM1
+        DP8EAAj/A14BzlgAAzUBVwz/AzoBYhgAAzUBVQj/FAADXQHXCP8oAAMEAQYDbAHyEP8EABD/A0cBgAgA
+        A18B4ANfAeADXwHgA18B4ANfAeADXwHgA18B4ANfAeADXwHgA18B4ANfAeAgAANRAaAM/wMUARwUAAM1
         AVUI/xQAA0MBeAj/JAADWAG7GP8EABj/AwoBDiz/JAADYAHWDP8YAAMNAREDDQERGAAI/wNDAXggABz/
-        BAAY/wMXASBUAAOEAfUI/wPJAf00AAj/A1kBxyAAHP8EABj/AxcBIFgADP8DXgHYMAADtwH8BP8DtwH8
-        IAAc/wQAGP8DFwEgQP8YAAMDAQQM/wNIAYQsAANZAccI/yAAGP8DSQGHBAADfgHzFP8DFwEgA1sByANb
+        BAAY/wMXASBUAANzAfUI/wO8Af00AAj/A1kBxyAAHP8EABj/AxcBIFgADP8DXgHYMAADqwH8BP8DqwH8
+        IAAc/wQAGP8DFwEgQP8YAAMDAQQM/wNIAYQsAANZAccI/yAAGP8DSQGHBAADbwHzFP8DFwEgA1sByANb
         AcgDWwHIA1sByANbAcgDWwHIA1sByANbAcgDWwHIA1sByANbAcgDWwHIA1sByANbAcgDWwHIA1sByBgA
         A04BlQz/AwIBAywAA0IBdgj/IAAQ/wNcAdEEAAMtAUYDYQHcBAADJAE1EP8DFwEgVAADMwFTDP8DHgEr
-        LAADGgElAxoBJQj/A0oBjAMaASUDGgElFAAI/wOmAfoDCwEPAwoBDgOhAfkM/wNOAZQEAANHAYII/wMX
+        LAADGgElAxoBJQj/A0oBjAMaASUDGgElFAAI/wOaAfoDCwEPAwoBDgOOAfkM/wNOAZQEAANHAYII/wMX
         ASADUwGoA1MBqANTAagDUwGoA1MBqANTAagDUwGoA1MBqANTAagDUwGoA1MBqCQAAxgBIQz/A0IBdDAA
-        HP8UAAT/Ay0BRgQAA14Bzhz/Ay0BRgQAA14BzgMXASAs/yAAAwQBBgz/A1wByRQAAy4BRwj/HAADtwH8
-        BP8DtwH8IAADSAGDKP8DpgH6AwsBD1AADP8DlgH3GAADNQFVCP8cAANbAcgI/yAAAzQBVCj/A2UB5QMA
-        AQFMAAOaAfgM/wNcAcwDXAHMA1wBzANcAcwDXAHMA1wBzANcAcwDXgHdCP8cAAMIAQsI/wMcASgkAANS
-        AaQc/wMYASEMAED/BAADYQHaOP8gAAO3AfwI/wNJAYcDGgElIwABAQNkAecM/wM+AWoUAED/AzcBWzz/
+        HP8UAAT/Ay0BRgQAA14Bzhz/Ay0BRgQAA14BzgMXASAs/yAAAwQBBgz/A1wByRQAAy4BRwj/HAADqwH8
+        BP8DqwH8IAADSAGDKP8DmgH6AwsBD1AADP8DiAH3GAADNQFVCP8cAANbAcgI/yAAAzQBVCj/A2UB5QMA
+        AQFMAAONAfgM/wNcAcwDXAHMA1wBzANcAcwDXAHMA1wBzANcAcwDXgHdCP8cAAMIAQsI/wMcASgkAANS
+        AaQc/wMYASEMAED/BAADYQHaOP8gAAOrAfwI/wNJAYcDGgElIwABAQNkAecM/wM+AWoUAED/AzcBWzz/
         JAADWQHHDP8oAAMZASMDVwG6HAABQgFNAT4HAAE+AwABKAMAAUADAAEgAwABAQEAAQEGAAEBFgAD/4UA
         AcEB/wH8AZ8CAAGAAQAB8AH/AfABjwL/AcEC+AH/AcABgwEAAR8B4AL4Af8CgAEAAR8B8AL8AX8CgAL/
         AfgBfwH8AX8CgAL/AfwBPwH8AX8CgAIAAfwBHwH8AX8CgAIAAfwBHwH8AX8BggFAAv8B+AE/AfgBDwGA
@@ -172,8 +172,8 @@
         AQcCAAGAAQAB/wEHAfgBHwQAAf8BhwH+AX8L
 </value>
   </data>
-  <metadata name="MyBottomBar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>125, 17</value>
+  <metadata name="MyToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnOutput.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

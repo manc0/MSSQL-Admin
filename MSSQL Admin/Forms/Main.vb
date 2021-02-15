@@ -1,14 +1,15 @@
 ﻿Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Text
+Imports System.Xml
 Imports AutocompleteMenuNS
 Imports ScintillaNET
 Imports ScintillaNET_FindReplaceDialog
 
 Public Class MainForm
-    Private Const SQL_KEYWORDS As String = "add alter as authorization backup begin bigint binary bit break browse bulk by cascade case catch check checkpoint close clustered column commit compute constraint containstable continue create current cursor cursor database date datetime datetime2 datetimeoffset dbcc deallocate decimal declare default delete deny desc disk distinct distributed double drop dump else end errlvl escape except exec execute exit external fetch file fillfactor float for foreign freetext freetexttable from full function goto grant group having hierarchyid holdlock identity identity_insert identitycol if image index insert int intersect into key kill lineno load merge money national nchar nocheck nocount nolock nonclustered ntext numeric nvarchar of off offsets on open opendatasource openquery openrowset openxml option order over percent plan precision primary print proc procedure public raiserror read readtext real reconfigure references replication restore restrict return revert revoke rollback rowcount rowguidcol rule save schema securityaudit select set setuser shutdown smalldatetime smallint smallmoney sql_variant statistics table table tablesample text textsize then time timestamp tinyint to top tran transaction trigger truncate try union unique uniqueidentifier update updatetext use user values varbinary varchar varying view waitfor when where while with writetext xml go "
+    Private Const SQL_KEYWORDS As String = "add alter as authorization backup begin bigint binary bit break browse bulk by cascade case catch check checkpoint close clustered column commit compute constraint containstable continue create current cursor database date datetime datetime2 datetimeoffset dbcc deallocate decimal declare default delete deny desc disk distinct distributed double drop dump else end errlvl escape except exec execute exit external fetch file fillfactor float for foreign freetext freetexttable from full function goto grant group having hierarchyid holdlock identity identity_insert identitycol if image index insert int intersect into key kill lineno load merge money national nchar nocheck nocount nolock nonclustered ntext numeric nvarchar of off offsets on open opendatasource openquery openrowset openxml option order over percent plan precision primary print proc procedure public raiserror read readtext real reconfigure references replication restore restrict return revert revoke rollback rowcount rowguidcol rule save schema securityaudit select set setuser shutdown smalldatetime smallint smallmoney sql_variant statistics table table tablesample text textsize then time timestamp tinyint to top tran transaction trigger truncate try union unique uniqueidentifier update updatetext use user values varbinary varchar varying view waitfor when where while with writetext xml go "
     Private Const SQL_OPERATORS As String = "all and any between cross exists in inner is join left like not null or outer pivot right some unpivot "
-    Private Const SQL_FUNCTIONS As String = "ascii cast char charindex ceiling coalesce collate contains convert current_date current_time current_timestamp current_user floor isnull max min nullif object_id session_user substring system_user tsequal "
+    Private Const SQL_FUNCTIONS As String = "ascii char charindex concat concat_ws datalength difference format left len lower ltrim nchar patindex quotename replace replicate reverse right rtrim soundex space str stuff substring translate trim unicode upper abs acos asin atan atn2 avg ceiling count cos cot degrees exp floor log log10 max min pi power radians rand round sign sin sqrt square sum tan current_timestamp dateadd datediff datefromparts datename datepart day getdate getutcdate isdate month sysdatetime year cast coalesce convert current_user iif isnull isnumeric nullif session_user sessionproperty system_user user_name "
     Private Const SQL_OBJECTS As String = "sys objects sysobjects "
 
     Private ReadOnly Property MyConnection As Connection = Connection.Instance
@@ -27,8 +28,8 @@ Public Class MainForm
             .Scintilla = MyScintilla
         }
 
-        MyBottomBar.RenderMode = ToolStripRenderMode.System
-        MyBottomBar.Renderer = New ToolStripOverride()
+        MyToolStrip.RenderMode = ToolStripRenderMode.System
+        MyToolStrip.Renderer = New ToolStripOverride()
 
         Log("Welcome " & Environment.UserName & ".")
     End Sub
@@ -220,7 +221,7 @@ Public Class MainForm
                                                 End Function)
 
         Array.ForEach(SQL_FUNCTIONS.Split(" "), Function(item)
-                                                    MyAutocompleteMenu.AddItem(New SnippetAutocompleteItem(item & "()") With {.ImageIndex = 2, .ToolTipTitle = "SQL Functions"})
+                                                    MyAutocompleteMenu.AddItem(New SnippetAutocompleteItem(item) With {.ImageIndex = 2, .ToolTipTitle = "SQL Functions"})
                                                     Return True
                                                 End Function)
 
@@ -256,6 +257,7 @@ Public Class MainForm
             My.Settings.Save()
 
             btnExecute.Enabled = True
+            btnDisconnect.Enabled = True
             cbDatabases.Enabled = True
             lblConnStatus.Text = "Connected"
             lblConnStatus.ForeColor = Color.PaleGreen
@@ -263,6 +265,7 @@ Public Class MainForm
             RetrieveDatabases()
         Catch ex As Exception
             btnExecute.Enabled = False
+            btnDisconnect.Enabled = False
             cbDatabases.Enabled = False
             lblConnStatus.Text = "Disconnected"
             lblConnStatus.ForeColor = Color.IndianRed
@@ -278,6 +281,8 @@ Public Class MainForm
             MyConnection?.Close()
             cbDatabases.Items.Clear()
             lbTableList.Items.Clear()
+            btnDisconnect.Enabled = False
+            btnConnect.Enabled = True
             btnSubmit.Enabled = False
             btnExecute.Enabled = False
             cbDatabases.Enabled = False
@@ -438,8 +443,8 @@ Public Class MainForm
                         DataTable = New DataTable
                         DataTable.Load(reader)
                         dgv.DataSource = DataTable
-
                         dgv.Refresh()
+
                         btnSubmit.Enabled = False
                         lbTableList.SelectedIndex = -1
                     End If
@@ -505,7 +510,8 @@ Public Class MainForm
                         File.WriteAllText(sfd.FileName, sw.ToString())
                 End Select
             End If
-
+        Else
+            Log("Nothing to export.")
         End If
     End Sub
 
@@ -525,11 +531,44 @@ Public Class MainForm
     End Sub
 
     ''' <summary>
+    ''' Executes the XPath expression written by the user.
+    ''' </summary>
+    Private Sub ExecuteXpath()
+        If dgv.RowCount > 0 Then
+            Try
+                Dim sw = New StringWriter()
+                DataTable.TableName = "Item"
+                DataTable.WriteXml(sw, XmlWriteMode.IgnoreSchema)
+                DataTable.TableName = ""
+
+                Dim xmlDoc As New XmlDocument
+                xmlDoc.LoadXml(sw.ToString)
+
+                Dim nodeList As XmlNodeList = xmlDoc.DocumentElement.SelectNodes(xpathExpression.Text)
+                xpathTextBox.Text = ""
+
+                If nodeList.Count > 0 Then
+                    For Each node As XmlNode In nodeList
+                        xpathTextBox.AppendText(node.OuterXml & vbNewLine)
+                    Next
+                Else
+                    xpathTextBox.AppendText("No matches found." & vbNewLine)
+                End If
+            Catch ex As Exception
+                xpathTextBox.Text = ""
+                xpathTextBox.AppendText("Wrong XPath expression." & vbNewLine)
+            End Try
+        Else
+            Log("Table is empty.")
+        End If
+    End Sub
+
+    ''' <summary>
     ''' Writes on the console.
     ''' </summary>
-    ''' <param name="ex">Message to log.</param>
-    Private Sub Log(ex As String)
-        outputTextBox.AppendText("> " & DateTime.Now.TimeOfDay.ToString("hh\:mm\:ss") & " " & ex & vbNewLine)
+    ''' <param name="str">Message to log.</param>
+    Private Sub Log(str As String)
+        outputTextBox.AppendText("> " & DateTime.Now.TimeOfDay.ToString("hh\:mm\:ss") & " " & str & vbNewLine)
     End Sub
 
     ''' <summary>
@@ -543,6 +582,10 @@ Public Class MainForm
 
     Private Sub BtnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
         ConnectToServer()
+    End Sub
+
+    Private Sub BtnDisconnect_Click(sender As Object, e As EventArgs) Handles btnDisconnect.Click
+        DisconnectFromServer()
     End Sub
 
     Private Sub CbDatabases_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbDatabases.SelectedIndexChanged
@@ -585,13 +628,6 @@ Public Class MainForm
         End Select
     End Sub
 
-    Private Sub AutocompleteMenu_Selected(sender As Object, e As SelectedEventArgs) Handles MyAutocompleteMenu.Selected
-        ' SQL Functions
-        If e.Item.ImageIndex = 2 Then
-            MyScintilla.GotoPosition(MyScintilla.CurrentPosition - 1)
-        End If
-    End Sub
-
     Private Sub Scintilla_ZoomChanged(sender As Object, e As EventArgs) Handles MyScintilla.ZoomChanged
         Dim zoom As Integer = MyScintilla.Zoom * 2
         MyScintilla.Margins(0).Width = 50 + zoom
@@ -603,6 +639,7 @@ Public Class MainForm
             btnXpath.Checked = False
 
             outputTextBox.Visible = True
+            xpathEvaluatorPanel.Visible = False
             xpathTextBox.Visible = False
             splitter1.Visible = True
             bottomPanel.Visible = True
@@ -618,6 +655,8 @@ Public Class MainForm
             btnXpath.Checked = True
 
             outputTextBox.Visible = False
+            xpathEvaluatorPanel.Visible = True
+            xpathEvaluatorPanel.Select()
             xpathTextBox.Visible = True
             splitter1.Visible = True
             bottomPanel.Visible = True
@@ -627,8 +666,13 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub BtnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
+    Private Sub BtnClearOutput_Click(sender As Object, e As EventArgs) Handles btnClearOutput.Click
         outputTextBox.Text = ""
+    End Sub
+
+    Private Sub btnClearXpath_Click(sender As Object, e As EventArgs) Handles btnClearXpath.Click
+        xpathExpression.Text = ""
+        xpathTextBox.Text = ""
     End Sub
 
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
@@ -638,10 +682,6 @@ Public Class MainForm
         Finally
             End
         End Try
-    End Sub
-
-    Private Sub BtnCloseConnection_Click(sender As Object, e As EventArgs) Handles btnCloseConnection.Click
-        DisconnectFromServer()
     End Sub
 
     Private Sub BtnUndo_Click(sender As Object, e As EventArgs) Handles btnUndo.Click
@@ -662,6 +702,10 @@ Public Class MainForm
 
     Private Sub BtnPaste_Click(sender As Object, e As EventArgs) Handles btnPaste.Click
         MyScintilla.Paste()
+    End Sub
+
+    Private Sub BtnSelectAll_Click(sender As Object, e As EventArgs) Handles btnSelectAll.Click
+        MyScintilla.SelectAll()
     End Sub
 
     Private Sub BtnFind_Click(sender As Object, e As EventArgs) Handles btnFind.Click
@@ -769,5 +813,9 @@ Public Class MainForm
         End Property
 
     End Class
+
+    Private Sub btnExecuteXpath_Click(sender As Object, e As EventArgs) Handles btnExecuteXpath.Click
+        ExecuteXpath()
+    End Sub
 
 End Class

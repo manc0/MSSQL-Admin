@@ -93,7 +93,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Connection.vb" />
+    <Compile Include="Connection\Connection.vb" />
     <Compile Include="Forms\Main.vb">
       <SubType>Form</SubType>
     </Compile>

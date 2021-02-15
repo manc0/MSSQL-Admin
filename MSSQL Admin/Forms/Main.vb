@@ -20,7 +20,7 @@ Public Class MainForm
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitializeScintilla()
         LoadConnectionSettings()
-        LoadAutoCompleteMenu()
+        InitializeAutoCompleteMenu()
 
         MyMenuStrip.Renderer = New ToolStripProfessionalRenderer(New MenuColorTable())
 
@@ -29,7 +29,7 @@ Public Class MainForm
         }
 
         MyToolStrip.RenderMode = ToolStripRenderMode.System
-        MyToolStrip.Renderer = New ToolStripOverride()
+        MyToolStrip.Renderer = New CustomToolStripRenderer()
 
         Log("Welcome " & Environment.UserName & ".")
     End Sub
@@ -61,13 +61,14 @@ Public Class MainForm
         MyScintilla.CaretWidth = 2
         MyScintilla.SetSelectionBackColor(True, selectionColor)
 
+        ' Syntax highlight
         With MyScintilla
             .Styles(Style.Default).BackColor = backColor
 
             .Styles(Style.LineNumber).ForeColor = Color.FromArgb(1, 149, 159, 161)
             .Styles(Style.LineNumber).BackColor = backColor
 
-            .Styles(Style.Sql.Default).ForeColor = Color.Gainsboro
+            .Styles(Style.Sql.Default).ForeColor = Color.LightGray
             .Styles(Style.Sql.Default).BackColor = backColor
             .Styles(Style.Sql.Default).Bold = False
             .Styles(Style.Sql.Default).Italic = False
@@ -91,28 +92,24 @@ Public Class MainForm
             .Styles(Style.Sql.CommentLineDoc).Italic = True
             .Styles(Style.Sql.CommentLineDoc).Underline = False
 
-            ' scintilla.SetKeywords(0,
             .Styles(Style.Sql.Word).ForeColor = Color.FromArgb(255, 100, 150, 215)
             .Styles(Style.Sql.Word).BackColor = backColor
             .Styles(Style.Sql.Word).Bold = False
             .Styles(Style.Sql.Word).Italic = False
             .Styles(Style.Sql.Word).Underline = False
 
-            ' scintilla.SetKeywords(1,
             .Styles(Style.Sql.Word2).ForeColor = Color.HotPink
             .Styles(Style.Sql.Word2).BackColor = backColor
             .Styles(Style.Sql.Word2).Bold = False
             .Styles(Style.Sql.Word2).Italic = False
             .Styles(Style.Sql.Word2).Underline = False
 
-            ' scintilla.SetKeywords(4
             .Styles(Style.Sql.User1).ForeColor = Color.FromArgb(255, 62, 201, 174)
             .Styles(Style.Sql.User1).BackColor = backColor
             .Styles(Style.Sql.User1).Bold = False
             .Styles(Style.Sql.User1).Italic = False
             .Styles(Style.Sql.User1).Underline = False
 
-            ' scintilla.SetKeywords(5,
             .Styles(Style.Sql.User2).ForeColor = Color.IndianRed
             .Styles(Style.Sql.User2).BackColor = backColor
             .Styles(Style.Sql.User2).Bold = False
@@ -120,7 +117,7 @@ Public Class MainForm
             .Styles(Style.Sql.User2).Underline = False
 
             .Styles(Style.Sql.Identifier).BackColor = backColor
-            .Styles(Style.Sql.Identifier).ForeColor = Color.Gainsboro
+            .Styles(Style.Sql.Identifier).ForeColor = Color.LightGray
             .Styles(Style.Sql.Identifier).Bold = False
             .Styles(Style.Sql.Identifier).Italic = False
             .Styles(Style.Sql.Identifier).Underline = False
@@ -150,7 +147,7 @@ Public Class MainForm
             .Styles(Style.Sql.Character).Underline = False
         End With
 
-
+        ' Keywords
         MyScintilla.SetKeywords(0, SQL_KEYWORDS)
         MyScintilla.SetKeywords(1, SQL_FUNCTIONS)
         MyScintilla.SetKeywords(4, SQL_OPERATORS)
@@ -207,7 +204,7 @@ Public Class MainForm
     ''' <summary>
     ''' Fills the autocompletemenu.
     ''' </summary>
-    Private Sub LoadAutoCompleteMenu()
+    Private Sub InitializeAutoCompleteMenu()
         MyAutocompleteMenu.TargetControlWrapper = New ScintillaWrapper(MyScintilla)
 
         Array.ForEach(SQL_KEYWORDS.Split(" "), Function(item)
@@ -226,7 +223,7 @@ Public Class MainForm
                                                 End Function)
 
         Array.ForEach(SQL_OBJECTS.Split(" "), Function(item)
-                                                  MyAutocompleteMenu.AddItem(New SnippetAutocompleteItem(item) With {.ImageIndex = 3, .ToolTipTitle = "Objects"})
+                                                  MyAutocompleteMenu.AddItem(New SnippetAutocompleteItem(item) With {.ImageIndex = 3, .ToolTipTitle = "SQL Objects"})
                                                   Return True
                                               End Function)
     End Sub
@@ -545,21 +542,22 @@ Public Class MainForm
                 xmlDoc.LoadXml(sw.ToString)
 
                 Dim nodeList As XmlNodeList = xmlDoc.DocumentElement.SelectNodes(xpathExpression.Text)
-                xpathTextBox.Text = ""
+                xpathArea.Text = ""
 
                 If nodeList.Count > 0 Then
                     For Each node As XmlNode In nodeList
-                        xpathTextBox.AppendText(node.OuterXml & vbNewLine)
+                        xpathArea.AppendText(node.OuterXml & vbNewLine)
                     Next
                 Else
-                    xpathTextBox.AppendText("No matches found." & vbNewLine)
+                    xpathArea.AppendText("No matches found." & vbNewLine)
                 End If
             Catch ex As Exception
-                xpathTextBox.Text = ""
-                xpathTextBox.AppendText("Wrong XPath expression." & vbNewLine)
+                xpathArea.Text = ""
+                xpathArea.AppendText("Wrong XPath expression." & vbNewLine)
             End Try
         Else
-            Log("Table is empty.")
+            xpathArea.Text = ""
+            xpathArea.AppendText("Table is empty." & vbNewLine)
         End If
     End Sub
 
@@ -568,7 +566,7 @@ Public Class MainForm
     ''' </summary>
     ''' <param name="str">Message to log.</param>
     Private Sub Log(str As String)
-        outputTextBox.AppendText("> " & DateTime.Now.TimeOfDay.ToString("hh\:mm\:ss") & " " & str & vbNewLine)
+        outputArea.AppendText("> " & DateTime.Now.TimeOfDay.ToString("hh\:mm\:ss") & " " & str & vbNewLine)
     End Sub
 
     ''' <summary>
@@ -638,9 +636,9 @@ Public Class MainForm
             btnOutput.Checked = True
             btnXpath.Checked = False
 
-            outputTextBox.Visible = True
-            xpathEvaluatorPanel.Visible = False
-            xpathTextBox.Visible = False
+            outputArea.Visible = True
+            xpathPanel.Visible = False
+
             splitter1.Visible = True
             bottomPanel.Visible = True
         Else
@@ -654,10 +652,9 @@ Public Class MainForm
             btnOutput.Checked = False
             btnXpath.Checked = True
 
-            outputTextBox.Visible = False
-            xpathEvaluatorPanel.Visible = True
-            xpathEvaluatorPanel.Select()
-            xpathTextBox.Visible = True
+            outputArea.Visible = False
+            xpathPanel.Visible = True
+
             splitter1.Visible = True
             bottomPanel.Visible = True
         Else
@@ -667,12 +664,12 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnClearOutput_Click(sender As Object, e As EventArgs) Handles btnClearOutput.Click
-        outputTextBox.Text = ""
+        outputArea.Text = ""
     End Sub
 
-    Private Sub btnClearXpath_Click(sender As Object, e As EventArgs) Handles btnClearXpath.Click
+    Private Sub BtnClearXpath_Click(sender As Object, e As EventArgs) Handles btnClearXpath.Click
         xpathExpression.Text = ""
-        xpathTextBox.Text = ""
+        xpathArea.Text = ""
     End Sub
 
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
@@ -724,16 +721,41 @@ Public Class MainForm
         SaveQuery()
     End Sub
 
-    Public Class ToolStripOverride
+    Private Sub BtnExecuteXpath_Click(sender As Object, e As EventArgs) Handles btnExecuteXpath.Click
+        ExecuteXpath()
+    End Sub
+
+    Private Class CustomToolStripRenderer
         Inherits ToolStripSystemRenderer
 
         Protected Overrides Sub OnRenderToolStripBorder(e As ToolStripRenderEventArgs)
 
         End Sub
 
+        Protected Overrides Sub OnRenderButtonBackground(e As ToolStripItemRenderEventArgs)
+            Dim btn = TryCast(e.Item, ToolStripButton)
+            Dim rectangle As New Rectangle(0, 0, e.Item.Size.Width - 1, e.Item.Size.Height - 1)
+            Dim selectedBrush As New SolidBrush(Color.FromArgb(44, 49, 59))
+            Dim checkedBrush As New SolidBrush(Color.FromArgb(53, 59, 67))
+            Dim pen As New Pen(Color.FromArgb(44, 49, 59))
+
+            If Not e.Item.Selected Then
+                MyBase.OnRenderButtonBackground(e)
+            Else
+                e.Graphics.FillRectangle(selectedBrush, rectangle)
+                e.Graphics.DrawRectangle(pen, rectangle)
+            End If
+
+            If btn IsNot Nothing AndAlso btn.CheckOnClick AndAlso btn.Checked Then
+                e.Graphics.FillRectangle(checkedBrush, rectangle)
+                e.Graphics.DrawRectangle(pen, rectangle)
+            End If
+
+        End Sub
+
     End Class
 
-    Class MenuColorTable
+    Private Class MenuColorTable
         Inherits ProfessionalColorTable
 
         Public Sub New()
@@ -813,9 +835,5 @@ Public Class MainForm
         End Property
 
     End Class
-
-    Private Sub btnExecuteXpath_Click(sender As Object, e As EventArgs) Handles btnExecuteXpath.Click
-        ExecuteXpath()
-    End Sub
 
 End Class

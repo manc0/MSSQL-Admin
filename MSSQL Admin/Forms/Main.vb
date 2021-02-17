@@ -12,7 +12,7 @@ Public Class MainForm
     Private Const SQL_FUNCTIONS As String = "ascii char charindex concat concat_ws datalength difference format left len lower ltrim nchar patindex quotename replace replicate reverse right rtrim soundex space str stuff substring translate trim unicode upper abs acos asin atan atn2 avg ceiling count cos cot degrees exp floor log log10 max min pi power radians rand round sign sin sqrt square sum tan current_timestamp dateadd datediff datefromparts datename datepart day getdate getutcdate isdate month sysdatetime year cast coalesce convert current_user iif isnull isnumeric nullif session_user sessionproperty system_user user_name "
     Private Const SQL_OBJECTS As String = "sys objects sysobjects "
 
-    Private ReadOnly Property MyConnection As Connection = Connection.Instance
+    Private Property MyConnection As SqlConnection
     Private Property ConnectionString As String = "Connection Timeout=5;"
     Private Property DataAdapter As SqlDataAdapter
     Private Property DataTable As DataTable
@@ -231,7 +231,7 @@ Public Class MainForm
     ''' <summary>
     ''' Connects to the server.
     ''' </summary>
-    Private Sub ConnectToServer()
+    Private Async Sub ConnectToServer()
         Dim server As String = tbServer.Text
         Dim user As String = tbUser.Text
         Dim pass As String = tbPass.Text
@@ -246,7 +246,11 @@ Public Class MainForm
         ClearDgv()
 
         Try
-            MyConnection.Open(ConnectionString)
+            MyConnection = New SqlConnection(ConnectionString)
+            lblConnStatus.Text = "Connecting..."
+            lblConnStatus.ForeColor = Color.Orange
+            btnConnect.Enabled = False
+            Await MyConnection.OpenAsync()
 
             My.Settings.Server = server
             My.Settings.User = user
@@ -261,6 +265,7 @@ Public Class MainForm
             Log("Connection established.")
             RetrieveDatabases()
         Catch ex As Exception
+            btnConnect.Enabled = True
             btnExecute.Enabled = False
             btnDisconnect.Enabled = False
             cbDatabases.Enabled = False
@@ -275,7 +280,7 @@ Public Class MainForm
     ''' </summary>
     Private Sub DisconnectFromServer()
         Try
-            MyConnection?.Close()
+
             cbDatabases.Items.Clear()
             lbTableList.Items.Clear()
             btnDisconnect.Enabled = False
@@ -287,6 +292,8 @@ Public Class MainForm
             lblConnStatus.ForeColor = Color.IndianRed
             ClearDgv()
             Log("Connection closed.")
+
+            MyConnection.Close()
         Catch ex As Exception
             Log(ex.Message)
         End Try
@@ -299,7 +306,7 @@ Public Class MainForm
         Try
             Dim databaseList As New List(Of String)()
 
-            Using cmd As SqlCommand = New SqlCommand("SELECT name FROM master.sys.databases", MyConnection.SqlConn)
+            Using cmd As SqlCommand = New SqlCommand("SELECT name FROM master.sys.databases", MyConnection)
                 Using reader As SqlDataReader = cmd.ExecuteReader()
 
                     While (reader.Read())
@@ -338,7 +345,7 @@ Public Class MainForm
         Try
             Dim tableList As New List(Of String)()
 
-            Using cmd As SqlCommand = New SqlCommand("SELECT TABLE_NAME FROM " & databaseName & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'", MyConnection.SqlConn)
+            Using cmd As SqlCommand = New SqlCommand("SELECT TABLE_NAME FROM " & databaseName & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'", MyConnection)
                 Using reader As SqlDataReader = cmd.ExecuteReader()
                     While (reader.Read())
                         tableList.Add(reader.GetString(0))
@@ -368,7 +375,7 @@ Public Class MainForm
                 End Using
             End Using
 
-            Using cmd As New SqlCommand("USE " & databaseName, MyConnection.SqlConn)
+            Using cmd As New SqlCommand("USE " & databaseName, MyConnection)
                 cmd.ExecuteNonQuery()
             End Using
         Catch ex As Exception
@@ -385,7 +392,7 @@ Public Class MainForm
         If IsNothing(tableName) Then Return
 
         Try
-            Using cmd As New SqlCommand("SELECT * FROM " & tableName, MyConnection.SqlConn)
+            Using cmd As New SqlCommand("SELECT * FROM " & tableName, MyConnection)
                 Dim ds As New DataSet
                 DataAdapter = New SqlDataAdapter(cmd)
                 DataTable = New DataTable
@@ -430,11 +437,9 @@ Public Class MainForm
     ''' Executes the code written by user on the server.
     ''' </summary>
     Private Sub ExecuteSqlCode()
-        If Not MyConnection.IsOpen Then Return
-
         If Not String.IsNullOrEmpty(MyScintilla.Text) Then
-            Using cmd As New SqlCommand(MyScintilla.Text, MyConnection.SqlConn)
-                Try
+            Try
+                Using cmd As New SqlCommand(MyScintilla.Text, MyConnection)
                     Dim reader As SqlDataReader = cmd.ExecuteReader()
                     If reader.HasRows Then
                         DataTable = New DataTable
@@ -454,10 +459,10 @@ Public Class MainForm
                     RetrieveDatabases()
                     RetrieveTables()
                     SetSelectedTable()
-                Catch ex As Exception
-                    Log(ex.Message)
-                End Try
-            End Using
+                End Using
+            Catch ex As Exception
+                Log(ex.Message)
+            End Try
         Else
             Log("Nothing to execute.")
         End If

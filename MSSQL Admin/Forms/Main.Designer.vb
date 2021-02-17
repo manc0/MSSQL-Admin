@@ -49,7 +49,6 @@ Partial Class MainForm
         Me.tsSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnReplace = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnFind = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiSettings = New System.Windows.Forms.ToolStripMenuItem()
         Me.leftPanel = New System.Windows.Forms.Panel()
         Me.btnDisconnect = New System.Windows.Forms.Button()
         Me.btnSubmit = New System.Windows.Forms.Button()
@@ -99,7 +98,7 @@ Partial Class MainForm
         'MyMenuStrip
         '
         Me.MyMenuStrip.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
-        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile, Me.tsmiEdit, Me.tsmiSettings})
+        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile, Me.tsmiEdit})
         Me.MyMenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MyMenuStrip.Name = "MyMenuStrip"
         Me.MyMenuStrip.Padding = New System.Windows.Forms.Padding(0)
@@ -280,15 +279,6 @@ Partial Class MainForm
         Me.btnFind.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
         Me.btnFind.Size = New System.Drawing.Size(177, 24)
         Me.btnFind.Text = "Find"
-        '
-        'tsmiSettings
-        '
-        Me.tsmiSettings.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tsmiSettings.ForeColor = System.Drawing.Color.LightSlateGray
-        Me.tsmiSettings.Name = "tsmiSettings"
-        Me.tsmiSettings.Padding = New System.Windows.Forms.Padding(4)
-        Me.tsmiSettings.Size = New System.Drawing.Size(66, 29)
-        Me.tsmiSettings.Text = "Settings"
         '
         'leftPanel
         '
@@ -898,7 +888,6 @@ Partial Class MainForm
     Friend WithEvents btnSaveSql As ToolStripMenuItem
     Friend WithEvents btnDisconnect As Button
     Friend WithEvents btnSelectAll As ToolStripMenuItem
-    Friend WithEvents tsmiSettings As ToolStripMenuItem
     Friend WithEvents btnClearXpath As ToolStripMenuItem
     Friend WithEvents xpathPanel As Panel
     Friend WithEvents xpathArea As RichTextBox

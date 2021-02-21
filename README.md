@@ -1,5 +1,5 @@
 # MSSQL-Admin
-Simple database administrator for SQL Server.
+Simple database administrator for SQL Server. The main purpose of this project is to show how easy is to work with SQL connections in .Net.
 
 ## How to use
 To connect to your server you must specify the server address and instance, a user and a password.

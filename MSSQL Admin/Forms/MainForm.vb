@@ -1,26 +1,26 @@
-﻿Imports System.Data.SqlClient
-Imports System.IO
-Imports System.Text
+﻿Imports System.IO
 Imports System.Xml
 Imports AutocompleteMenuNS
 Imports ScintillaNET
 Imports ScintillaNET_FindReplaceDialog
+Imports MSSQLA.UserInterface.ClassUtils
+Imports MSSQLA.BusinessLogicLayer
 
 Public Class MainForm
-    Private Const SQL_KEYWORDS As String = "add alter as authorization backup begin bigint binary bit break browse bulk by cascade case catch check checkpoint close clustered column commit compute constraint containstable continue create current cursor database date datetime datetime2 datetimeoffset dbcc deallocate decimal declare default delete deny desc disk distinct distributed double drop dump else end errlvl escape except exec execute exit external fetch file fillfactor float for foreign freetext freetexttable from full function goto grant group having hierarchyid holdlock identity identity_insert identitycol if image index insert int intersect into key kill lineno load merge money national nchar nocheck nocount nolock nonclustered ntext numeric nvarchar of off offsets on open opendatasource openquery openrowset openxml option order over percent plan precision primary print proc procedure public raiserror read readtext real reconfigure references replication restore restrict return revert revoke rollback rowcount rowguidcol rule save schema securityaudit select set setuser shutdown smalldatetime smallint smallmoney sql_variant statistics table table tablesample text textsize then time timestamp tinyint to top tran transaction trigger truncate try union unique uniqueidentifier update updatetext use user values varbinary varchar varying view waitfor when where while with writetext xml go "
-    Private Const SQL_OPERATORS As String = "all and any between cross exists in inner is join left like not null or outer pivot right some unpivot "
-    Private Const SQL_FUNCTIONS As String = "ascii char charindex concat concat_ws datalength difference format left len lower ltrim nchar patindex quotename replace replicate reverse right rtrim soundex space str stuff substring translate trim unicode upper abs acos asin atan atn2 avg ceiling count cos cot degrees exp floor log log10 max min pi power radians rand round sign sin sqrt square sum tan current_timestamp dateadd datediff datefromparts datename datepart day getdate getutcdate isdate month sysdatetime year cast coalesce convert current_user iif isnull isnumeric nullif session_user sessionproperty system_user user_name "
-    Private Const SQL_OBJECTS As String = "sys objects sysobjects "
+    Private ReadOnly Property DatabaseLogic As New DatabaseLogic
+    Private ReadOnly Property FileLogic As New FileLogic
+    Private Property GlobalTableCounter As Integer
 
-    Private Property MyConnection As SqlConnection
-    Private Property ConnectionString As String = "Connection Timeout=5;"
-    Private Property DataAdapter As SqlDataAdapter
-    Private Property DataTable As DataTable
+    ' Flags that avoid triggering events recursively
+    Private _ignoreTableListIndexChangedEvent As Boolean = False
+    Private _ignoreTabControlSelectedEvent As Boolean = False
 
-    Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+#Region "Form Initialization"
+
+    Protected Overrides Sub OnLoad(e As EventArgs)
         InitializeScintilla()
-        LoadConnectionSettings()
         InitializeAutoCompleteMenu()
+        LoadConnectionSettings()
 
         MyMenuStrip.Renderer = New ToolStripProfessionalRenderer(New MenuColorTable())
 
@@ -32,6 +32,7 @@ Public Class MainForm
         MyToolStrip.Renderer = New CustomToolStripRenderer()
 
         Log("Welcome " & Environment.UserName & ".")
+        MyBase.OnLoad(e)
     End Sub
 
     ''' <summary>
@@ -193,15 +194,6 @@ Public Class MainForm
     End Sub
 
     ''' <summary>
-    ''' Loads the last credentials used.
-    ''' </summary>
-    Private Sub LoadConnectionSettings()
-        tbServer.Text = My.Settings.Server
-        tbUser.Text = My.Settings.User
-        tbPass.Text = My.Settings.Pass
-    End Sub
-
-    ''' <summary>
     ''' Fills the autocompletemenu.
     ''' </summary>
     Private Sub InitializeAutoCompleteMenu()
@@ -229,16 +221,117 @@ Public Class MainForm
     End Sub
 
     ''' <summary>
-    ''' Connects to the server.
+    ''' Loads the last credentials used.
     ''' </summary>
-    Private Async Sub ConnectToServer()
+    Private Sub LoadConnectionSettings()
+        tbServer.Text = My.Settings.Server
+        tbUser.Text = My.Settings.User
+        tbPass.Text = My.Settings.Pass
+    End Sub
+
+#End Region
+
+#Region "Form Functionality"
+
+    ''' <summary>
+    ''' Writes on the console.
+    ''' </summary>
+    ''' <param name="str">Message to log.</param>
+    Private Sub Log(str As String)
+        outputArea.AppendText("> " & DateTime.Now.TimeOfDay.ToString("hh\:mm\:ss") & " " & str & vbNewLine)
+    End Sub
+
+    ''' <summary>
+    ''' Empties the DGV.
+    ''' </summary>
+    Private Sub ClearDgv()
+        CurrentTable = Nothing
+        CurrentDGV = Nothing
+        TabControl.TabPages.Clear()
+        TabControl.Visible = False
+        GlobalTableCounter = 0
+    End Sub
+
+    ''' <summary>
+    ''' Adds a new tab to the TabControl.
+    ''' </summary>
+    ''' <param name="dt">DataTable to be added in that tab.</param>
+    ''' <param name="tableName">Name of the table.</param>
+    ''' <param name="databaseName">Name of the database which the table belongs to.</param>
+    ''' <param name="canBeUpdated">Used to indicate wether the table can be updated from the DGV or not.</param>
+    Private Sub AddNewTable(dt As DataTable, tableName As String, databaseName As String, canBeUpdated As Boolean)
+        Dim tabNames = From tabs In TabControl.TabPages.Cast(Of TabPage)
+                       Select tabs.Name
+        Dim tabSymbol As String = IIf(canBeUpdated, "✎", "👁") & " "
+
+        _ignoreTabControlSelectedEvent = True
+        If Not tabNames.Contains(tableName) Then
+            Dim tab As New TabPage() With {
+                .Text = tabSymbol & tableName,
+                .Name = tableName,
+                .Margin = New Padding(30)
+            }
+            AddUserTableControl(tab, New UserTable(dt, canBeUpdated, tableName, databaseName))
+
+            TabControl.TabPages.Add(tab)
+            TabControl.SelectTab(tab)
+        Else
+            TabControl.SelectTab(tableName)
+            Dim tab = TabControl.SelectedTab
+            AddUserTableControl(tab, New UserTable(dt, canBeUpdated, tableName, databaseName))
+        End If
+
+        _ignoreTabControlSelectedEvent = False
+        TabControl.Visible = True
+    End Sub
+
+    ''' <summary>
+    ''' Updates all tabs if their tables got any changes made by the user after a manual insert, update or delete.
+    ''' </summary>
+    Private Sub UpdateTabs()
+        For Each tab As TabPage In TabControl.TabPages
+            Dim userTable As UserTable = CType(tab.Controls(0), UserTable)
+
+            If userTable.CanBeUpdated Then
+                userTable.UpdateTable()
+            End If
+
+            If TabControl.SelectedTab Is tab Then
+                SetCurrentUserTable(userTable)
+            End If
+        Next
+    End Sub
+
+    ''' <summary>
+    ''' Closes the current sesion and forces the user to connect again to the server.
+    ''' </summary>
+    Private Sub CloseSession()
+        cbDatabases.Items.Clear()
+        lbTableList.Items.Clear()
+        btnDisconnect.Enabled = False
+        btnConnect.Enabled = True
+        btnSubmit.Enabled = False
+        btnExecute.Enabled = False
+        cbDatabases.Enabled = False
+        lblConnStatus.Text = "Disconnected"
+        lblConnStatus.ForeColor = Color.IndianRed
+        ClearDgv()
+
+        Log("Connection closed.")
+    End Sub
+
+#End Region
+
+#Region "Database Logic"
+
+    ''' <summary>
+    ''' Tests the connection for the first time.
+    ''' </summary>
+    Private Async Sub Connect()
         Dim server As String = tbServer.Text
         Dim user As String = tbUser.Text
         Dim pass As String = tbPass.Text
-
-        ConnectionString &= "Server=" & server & ";"
-        ConnectionString &= "User Id=" & user & ";"
-        ConnectionString &= "Password=" & pass & ";"
+        DatabaseLogic.SetConnection(server, user, pass, ConnectionTimeout)
 
         cbDatabases.Items.Clear()
         lbTableList.Items.Clear()
@@ -246,11 +339,11 @@ Public Class MainForm
         ClearDgv()
 
         Try
-            MyConnection = New SqlConnection(ConnectionString)
             lblConnStatus.Text = "Connecting..."
             lblConnStatus.ForeColor = Color.Orange
             btnConnect.Enabled = False
-            Await MyConnection.OpenAsync()
+            CurrentStatus = ConnectionStatus.Connecting
+            Await DatabaseLogic.TestConnection(ConnectionTimeout)
 
             My.Settings.Server = server
             My.Settings.User = user
@@ -262,8 +355,10 @@ Public Class MainForm
             cbDatabases.Enabled = True
             lblConnStatus.Text = "Connected"
             lblConnStatus.ForeColor = Color.PaleGreen
+
+            CurrentStatus = ConnectionStatus.Connected
             Log("Connection established.")
-            RetrieveDatabases()
+            FillDatabasesComboBox()
         Catch ex As Exception
             btnConnect.Enabled = True
             btnExecute.Enabled = False
@@ -271,113 +366,68 @@ Public Class MainForm
             cbDatabases.Enabled = False
             lblConnStatus.Text = "Disconnected"
             lblConnStatus.ForeColor = Color.IndianRed
+
+            CurrentStatus = ConnectionStatus.Disconnected
             Log(ex.Message)
         End Try
     End Sub
 
     ''' <summary>
-    ''' Closes the current connection.
+    ''' Fills the ComboBox containing the databases.
     ''' </summary>
-    Private Sub DisconnectFromServer()
+    Private Sub FillDatabasesComboBox()
         Try
+            Dim databaseList As List(Of String) = DatabaseLogic.GetDatabasesList()
 
-            cbDatabases.Items.Clear()
-            lbTableList.Items.Clear()
-            btnDisconnect.Enabled = False
-            btnConnect.Enabled = True
-            btnSubmit.Enabled = False
-            btnExecute.Enabled = False
-            cbDatabases.Enabled = False
-            lblConnStatus.Text = "Disconnected"
-            lblConnStatus.ForeColor = Color.IndianRed
-            ClearDgv()
-            Log("Connection closed.")
+            For Each db In databaseList
+                If Not cbDatabases.Items.Contains(db) Then
+                    cbDatabases.Items.Add(db)
+                End If
+            Next
 
-            MyConnection.Close()
+            Try
+                For Each db In cbDatabases.Items
+                    If Not databaseList.Contains(db) Then
+                        cbDatabases.Items.Remove(db)
+                    End If
+                Next
+            Catch
+            End Try
         Catch ex As Exception
             Log(ex.Message)
         End Try
     End Sub
 
     ''' <summary>
-    ''' Gets all databases in the server.
+    ''' Fills the ListBox Gets containing the tables from the selected database.
     ''' </summary>
-    Private Sub RetrieveDatabases()
-        Try
-            Dim databaseList As New List(Of String)()
-
-            Using cmd As SqlCommand = New SqlCommand("SELECT name FROM master.sys.databases", MyConnection)
-                Using reader As SqlDataReader = cmd.ExecuteReader()
-
-                    While (reader.Read())
-                        databaseList.Add(reader.GetString(0))
-                    End While
-                    reader.Close()
-
-                    For Each db In databaseList
-                        If Not cbDatabases.Items.Contains(db) Then
-                            cbDatabases.Items.Add(db)
-                        End If
-                    Next
-
-                    Try
-                        For Each db In cbDatabases.Items
-                            If Not databaseList.Contains(db) Then
-                                cbDatabases.Items.Remove(db)
-                            End If
-                        Next
-                    Catch
-                    End Try
-                End Using
-            End Using
-        Catch ex As Exception
-            Log(ex.Message)
-        End Try
-    End Sub
-
-    ''' <summary>
-    ''' Gets all tables in the current selected database.
-    ''' </summary>
-    Private Sub RetrieveTables()
-        Dim databaseName As String = cbDatabases.SelectedItem?.ToString
+    Private Sub FillTablesListBox()
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
         If IsNothing(databaseName) Then Return
 
         Try
-            Dim tableList As New List(Of String)()
+            Dim tableList As List(Of String) = DatabaseLogic.GetTablesListFromDatabase(databaseName)
 
-            Using cmd As SqlCommand = New SqlCommand("SELECT TABLE_NAME FROM " & databaseName & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'", MyConnection)
-                Using reader As SqlDataReader = cmd.ExecuteReader()
-                    While (reader.Read())
-                        tableList.Add(reader.GetString(0))
-                    End While
-                    reader.Close()
+            For Each table In tableList
+                If Not lbTableList.Items.Contains(table) Then
+                    lbTableList.Items.Add(table)
+                End If
+            Next
 
-                    For Each table In tableList
-                        If Not lbTableList.Items.Contains(table) Then
-                            lbTableList.Items.Add(table)
-                        End If
-                    Next
-
-                    Try
-                        For Each db In lbTableList.Items
-                            If Not tableList.Contains(db) Then
-                                If lbTableList.SelectedItem IsNot Nothing Then
-                                    If lbTableList.SelectedItem.ToString.Equals(db) Then
-                                        ClearDgv()
-                                    End If
-                                End If
-
-                                lbTableList.Items.Remove(db)
+            Try
+                For Each db In lbTableList.Items
+                    If Not tableList.Contains(db) Then
+                        If lbTableList.SelectedItem IsNot Nothing Then
+                            If lbTableList.SelectedItem.ToString.Equals(db) Then
+                                ClearDgv()
                             End If
-                        Next
-                    Catch
-                    End Try
-                End Using
-            End Using
+                        End If
 
-            Using cmd As New SqlCommand("USE " & databaseName, MyConnection)
-                cmd.ExecuteNonQuery()
-            End Using
+                        lbTableList.Items.Remove(db)
+                    End If
+                Next
+            Catch
+            End Try
         Catch ex As Exception
             Log(ex.Message)
         End Try
@@ -389,20 +439,14 @@ Public Class MainForm
     ''' </summary>
     Private Sub SetSelectedTable()
         Dim tableName As String = lbTableList.SelectedItem?.ToString
-        If IsNothing(tableName) Then Return
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        If IsNothing(databaseName) Or IsNothing(tableName) Then Return
 
         Try
-            Using cmd As New SqlCommand("SELECT * FROM " & tableName, MyConnection)
-                Dim ds As New DataSet
-                DataAdapter = New SqlDataAdapter(cmd)
-                DataTable = New DataTable
+            Dim dt As DataTable = DatabaseLogic.GetTableFromDataBase(tableName, databaseName)
+            AddNewTable(dt, tableName, databaseName, True)
 
-                DataAdapter.Fill(ds, tableName)
-                DataAdapter.Fill(DataTable)
-                dgv.DataSource = DataTable
-                dgv.Refresh()
-                btnSubmit.Enabled = True
-            End Using
+            btnSubmit.Enabled = True
         Catch ex As Exception
             Log(ex.Message)
         End Try
@@ -411,55 +455,58 @@ Public Class MainForm
     ''' <summary>
     ''' Submits all changes on the DGV to the server.
     ''' </summary>
-    Private Sub SubmitFromDgv()
-        If DataTable IsNot Nothing And lbTableList.SelectedIndex <> -1 Then
+    Private Sub SubmitChanges()
+        Dim tableName As String = CType(TabControl.SelectedTab.Controls(0), UserTable).TableName
+        Dim databaseName As String = CType(TabControl.SelectedTab.Controls(0), UserTable).DatabaseName
+        If IsNothing(databaseName) Or IsNothing(tableName) Then Return
+
+        If CurrentTable.GetChanges() IsNot Nothing Then
             Dim dr As DialogResult = MessageBox.Show("Are you sure to submit changes?", "Submit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
 
             If dr = DialogResult.Yes Then
-                dgv.EndEdit()
+                CurrentDGV.EndEdit()
 
                 Try
-                    Dim cmdBuilder As New SqlCommandBuilder(DataAdapter)
-                    Dim changes = DataTable.GetChanges()
-
-                    If changes IsNot Nothing Then
-                        DataAdapter.Update(changes)
-                    End If
+                    DatabaseLogic.UpdateDataTable(tableName, databaseName, CurrentTable)
                     Log("Changes submitted to server.")
                 Catch ex As Exception
                     Log(ex.Message)
                 End Try
             End If
+        Else
+            Log("No changes were found.")
         End If
     End Sub
 
     ''' <summary>
     ''' Executes the code written by user on the server.
     ''' </summary>
-    Private Sub ExecuteSqlCode()
+    Private Sub ExecuteCode()
         If Not String.IsNullOrEmpty(MyScintilla.Text) Then
+            Dim sqlCode As String = IIf(MyScintilla.SelectedText.Length > 0, MyScintilla.SelectedText, MyScintilla.Text)
+            Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+
+            If MyScintilla.Text.IndexOf("USE", 0, StringComparison.CurrentCultureIgnoreCase) = -1 And Not IsNothing(databaseName) Then
+                sqlCode = "USE " & databaseName & vbNewLine & sqlCode
+            End If
+
             Try
-                Using cmd As New SqlCommand(MyScintilla.Text, MyConnection)
-                    Dim reader As SqlDataReader = cmd.ExecuteReader()
-                    If reader.HasRows Then
-                        DataTable = New DataTable
-                        DataTable.Load(reader)
-                        dgv.DataSource = DataTable
-                        dgv.Refresh()
+                Dim codeExecution = DatabaseLogic.ExecuteSqlCode(sqlCode)
+                Dim dtList As List(Of DataTable) = codeExecution(0)
+                Dim recordsAffected = codeExecution(1)
 
-                        btnSubmit.Enabled = False
-                        lbTableList.SelectedIndex = -1
-                    End If
+                For Each dt As DataTable In dtList
+                    GlobalTableCounter += 1
+                    AddNewTable(dt, "Table " & GlobalTableCounter, databaseName, False)
+                    lbTableList.SelectedIndex = -1
+                Next
 
-                    Dim recordsAffected = reader.RecordsAffected
-                    If recordsAffected = -1 Then recordsAffected = 0
-                    Log("Execution succesful. " & recordsAffected & " record(s) affected.")
-                    reader.Close()
+                If recordsAffected = -1 Then recordsAffected = 0
 
-                    RetrieveDatabases()
-                    RetrieveTables()
-                    SetSelectedTable()
-                End Using
+                Log("Execution succesful. " & recordsAffected & " record(s) affected.")
+                FillDatabasesComboBox()
+                FillTablesListBox()
+                UpdateTabs()
             Catch ex As Exception
                 Log(ex.Message)
             End Try
@@ -468,11 +515,15 @@ Public Class MainForm
         End If
     End Sub
 
+#End Region
+
+#Region "File Logic"
+
     ''' <summary>
-    ''' Exports the current table shown in the DGV.
+    ''' Exports the current table that's being displayed in the DGV.
     ''' </summary>
-    Private Sub ExportTo()
-        If dgv.RowCount > 0 Then
+    Private Sub Export()
+        If CurrentDGV IsNot Nothing AndAlso CurrentDGV.RowCount > 0 Then
             Dim sfd As New SaveFileDialog With {
                     .Filter = "CSV File(*.csv)|*.csv|XML File(*.xml)|*.xml",
                     .Title = "Export Table As...",
@@ -482,34 +533,9 @@ Public Class MainForm
             If sfd.ShowDialog() = DialogResult.OK Then
                 Select Case sfd.FilterIndex
                     Case 1 ' CSV
-                        Dim columnCount As Integer = dgv.Columns.Count - 1
-                        Dim rowCount As Integer = dgv.Rows.Count - 1
-                        Dim columnNames As String = ""
-                        Dim outputCsv As New List(Of String)
-
-                        For c = 0 To columnCount
-                            columnNames += dgv.Columns(c).HeaderText.ToString() + ","
-                        Next
-                        outputCsv.Add(columnNames)
-
-                        For i = 0 To rowCount - 1
-                            Dim rowItems As String = ""
-
-                            For j = 0 To columnCount
-                                rowItems += dgv.Rows(i).Cells(j).Value.ToString() + ","
-                            Next
-
-                            outputCsv.Add(rowItems)
-                        Next
-
-                        File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8)
+                        FileLogic.ToCsv(CurrentDGV, sfd.FileName)
                     Case 2 ' XML
-                        Dim sw = New StringWriter()
-                        DataTable.TableName = "Item"
-                        DataTable.WriteXml(sw, XmlWriteMode.IgnoreSchema)
-                        DataTable.TableName = ""
-
-                        File.WriteAllText(sfd.FileName, sw.ToString())
+                        FileLogic.ToXml(CurrentTable, sfd.FileName)
                 End Select
             End If
         Else
@@ -518,7 +544,7 @@ Public Class MainForm
     End Sub
 
     ''' <summary>
-    ''' Saves the written query as SQL.
+    ''' Saves the query as SQL.
     ''' </summary>
     Private Sub SaveQuery()
         Dim sfd As New SaveFileDialog With {
@@ -528,20 +554,24 @@ Public Class MainForm
         }
 
         If sfd.ShowDialog() = DialogResult.OK Then
-            File.WriteAllText(sfd.FileName, MyScintilla.Text, Encoding.UTF8)
+            FileLogic.ToSql(MyScintilla.Text, sfd.FileName)
         End If
     End Sub
+
+#End Region
+
+#Region "XPath"
 
     ''' <summary>
     ''' Executes the XPath expression written by the user.
     ''' </summary>
     Private Sub ExecuteXpath()
-        If dgv.RowCount > 0 Then
+        If CurrentDGV IsNot Nothing AndAlso CurrentDGV.RowCount > 0 Then
             Try
                 Dim sw = New StringWriter()
-                DataTable.TableName = "Item"
-                DataTable.WriteXml(sw, XmlWriteMode.IgnoreSchema)
-                DataTable.TableName = ""
+                CurrentTable.TableName = "Item"
+                CurrentTable.WriteXml(sw, XmlWriteMode.IgnoreSchema)
+                CurrentTable.TableName = ""
 
                 Dim xmlDoc As New XmlDocument
                 xmlDoc.LoadXml(sw.ToString)
@@ -566,52 +596,59 @@ Public Class MainForm
         End If
     End Sub
 
-    ''' <summary>
-    ''' Writes on the console.
-    ''' </summary>
-    ''' <param name="str">Message to log.</param>
-    Private Sub Log(str As String)
-        outputArea.AppendText("> " & DateTime.Now.TimeOfDay.ToString("hh\:mm\:ss") & " " & str & vbNewLine)
-    End Sub
+#End Region
 
-    ''' <summary>
-    ''' Empties the DGV.
-    ''' </summary>
-    Private Sub ClearDgv()
-        DataTable = Nothing
-        dgv.DataSource = DataTable
-        dgv.Refresh()
-    End Sub
+#Region "Events"
 
     Private Sub BtnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
-        ConnectToServer()
+        Connect()
     End Sub
 
     Private Sub BtnDisconnect_Click(sender As Object, e As EventArgs) Handles btnDisconnect.Click
-        DisconnectFromServer()
+        CloseSession()
     End Sub
 
     Private Sub CbDatabases_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbDatabases.SelectedIndexChanged
         btnSubmit.Enabled = False
         lbTableList.Items.Clear()
         ClearDgv()
-        RetrieveTables()
+        FillTablesListBox()
     End Sub
 
     Private Sub TableList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lbTableList.SelectedIndexChanged
-        SetSelectedTable()
+        If Not _ignoreTableListIndexChangedEvent Then
+            _ignoreTabControlSelectedEvent = True
+            SetSelectedTable()
+            _ignoreTabControlSelectedEvent = False
+        End If
     End Sub
 
-    Private Sub Dgv_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgv.DataError
-        Log(e.Exception.Message)
+    Private Sub TabControl_Selected(sender As Object, e As TabControlEventArgs) Handles TabControl.Selected
+        Dim index As Integer = TabControl.SelectedIndex
+        _ignoreTableListIndexChangedEvent = True
+
+        If index <> -1 And Not _ignoreTabControlSelectedEvent Then
+            Dim userTable As UserTable = CType(TabControl.TabPages(index).Controls(0), UserTable)
+
+            SetCurrentUserTable(userTable)
+            btnSubmit.Enabled = userTable.CanBeUpdated
+
+            If userTable.CanBeUpdated Then
+                lbTableList.SelectedItem = userTable.TableName
+            Else
+                lbTableList.SelectedIndex = -1
+            End If
+        End If
+
+        _ignoreTableListIndexChangedEvent = False
     End Sub
 
     Private Sub BtnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
-        SubmitFromDgv()
+        SubmitChanges()
     End Sub
 
     Private Sub BtnExecute_Click(sender As Object, e As EventArgs) Handles btnExecute.Click
-        ExecuteSqlCode()
+        ExecuteCode()
     End Sub
 
     Private Sub Scintilla_CharAdded(sender As Object, e As CharAddedEventArgs) Handles MyScintilla.CharAdded
@@ -678,12 +715,7 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
-        Try
-            MyConnection?.Close()
-        Catch
-        Finally
-            End
-        End Try
+        CloseSession()
     End Sub
 
     Private Sub BtnUndo_Click(sender As Object, e As EventArgs) Handles btnUndo.Click
@@ -719,7 +751,7 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
-        ExportTo()
+        Export()
     End Sub
 
     Private Sub BtnSaveSql_Click(sender As Object, e As EventArgs) Handles btnSaveSql.Click
@@ -730,115 +762,19 @@ Public Class MainForm
         ExecuteXpath()
     End Sub
 
-    Private Class CustomToolStripRenderer
-        Inherits ToolStripSystemRenderer
+    Private Sub XpathExpression_TextChanged(sender As Object, e As EventArgs) Handles xpathExpression.TextChanged
+        Dim selectionIndex As Integer = xpathExpression.SelectionStart
 
-        Protected Overrides Sub OnRenderToolStripBorder(e As ToolStripRenderEventArgs)
-
-        End Sub
-
-        Protected Overrides Sub OnRenderButtonBackground(e As ToolStripItemRenderEventArgs)
-            Dim btn = TryCast(e.Item, ToolStripButton)
-            Dim rectangle As New Rectangle(0, 0, e.Item.Size.Width - 1, e.Item.Size.Height - 1)
-            Dim selectedBrush As New SolidBrush(Color.FromArgb(44, 49, 59))
-            Dim checkedBrush As New SolidBrush(Color.FromArgb(53, 59, 67))
-            Dim pen As New Pen(Color.FromArgb(44, 49, 59))
-
-            If Not e.Item.Selected Then
-                MyBase.OnRenderButtonBackground(e)
+        If Not xpathExpression.Text.StartsWith("//") Then
+            xpathExpression.Text = "//"
+            If selectionIndex >= 1 Then
+                xpathExpression.SelectionStart = 2
             Else
-                e.Graphics.FillRectangle(selectedBrush, rectangle)
-                e.Graphics.DrawRectangle(pen, rectangle)
+                xpathExpression.SelectionStart = selectionIndex + 1
             End If
+        End If
+    End Sub
 
-            If btn IsNot Nothing AndAlso btn.CheckOnClick AndAlso btn.Checked Then
-                e.Graphics.FillRectangle(checkedBrush, rectangle)
-                e.Graphics.DrawRectangle(pen, rectangle)
-            End If
-
-        End Sub
-
-    End Class
-
-    Private Class MenuColorTable
-        Inherits ProfessionalColorTable
-
-        Public Sub New()
-            MyBase.UseSystemColors = False
-        End Sub
-
-        Public Overrides ReadOnly Property MenuBorder As Color
-            Get
-                Return Color.Empty
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property MenuItemBorder As Color
-            Get
-                Return Color.FromArgb(44, 49, 59)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property MenuItemSelectedGradientBegin As Color
-            Get
-                Return Color.FromArgb(44, 49, 59)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property MenuItemSelectedGradientEnd As Color
-            Get
-                Return Color.FromArgb(44, 49, 59)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property MenuItemPressedGradientBegin As Color
-            Get
-                Return Color.FromArgb(44, 49, 59)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property MenuItemPressedGradientMiddle As Color
-            Get
-                Return Color.FromArgb(44, 49, 59)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property MenuItemPressedGradientEnd As Color
-            Get
-                Return Color.FromArgb(44, 49, 59)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property ImageMarginGradientBegin As Color
-            Get
-                Return Color.FromArgb(53, 59, 67)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property ImageMarginGradientMiddle As Color
-            Get
-                Return Color.FromArgb(53, 59, 67)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property ImageMarginGradientEnd As Color
-            Get
-                Return Color.FromArgb(53, 59, 67)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property ToolStripDropDownBackground As Color
-            Get
-                Return Color.FromArgb(53, 59, 67)
-            End Get
-        End Property
-
-        Public Overrides ReadOnly Property MenuItemSelected As Color
-            Get
-                Return Color.FromArgb(44, 49, 59)
-            End Get
-        End Property
-
-    End Class
+#End Region
 
 End Class

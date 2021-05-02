@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.MSSQL_Admin.MainForm
+            Me.MainForm = Global.MSSQLA.UserInterface.MainForm
         End Sub
     End Class
 End Namespace

@@ -247,8 +247,8 @@ Public Class MainForm
     Private Sub ClearDgv()
         CurrentTable = Nothing
         CurrentDGV = Nothing
-        TabControl.TabPages.Clear()
         TabControl.Visible = False
+        TabControl.TabPages.Clear()
         GlobalTableCounter = 0
     End Sub
 
@@ -298,6 +298,7 @@ Public Class MainForm
 
             If TabControl.SelectedTab Is tab Then
                 SetCurrentUserTable(userTable)
+                btnSubmit.Enabled = userTable.CanBeUpdated
             End If
         Next
     End Sub
@@ -312,6 +313,7 @@ Public Class MainForm
         btnConnect.Enabled = True
         btnSubmit.Enabled = False
         btnExecute.Enabled = False
+        btnReload.Enabled = False
         cbDatabases.Enabled = False
         lblConnStatus.Text = "Disconnected"
         lblConnStatus.ForeColor = Color.IndianRed
@@ -352,6 +354,7 @@ Public Class MainForm
 
             btnExecute.Enabled = True
             btnDisconnect.Enabled = True
+            btnReload.Enabled = True
             cbDatabases.Enabled = True
             lblConnStatus.Text = "Connected"
             lblConnStatus.ForeColor = Color.PaleGreen
@@ -363,6 +366,7 @@ Public Class MainForm
             btnConnect.Enabled = True
             btnExecute.Enabled = False
             btnDisconnect.Enabled = False
+            btnReload.Enabled = False
             cbDatabases.Enabled = False
             lblConnStatus.Text = "Disconnected"
             lblConnStatus.ForeColor = Color.IndianRed
@@ -643,6 +647,10 @@ Public Class MainForm
         _ignoreTableListIndexChangedEvent = False
     End Sub
 
+    Private Sub BtnReload_Click(sender As Object, e As EventArgs) Handles btnReload.Click
+        FillDatabasesComboBox()
+    End Sub
+
     Private Sub BtnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
         SubmitChanges()
     End Sub
@@ -773,6 +781,29 @@ Public Class MainForm
                 xpathExpression.SelectionStart = selectionIndex + 1
             End If
         End If
+    End Sub
+
+    Private Sub btnCloseTab_Click(sender As Object, e As EventArgs) Handles btnCloseTab.Click
+        Dim index As Integer = TabControl.SelectedIndex
+        Dim tabToRemove As TabPage = TabControl.SelectedTab
+        Try
+            TabControl.SelectTab(index - 1)
+        Catch
+            Try
+                TabControl.SelectTab(index + 1)
+            Catch
+                ClearDgv()
+                lbTableList.SelectedIndex = -1
+            End Try
+        Finally
+            TabControl.TabPages.Remove(tabToRemove)
+        End Try
+
+    End Sub
+
+    Private Sub btnCloseAllTabs_Click(sender As Object, e As EventArgs) Handles btnCloseAllTabs.Click
+        ClearDgv()
+        lbTableList.SelectedIndex = -1
     End Sub
 
 #End Region

@@ -35,6 +35,9 @@ Partial Class MainForm
         Me.btnClearOutput = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnClearXpath = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnCloseTab = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnCloseAllTabs = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiEdit = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnUndo = New System.Windows.Forms.ToolStripMenuItem()
@@ -48,6 +51,7 @@ Partial Class MainForm
         Me.btnReplace = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnFind = New System.Windows.Forms.ToolStripMenuItem()
         Me.leftPanel = New System.Windows.Forms.Panel()
+        Me.btnReload = New FontAwesome.Sharp.IconButton()
         Me.btnExecute = New FontAwesome.Sharp.IconButton()
         Me.btnSubmit = New FontAwesome.Sharp.IconButton()
         Me.lblTables = New System.Windows.Forms.Label()
@@ -79,13 +83,9 @@ Partial Class MainForm
         Me.btnXpath = New System.Windows.Forms.ToolStripButton()
         Me.splitter1 = New System.Windows.Forms.Splitter()
         Me.mainPanel = New System.Windows.Forms.Panel()
-        Me.TabControl = New System.Windows.Forms.TabControl()
+        Me.TabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.MyAutocompleteMenu = New AutocompleteMenuNS.AutocompleteMenu()
         Me.MyImageList = New System.Windows.Forms.ImageList(Me.components)
-        Me.btnReload = New FontAwesome.Sharp.IconButton()
-        Me.btnCloseAllTabs = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnCloseTab = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
         Me.topPanel.SuspendLayout()
@@ -166,6 +166,34 @@ Partial Class MainForm
         Me.tsSeparator1.Padding = New System.Windows.Forms.Padding(2)
         Me.tsSeparator1.Size = New System.Drawing.Size(237, 6)
         '
+        'btnCloseTab
+        '
+        Me.btnCloseTab.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnCloseTab.ForeColor = System.Drawing.Color.White
+        Me.btnCloseTab.Name = "btnCloseTab"
+        Me.btnCloseTab.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnCloseTab.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
+        Me.btnCloseTab.Size = New System.Drawing.Size(244, 24)
+        Me.btnCloseTab.Text = "Close Tab"
+        '
+        'btnCloseAllTabs
+        '
+        Me.btnCloseAllTabs.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnCloseAllTabs.ForeColor = System.Drawing.Color.White
+        Me.btnCloseAllTabs.Name = "btnCloseAllTabs"
+        Me.btnCloseAllTabs.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnCloseAllTabs.ShortcutKeys = CType((System.Windows.Forms.Keys.Shift Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
+        Me.btnCloseAllTabs.Size = New System.Drawing.Size(244, 24)
+        Me.btnCloseAllTabs.Text = "Close All Tabs"
+        '
+        'tsSeparator5
+        '
+        Me.tsSeparator5.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.tsSeparator5.ForeColor = System.Drawing.Color.White
+        Me.tsSeparator5.Name = "tsSeparator5"
+        Me.tsSeparator5.Padding = New System.Windows.Forms.Padding(2)
+        Me.tsSeparator5.Size = New System.Drawing.Size(237, 6)
+        '
         'btnExit
         '
         Me.btnExit.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
@@ -192,7 +220,7 @@ Partial Class MainForm
         Me.btnUndo.Name = "btnUndo"
         Me.btnUndo.Padding = New System.Windows.Forms.Padding(2)
         Me.btnUndo.ShortcutKeyDisplayString = "Ctrl+Z"
-        Me.btnUndo.Size = New System.Drawing.Size(184, 24)
+        Me.btnUndo.Size = New System.Drawing.Size(177, 24)
         Me.btnUndo.Text = "Undo"
         '
         'btnRedo
@@ -202,7 +230,7 @@ Partial Class MainForm
         Me.btnRedo.Name = "btnRedo"
         Me.btnRedo.Padding = New System.Windows.Forms.Padding(2)
         Me.btnRedo.ShortcutKeyDisplayString = "Ctrl+Y"
-        Me.btnRedo.Size = New System.Drawing.Size(184, 24)
+        Me.btnRedo.Size = New System.Drawing.Size(177, 24)
         Me.btnRedo.Text = "Redo"
         '
         'tsSeparator2
@@ -211,7 +239,7 @@ Partial Class MainForm
         Me.tsSeparator2.ForeColor = System.Drawing.Color.White
         Me.tsSeparator2.Name = "tsSeparator2"
         Me.tsSeparator2.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator2.Size = New System.Drawing.Size(177, 6)
+        Me.tsSeparator2.Size = New System.Drawing.Size(170, 6)
         '
         'btnCut
         '
@@ -220,7 +248,7 @@ Partial Class MainForm
         Me.btnCut.Name = "btnCut"
         Me.btnCut.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCut.ShortcutKeyDisplayString = "Ctrl+X"
-        Me.btnCut.Size = New System.Drawing.Size(184, 24)
+        Me.btnCut.Size = New System.Drawing.Size(177, 24)
         Me.btnCut.Text = "Cut"
         '
         'btnCopy
@@ -230,7 +258,7 @@ Partial Class MainForm
         Me.btnCopy.Name = "btnCopy"
         Me.btnCopy.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCopy.ShortcutKeyDisplayString = "Ctrl+C"
-        Me.btnCopy.Size = New System.Drawing.Size(184, 24)
+        Me.btnCopy.Size = New System.Drawing.Size(177, 24)
         Me.btnCopy.Text = "Copy"
         '
         'btnPaste
@@ -240,7 +268,7 @@ Partial Class MainForm
         Me.btnPaste.Name = "btnPaste"
         Me.btnPaste.Padding = New System.Windows.Forms.Padding(2)
         Me.btnPaste.ShortcutKeyDisplayString = "Ctrl+V"
-        Me.btnPaste.Size = New System.Drawing.Size(184, 24)
+        Me.btnPaste.Size = New System.Drawing.Size(177, 24)
         Me.btnPaste.Text = "Paste"
         '
         'btnSelectAll
@@ -250,7 +278,7 @@ Partial Class MainForm
         Me.btnSelectAll.Name = "btnSelectAll"
         Me.btnSelectAll.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSelectAll.ShortcutKeyDisplayString = "Ctrl+A"
-        Me.btnSelectAll.Size = New System.Drawing.Size(184, 24)
+        Me.btnSelectAll.Size = New System.Drawing.Size(177, 24)
         Me.btnSelectAll.Text = "Select All"
         '
         'tsSeparator3
@@ -259,7 +287,7 @@ Partial Class MainForm
         Me.tsSeparator3.ForeColor = System.Drawing.Color.White
         Me.tsSeparator3.Name = "tsSeparator3"
         Me.tsSeparator3.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator3.Size = New System.Drawing.Size(177, 6)
+        Me.tsSeparator3.Size = New System.Drawing.Size(170, 6)
         '
         'btnReplace
         '
@@ -268,7 +296,7 @@ Partial Class MainForm
         Me.btnReplace.Name = "btnReplace"
         Me.btnReplace.Padding = New System.Windows.Forms.Padding(2)
         Me.btnReplace.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
-        Me.btnReplace.Size = New System.Drawing.Size(184, 24)
+        Me.btnReplace.Size = New System.Drawing.Size(177, 24)
         Me.btnReplace.Text = "Replace"
         '
         'btnFind
@@ -278,7 +306,7 @@ Partial Class MainForm
         Me.btnFind.Name = "btnFind"
         Me.btnFind.Padding = New System.Windows.Forms.Padding(2)
         Me.btnFind.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.btnFind.Size = New System.Drawing.Size(184, 24)
+        Me.btnFind.Size = New System.Drawing.Size(177, 24)
         Me.btnFind.Text = "Find"
         '
         'leftPanel
@@ -304,6 +332,25 @@ Partial Class MainForm
         Me.leftPanel.Name = "leftPanel"
         Me.leftPanel.Size = New System.Drawing.Size(269, 710)
         Me.leftPanel.TabIndex = 1
+        '
+        'btnReload
+        '
+        Me.btnReload.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnReload.Enabled = False
+        Me.btnReload.FlatAppearance.BorderSize = 0
+        Me.btnReload.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnReload.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnReload.ForeColor = System.Drawing.Color.White
+        Me.btnReload.IconChar = FontAwesome.Sharp.IconChar.SyncAlt
+        Me.btnReload.IconColor = System.Drawing.Color.White
+        Me.btnReload.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnReload.IconSize = 24
+        Me.btnReload.Location = New System.Drawing.Point(227, 30)
+        Me.btnReload.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
+        Me.btnReload.Name = "btnReload"
+        Me.btnReload.Size = New System.Drawing.Size(28, 25)
+        Me.btnReload.TabIndex = 13
+        Me.btnReload.UseVisualStyleBackColor = False
         '
         'btnExecute
         '
@@ -768,6 +815,7 @@ Partial Class MainForm
         'TabControl
         '
         Me.TabControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
         Me.TabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
         Me.TabControl.Location = New System.Drawing.Point(0, 285)
         Me.TabControl.Margin = New System.Windows.Forms.Padding(0)
@@ -776,7 +824,6 @@ Partial Class MainForm
         Me.TabControl.SelectedIndex = 0
         Me.TabControl.Size = New System.Drawing.Size(953, 225)
         Me.TabControl.TabIndex = 14
-        Me.TabControl.Visible = False
         '
         'MyAutocompleteMenu
         '
@@ -797,53 +844,6 @@ Partial Class MainForm
         Me.MyImageList.Images.SetKeyName(1, "operator.png")
         Me.MyImageList.Images.SetKeyName(2, "function.png")
         Me.MyImageList.Images.SetKeyName(3, "object.png")
-        '
-        'btnReload
-        '
-        Me.btnReload.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnReload.Enabled = False
-        Me.btnReload.FlatAppearance.BorderSize = 0
-        Me.btnReload.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnReload.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnReload.ForeColor = System.Drawing.Color.White
-        Me.btnReload.IconChar = FontAwesome.Sharp.IconChar.SyncAlt
-        Me.btnReload.IconColor = System.Drawing.Color.White
-        Me.btnReload.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnReload.IconSize = 24
-        Me.btnReload.Location = New System.Drawing.Point(227, 30)
-        Me.btnReload.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
-        Me.btnReload.Name = "btnReload"
-        Me.btnReload.Size = New System.Drawing.Size(28, 25)
-        Me.btnReload.TabIndex = 13
-        Me.btnReload.UseVisualStyleBackColor = False
-        '
-        'btnCloseAllTabs
-        '
-        Me.btnCloseAllTabs.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
-        Me.btnCloseAllTabs.ForeColor = System.Drawing.Color.White
-        Me.btnCloseAllTabs.Name = "btnCloseAllTabs"
-        Me.btnCloseAllTabs.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnCloseAllTabs.ShortcutKeys = CType((System.Windows.Forms.Keys.Shift Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
-        Me.btnCloseAllTabs.Size = New System.Drawing.Size(244, 24)
-        Me.btnCloseAllTabs.Text = "Close All Tabs"
-        '
-        'btnCloseTab
-        '
-        Me.btnCloseTab.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
-        Me.btnCloseTab.ForeColor = System.Drawing.Color.White
-        Me.btnCloseTab.Name = "btnCloseTab"
-        Me.btnCloseTab.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnCloseTab.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
-        Me.btnCloseTab.Size = New System.Drawing.Size(244, 24)
-        Me.btnCloseTab.Text = "Close Tab"
-        '
-        'tsSeparator5
-        '
-        Me.tsSeparator5.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
-        Me.tsSeparator5.ForeColor = System.Drawing.Color.White
-        Me.tsSeparator5.Name = "tsSeparator5"
-        Me.tsSeparator5.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator5.Size = New System.Drawing.Size(237, 6)
         '
         'MainForm
         '
@@ -932,7 +932,7 @@ Partial Class MainForm
     Friend WithEvents xpathEvaluatorPanel As Panel
     Friend WithEvents btnExecuteXpath As Button
     Friend WithEvents xpathExpression As TextBox
-    Friend WithEvents TabControl As TabControl
+    Friend WithEvents TabControl As CustomTabControl
     Friend WithEvents btnReload As IconButton
     Friend WithEvents btnCloseTab As ToolStripMenuItem
     Friend WithEvents btnCloseAllTabs As ToolStripMenuItem

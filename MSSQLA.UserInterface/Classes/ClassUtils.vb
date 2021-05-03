@@ -7,7 +7,7 @@
     Public Shared Property CurrentStatus As ConnectionStatus
     Public Shared Property CurrentTable As DataTable
     Public Shared Property CurrentDGV As DataGridView
-    Public Shared Property ConnectionTimeout = 5
+    Public Shared Property ConnectionTimeout As Integer = 5
 
     Public Enum ConnectionStatus
         Disconnected = 1

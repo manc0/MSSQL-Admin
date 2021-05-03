@@ -5,6 +5,7 @@ Imports ScintillaNET
 Imports ScintillaNET_FindReplaceDialog
 Imports MSSQLA.UserInterface.ClassUtils
 Imports MSSQLA.BusinessLogicLayer
+Imports FontAwesome.Sharp
 
 Public Class MainForm
     Private ReadOnly Property DatabaseLogic As New DatabaseLogic
@@ -22,6 +23,12 @@ Public Class MainForm
         InitializeAutoCompleteMenu()
         LoadConnectionSettings()
 
+        For Each control In leftPanel.Controls
+            If TypeOf control Is IconButton Then
+                SwitchIconButtonColor(control)
+            End If
+        Next
+
         MyMenuStrip.Renderer = New ToolStripProfessionalRenderer(New MenuColorTable())
 
         MyFindReplace = New FindReplace(MyScintilla) With {
@@ -30,6 +37,9 @@ Public Class MainForm
 
         MyToolStrip.RenderMode = ToolStripRenderMode.System
         MyToolStrip.Renderer = New CustomToolStripRenderer()
+        TabControl.ItemSize = New Size(0, 25)
+        TabControl.SizeMode = TabSizeMode.Normal
+        TabControl.DrawMode = DrawMode.OwnerDrawFixed
 
         Log("Welcome " & Environment.UserName & ".")
         MyBase.OnLoad(e)
@@ -245,11 +255,11 @@ Public Class MainForm
     ''' Empties the DGV.
     ''' </summary>
     Private Sub ClearDgv()
+        GlobalTableCounter = 0
         CurrentTable = Nothing
         CurrentDGV = Nothing
-        TabControl.Visible = False
         TabControl.TabPages.Clear()
-        GlobalTableCounter = 0
+        btnSubmit.Enabled = False
     End Sub
 
     ''' <summary>
@@ -267,9 +277,8 @@ Public Class MainForm
         _ignoreTabControlSelectedEvent = True
         If Not tabNames.Contains(tableName) Then
             Dim tab As New TabPage() With {
-                .Text = tabSymbol & tableName,
-                .Name = tableName,
-                .Margin = New Padding(30)
+                .Text = tabSymbol & tableName & "       ",
+                .Name = tableName
             }
             AddUserTableControl(tab, New UserTable(dt, canBeUpdated, tableName, databaseName))
 
@@ -282,7 +291,6 @@ Public Class MainForm
         End If
 
         _ignoreTabControlSelectedEvent = False
-        TabControl.Visible = True
     End Sub
 
     ''' <summary>
@@ -307,19 +315,38 @@ Public Class MainForm
     ''' Closes the current sesion and forces the user to connect again to the server.
     ''' </summary>
     Private Sub CloseSession()
+        ClearDgv()
         cbDatabases.Items.Clear()
         lbTableList.Items.Clear()
         btnDisconnect.Enabled = False
         btnConnect.Enabled = True
-        btnSubmit.Enabled = False
         btnExecute.Enabled = False
         btnReload.Enabled = False
         cbDatabases.Enabled = False
         lblConnStatus.Text = "Disconnected"
         lblConnStatus.ForeColor = Color.IndianRed
-        ClearDgv()
 
         Log("Connection closed.")
+    End Sub
+
+    ''' <summary>
+    ''' Switches Icon's color depending if the button is enabled or not.
+    ''' <param name="button">Button to check.</param>
+    ''' <param name="isExecuteButton">Optional parameter to check if the given button is the Execute one, which has other color.</param>
+    ''' </summary>
+    Private Sub SwitchIconButtonColor(button As IconButton, Optional isExecuteButton As Boolean = False)
+        Dim isEnabled As Boolean = button.Enabled
+
+        If isEnabled Then
+            If isExecuteButton Then
+                button.IconColor = Color.Lime
+            Else
+                button.IconColor = Color.White
+            End If
+            button.ForeColor = Color.White
+        Else
+            button.IconColor = Color.Gray
+        End If
     End Sub
 
 #End Region
@@ -335,10 +362,9 @@ Public Class MainForm
         Dim pass As String = tbPass.Text
         DatabaseLogic.SetConnection(server, user, pass, ConnectionTimeout)
 
+        ClearDgv()
         cbDatabases.Items.Clear()
         lbTableList.Items.Clear()
-        btnSubmit.Enabled = False
-        ClearDgv()
 
         Try
             lblConnStatus.Text = "Connecting..."
@@ -612,15 +638,26 @@ Public Class MainForm
         CloseSession()
     End Sub
 
+    Private Sub BtnReload_Click(sender As Object, e As EventArgs) Handles btnReload.Click
+        FillDatabasesComboBox()
+    End Sub
+
+    Private Sub BtnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
+        SubmitChanges()
+    End Sub
+
+    Private Sub BtnExecute_Click(sender As Object, e As EventArgs) Handles btnExecute.Click
+        ExecuteCode()
+    End Sub
+
     Private Sub CbDatabases_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbDatabases.SelectedIndexChanged
-        btnSubmit.Enabled = False
         lbTableList.Items.Clear()
         ClearDgv()
         FillTablesListBox()
     End Sub
 
     Private Sub TableList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lbTableList.SelectedIndexChanged
-        If Not _ignoreTableListIndexChangedEvent Then
+        If Not _ignoreTableListIndexChangedEvent And lbTableList.SelectedIndex <> -1 Then
             _ignoreTabControlSelectedEvent = True
             SetSelectedTable()
             _ignoreTabControlSelectedEvent = False
@@ -642,21 +679,34 @@ Public Class MainForm
             Else
                 lbTableList.SelectedIndex = -1
             End If
+        ElseIf index = -1 Then
+            btnSubmit.Enabled = False
         End If
 
         _ignoreTableListIndexChangedEvent = False
     End Sub
 
-    Private Sub BtnReload_Click(sender As Object, e As EventArgs) Handles btnReload.Click
-        FillDatabasesComboBox()
+    Private Sub BtnCloseTab_Click(sender As Object, e As EventArgs) Handles btnCloseTab.Click
+        If TabControl.TabCount > 0 Then
+            Dim index As Integer = TabControl.SelectedIndex
+            Dim tabToRemove As TabPage = TabControl.SelectedTab
+            Try
+                TabControl.SelectTab(index + 1)
+            Catch
+                Try
+                    TabControl.SelectTab(index - 1)
+                Catch
+                    lbTableList.SelectedIndex = -1
+                End Try
+            Finally
+                TabControl.TabPages.Remove(tabToRemove)
+            End Try
+        End If
     End Sub
 
-    Private Sub BtnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
-        SubmitChanges()
-    End Sub
-
-    Private Sub BtnExecute_Click(sender As Object, e As EventArgs) Handles btnExecute.Click
-        ExecuteCode()
+    Private Sub BtnCloseAllTabs_Click(sender As Object, e As EventArgs) Handles btnCloseAllTabs.Click
+        ClearDgv()
+        lbTableList.SelectedIndex = -1
     End Sub
 
     Private Sub Scintilla_CharAdded(sender As Object, e As CharAddedEventArgs) Handles MyScintilla.CharAdded
@@ -710,6 +760,19 @@ Public Class MainForm
         Else
             splitter1.Visible = False
             bottomPanel.Visible = False
+        End If
+    End Sub
+
+    Private Sub XpathExpression_TextChanged(sender As Object, e As EventArgs) Handles xpathExpression.TextChanged
+        Dim selectionIndex As Integer = xpathExpression.SelectionStart
+
+        If Not xpathExpression.Text.StartsWith("//") Then
+            xpathExpression.Text = "//"
+            If selectionIndex >= 1 Then
+                xpathExpression.SelectionStart = 2
+            Else
+                xpathExpression.SelectionStart = selectionIndex + 1
+            End If
         End If
     End Sub
 
@@ -770,40 +833,24 @@ Public Class MainForm
         ExecuteXpath()
     End Sub
 
-    Private Sub XpathExpression_TextChanged(sender As Object, e As EventArgs) Handles xpathExpression.TextChanged
-        Dim selectionIndex As Integer = xpathExpression.SelectionStart
-
-        If Not xpathExpression.Text.StartsWith("//") Then
-            xpathExpression.Text = "//"
-            If selectionIndex >= 1 Then
-                xpathExpression.SelectionStart = 2
-            Else
-                xpathExpression.SelectionStart = selectionIndex + 1
-            End If
-        End If
+    Private Sub BtnExecute_EnabledChanged(sender As Object, e As EventArgs) Handles btnExecute.EnabledChanged
+        SwitchIconButtonColor(sender, True)
     End Sub
 
-    Private Sub btnCloseTab_Click(sender As Object, e As EventArgs) Handles btnCloseTab.Click
-        Dim index As Integer = TabControl.SelectedIndex
-        Dim tabToRemove As TabPage = TabControl.SelectedTab
-        Try
-            TabControl.SelectTab(index - 1)
-        Catch
-            Try
-                TabControl.SelectTab(index + 1)
-            Catch
-                ClearDgv()
-                lbTableList.SelectedIndex = -1
-            End Try
-        Finally
-            TabControl.TabPages.Remove(tabToRemove)
-        End Try
-
+    Private Sub BtnSubmit_EnabledChanged(sender As Object, e As EventArgs) Handles btnSubmit.EnabledChanged
+        SwitchIconButtonColor(sender)
     End Sub
 
-    Private Sub btnCloseAllTabs_Click(sender As Object, e As EventArgs) Handles btnCloseAllTabs.Click
-        ClearDgv()
-        lbTableList.SelectedIndex = -1
+    Private Sub BtnConnect_EnabledChanged(sender As Object, e As EventArgs) Handles btnConnect.EnabledChanged
+        SwitchIconButtonColor(sender)
+    End Sub
+
+    Private Sub BtnDisconnect_EnabledChanged(sender As Object, e As EventArgs) Handles btnDisconnect.EnabledChanged
+        SwitchIconButtonColor(sender)
+    End Sub
+
+    Private Sub BtnReload_EnabledChanged(sender As Object, e As EventArgs) Handles btnReload.EnabledChanged
+        SwitchIconButtonColor(sender)
     End Sub
 
 #End Region

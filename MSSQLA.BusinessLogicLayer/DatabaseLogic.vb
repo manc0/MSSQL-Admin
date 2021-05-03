@@ -34,11 +34,11 @@ Public Class DatabaseLogic
     ''' <returns></returns>
     Public Function GetTablesListFromDatabase(database As String) As List(Of String)
         Dim tableList As New List(Of String)()
-        Dim sqlQuery = "SELECT TABLE_NAME FROM " & database & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'"
+        Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM " & database & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'"
         Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
 
         While (reader.Read())
-            tableList.Add(reader.GetString(0))
+            tableList.Add(reader.GetString(0) + "." + reader.GetString(1))
         End While
 
         reader.Close()

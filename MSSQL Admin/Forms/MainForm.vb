@@ -486,7 +486,7 @@ Public Class MainForm
             Dim sqlCode As String = IIf(MyScintilla.SelectedText.Length > 0, MyScintilla.SelectedText, MyScintilla.Text)
             Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
 
-            If MyScintilla.Text.IndexOf("USE", 0, StringComparison.CurrentCultureIgnoreCase) = -1 And Not IsNothing(databaseName) Then
+            If MyScintilla.Text.IndexOf("USE ", 0, StringComparison.CurrentCultureIgnoreCase) = -1 And Not IsNothing(databaseName) Then
                 sqlCode = "USE " & databaseName & vbNewLine & sqlCode
             End If
 

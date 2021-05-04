@@ -681,27 +681,14 @@ Public Class MainForm
             End If
         ElseIf index = -1 Then
             btnSubmit.Enabled = False
+            lbTableList.SelectedIndex = -1
         End If
 
         _ignoreTableListIndexChangedEvent = False
     End Sub
 
     Private Sub BtnCloseTab_Click(sender As Object, e As EventArgs) Handles btnCloseTab.Click
-        If TabControl.TabCount > 0 Then
-            Dim index As Integer = TabControl.SelectedIndex
-            Dim tabToRemove As TabPage = TabControl.SelectedTab
-            Try
-                TabControl.SelectTab(index + 1)
-            Catch
-                Try
-                    TabControl.SelectTab(index - 1)
-                Catch
-                    lbTableList.SelectedIndex = -1
-                End Try
-            Finally
-                TabControl.TabPages.Remove(tabToRemove)
-            End Try
-        End If
+        TabControl.CloseTabAt(TabControl.SelectedIndex)
     End Sub
 
     Private Sub BtnCloseAllTabs_Click(sender As Object, e As EventArgs) Handles btnCloseAllTabs.Click

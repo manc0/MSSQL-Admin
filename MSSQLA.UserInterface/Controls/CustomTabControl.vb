@@ -5,7 +5,7 @@ Public Class CustomTabControl
     Inherits TabControl
 
     Private SelectedTabColor As Color = Color.FromArgb(77, 122, 200)
-    Private HotTabColor As Color = Color.FromArgb(77, 140, 200)
+    Private HotTabColor As Color = Color.FromArgb(77, 144, 200)
     Private DefaultColor As Color = Color.FromArgb(40, 44, 52)
 
 #Region " Windows Form Designer generated code "
@@ -113,16 +113,7 @@ Public Class CustomTabControl
             Dim pt As Point = Me.PointToClient(Cursor.Position)
             Dim closeRect As Rectangle = GetCloseButtonRect(HotTabIndex)
             If closeRect.Contains(pt) Then
-                Try
-                    SelectTab(HotTabIndex + 1)
-                Catch
-                    Try
-                        SelectTab(HotTabIndex - 1)
-                    Catch
-                    End Try
-                Finally
-                    TabPages.RemoveAt(HotTabIndex)
-                End Try
+                CloseTabAt(HotTabIndex)
 
                 m.Msg = WM_NULL
             End If
@@ -209,6 +200,29 @@ Public Class CustomTabControl
     Protected Overrides Sub OnMouseLeave(e As System.EventArgs)
         MyBase.OnMouseLeave(e)
         HotTabIndex = -1
+    End Sub
+
+#End Region
+
+#Region "Public Methods"
+
+    ''' <summary>
+    ''' Closes the specified tab and selects the next one.
+    ''' </summary>
+    ''' <param name="index"></param>
+    Public Sub CloseTabAt(index As Integer)
+        If TabCount > 0 Then
+            Try
+                SelectTab(index + 1)
+            Catch
+                Try
+                    SelectTab(index - 1)
+                Catch
+                End Try
+            Finally
+                TabPages.RemoveAt(index)
+            End Try
+        End If
     End Sub
 
 #End Region

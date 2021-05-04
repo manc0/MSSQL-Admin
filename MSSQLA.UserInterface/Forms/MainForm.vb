@@ -1,8 +1,5 @@
 ﻿Imports System.IO
 Imports System.Xml
-Imports AutocompleteMenuNS
-Imports ScintillaNET
-Imports ScintillaNET_FindReplaceDialog
 Imports MSSQLA.UserInterface.ClassUtils
 Imports MSSQLA.BusinessLogicLayer
 Imports FontAwesome.Sharp
@@ -11,6 +8,7 @@ Public Class MainForm
     Private ReadOnly Property DatabaseLogic As New DatabaseLogic
     Private ReadOnly Property FileLogic As New FileLogic
     Private Property GlobalTableCounter As Integer
+    Private Property GlobalNewEditorCounter As Integer
 
     ' Flags that avoid triggering events recursively
     Private _ignoreTableListIndexChangedEvent As Boolean = False
@@ -19,8 +17,6 @@ Public Class MainForm
 #Region "Form Initialization"
 
     Protected Overrides Sub OnLoad(e As EventArgs)
-        InitializeScintilla()
-        InitializeAutoCompleteMenu()
         LoadConnectionSettings()
 
         For Each control In leftPanel.Controls
@@ -30,204 +26,20 @@ Public Class MainForm
         Next
 
         MyMenuStrip.Renderer = New ToolStripProfessionalRenderer(New MenuColorTable())
-
-        MyFindReplace = New FindReplace(MyScintilla) With {
-            .Scintilla = MyScintilla
-        }
-
         MyToolStrip.RenderMode = ToolStripRenderMode.System
         MyToolStrip.Renderer = New CustomToolStripRenderer()
-        TabControl.ItemSize = New Size(0, 25)
-        TabControl.SizeMode = TabSizeMode.Normal
-        TabControl.DrawMode = DrawMode.OwnerDrawFixed
+
+        TablesTabControl.ItemSize = New Size(0, 25)
+        TablesTabControl.SizeMode = TabSizeMode.Normal
+        TablesTabControl.DrawMode = DrawMode.OwnerDrawFixed
+
+        EditorsTabControl.ItemSize = New Size(0, 25)
+        EditorsTabControl.SizeMode = TabSizeMode.Normal
+        EditorsTabControl.DrawMode = DrawMode.OwnerDrawFixed
+        EditorsTabControl.Visible = False
 
         Log("Welcome " & Environment.UserName & ".")
         MyBase.OnLoad(e)
-    End Sub
-
-    ''' <summary>
-    ''' Loads Scintilla settings.
-    ''' </summary>
-    Private Sub InitializeScintilla()
-        Dim backColor As Color = Color.FromArgb(40, 44, 52)
-        Dim selectionColor As Color = Color.FromArgb(255, 38, 79, 120)
-
-        ' Reset the styles.
-        MyScintilla.StyleResetDefault()
-        MyScintilla.Styles(Style.[Default]).Font = "Consolas"
-        MyScintilla.Styles(Style.[Default]).Size = 12
-        MyScintilla.StyleClearAll()
-
-        ' Lexer
-        MyScintilla.Lexer = Lexer.Sql
-
-        ' Margin
-        MyScintilla.Margins(0).Width = 50
-
-        ' Disable whitespaces visibility.
-        MyScintilla.ViewWhitespace = WhitespaceMode.Invisible
-
-        ' Set the common editor colors.
-        MyScintilla.CaretForeColor = Color.FromArgb(1, 77, 122, 200)
-        MyScintilla.CaretWidth = 2
-        MyScintilla.SetSelectionBackColor(True, selectionColor)
-
-        ' Syntax highlight
-        With MyScintilla
-            .Styles(Style.Default).BackColor = backColor
-
-            .Styles(Style.LineNumber).ForeColor = Color.FromArgb(1, 149, 159, 161)
-            .Styles(Style.LineNumber).BackColor = backColor
-
-            .Styles(Style.Sql.Default).ForeColor = Color.LightGray
-            .Styles(Style.Sql.Default).BackColor = backColor
-            .Styles(Style.Sql.Default).Bold = False
-            .Styles(Style.Sql.Default).Italic = False
-            .Styles(Style.Sql.Default).Underline = False
-
-            .Styles(Style.Sql.Comment).ForeColor = Color.FromArgb(255, 87, 159, 56)
-            .Styles(Style.Sql.Comment).BackColor = backColor
-            .Styles(Style.Sql.Comment).Bold = False
-            .Styles(Style.Sql.Comment).Italic = True
-            .Styles(Style.Sql.Comment).Underline = False
-
-            .Styles(Style.Sql.CommentLine).ForeColor = Color.FromArgb(255, 87, 159, 56)
-            .Styles(Style.Sql.CommentLine).BackColor = backColor
-            .Styles(Style.Sql.CommentLine).Bold = False
-            .Styles(Style.Sql.CommentLine).Italic = True
-            .Styles(Style.Sql.CommentLine).Underline = False
-
-            .Styles(Style.Sql.CommentLineDoc).ForeColor = Color.FromArgb(255, 87, 159, 56)
-            .Styles(Style.Sql.CommentLineDoc).BackColor = backColor
-            .Styles(Style.Sql.CommentLineDoc).Bold = False
-            .Styles(Style.Sql.CommentLineDoc).Italic = True
-            .Styles(Style.Sql.CommentLineDoc).Underline = False
-
-            .Styles(Style.Sql.Word).ForeColor = Color.FromArgb(255, 100, 150, 215)
-            .Styles(Style.Sql.Word).BackColor = backColor
-            .Styles(Style.Sql.Word).Bold = False
-            .Styles(Style.Sql.Word).Italic = False
-            .Styles(Style.Sql.Word).Underline = False
-
-            .Styles(Style.Sql.Word2).ForeColor = Color.HotPink
-            .Styles(Style.Sql.Word2).BackColor = backColor
-            .Styles(Style.Sql.Word2).Bold = False
-            .Styles(Style.Sql.Word2).Italic = False
-            .Styles(Style.Sql.Word2).Underline = False
-
-            .Styles(Style.Sql.User1).ForeColor = Color.FromArgb(255, 62, 201, 174)
-            .Styles(Style.Sql.User1).BackColor = backColor
-            .Styles(Style.Sql.User1).Bold = False
-            .Styles(Style.Sql.User1).Italic = False
-            .Styles(Style.Sql.User1).Underline = False
-
-            .Styles(Style.Sql.User2).ForeColor = Color.IndianRed
-            .Styles(Style.Sql.User2).BackColor = backColor
-            .Styles(Style.Sql.User2).Bold = False
-            .Styles(Style.Sql.User2).Italic = False
-            .Styles(Style.Sql.User2).Underline = False
-
-            .Styles(Style.Sql.Identifier).BackColor = backColor
-            .Styles(Style.Sql.Identifier).ForeColor = Color.LightGray
-            .Styles(Style.Sql.Identifier).Bold = False
-            .Styles(Style.Sql.Identifier).Italic = False
-            .Styles(Style.Sql.Identifier).Underline = False
-
-            .Styles(Style.Sql.Number).BackColor = backColor
-            .Styles(Style.Sql.Number).ForeColor = Color.FromArgb(255, 181, 206, 168)
-            .Styles(Style.Sql.Number).Bold = False
-            .Styles(Style.Sql.Number).Italic = False
-            .Styles(Style.Sql.Number).Underline = False
-
-            .Styles(Style.Sql.Operator).BackColor = backColor
-            .Styles(Style.Sql.Operator).ForeColor = Color.LightSlateGray
-            .Styles(Style.Sql.Operator).Bold = True
-            .Styles(Style.Sql.Operator).Italic = False
-            .Styles(Style.Sql.Operator).Underline = False
-
-            .Styles(Style.Sql.String).BackColor = backColor
-            .Styles(Style.Sql.String).ForeColor = Color.FromArgb(255, 214, 157, 133)
-            .Styles(Style.Sql.String).Bold = False
-            .Styles(Style.Sql.String).Italic = False
-            .Styles(Style.Sql.String).Underline = False
-
-            .Styles(Style.Sql.Character).ForeColor = Color.FromArgb(255, 214, 157, 133)
-            .Styles(Style.Sql.Character).BackColor = backColor
-            .Styles(Style.Sql.Character).Bold = False
-            .Styles(Style.Sql.Character).Italic = False
-            .Styles(Style.Sql.Character).Underline = False
-        End With
-
-        ' Keywords
-        MyScintilla.SetKeywords(0, SQL_KEYWORDS)
-        MyScintilla.SetKeywords(1, SQL_FUNCTIONS)
-        MyScintilla.SetKeywords(4, SQL_OPERATORS)
-        MyScintilla.SetKeywords(5, SQL_OBJECTS)
-
-        ' Instruct the lexer to calculate folding
-        MyScintilla.SetProperty("fold", "1")
-        MyScintilla.SetProperty("fold.compact", "1")
-
-        ' Configure a margin to display folding symbols
-        MyScintilla.Margins(2).Type = MarginType.Symbol
-        MyScintilla.Margins(2).Mask = Marker.MaskFolders
-        MyScintilla.Margins(2).Sensitive = True
-        MyScintilla.Margins(2).Width = 13
-
-        ' Configure folding markers with respective symbols
-        MyScintilla.Markers(Marker.Folder).Symbol = MarkerSymbol.Arrow
-        MyScintilla.Markers(Marker.FolderOpen).Symbol = MarkerSymbol.ArrowDown
-        MyScintilla.Markers(Marker.FolderEnd).Symbol = MarkerSymbol.Arrow
-
-        MyScintilla.Markers(Marker.FolderMidTail).Symbol = MarkerSymbol.VLine
-        MyScintilla.Markers(Marker.FolderOpenMid).Symbol = MarkerSymbol.ArrowDown
-
-        MyScintilla.Markers(Marker.FolderSub).Symbol = MarkerSymbol.VLine
-        MyScintilla.Markers(Marker.FolderTail).Symbol = MarkerSymbol.VLine
-
-        ' Set colors for all folding markers
-        For i As Integer = Marker.FolderEnd To Marker.FolderOpen
-            MyScintilla.Markers(i).SetForeColor(backColor)
-            MyScintilla.Markers(i).SetBackColor(Color.FromArgb(1, 149, 159, 161))
-        Next i
-
-        ' Enable automatic folding
-        MyScintilla.AutomaticFold = (AutomaticFold.Show Or AutomaticFold.Click Or AutomaticFold.Change)
-
-        MyScintilla.SetFoldMarginColor(True, backColor)
-        MyScintilla.SetFoldMarginHighlightColor(True, backColor)
-
-        MyScintilla.SetFoldMarginColor(True, backColor)
-        MyScintilla.SetFoldMarginHighlightColor(True, backColor)
-        MyScintilla.IndentationGuides = IndentView.LookBoth
-        MyScintilla.Select()
-    End Sub
-
-    ''' <summary>
-    ''' Fills the autocompletemenu.
-    ''' </summary>
-    Private Sub InitializeAutoCompleteMenu()
-        MyAutocompleteMenu.TargetControlWrapper = New ScintillaWrapper(MyScintilla)
-
-        Array.ForEach(SQL_KEYWORDS.Split(" "), Function(item)
-                                                   MyAutocompleteMenu.AddItem(New SnippetAutocompleteItem(item) With {.ImageIndex = 0, .ToolTipTitle = "SQL Keywords"})
-                                                   Return True
-                                               End Function)
-
-        Array.ForEach(SQL_OPERATORS.Split(" "), Function(item)
-                                                    MyAutocompleteMenu.AddItem(New SnippetAutocompleteItem(item) With {.ImageIndex = 1, .ToolTipTitle = "SQL Logical and Relational Operators"})
-                                                    Return True
-                                                End Function)
-
-        Array.ForEach(SQL_FUNCTIONS.Split(" "), Function(item)
-                                                    MyAutocompleteMenu.AddItem(New SnippetAutocompleteItem(item) With {.ImageIndex = 2, .ToolTipTitle = "SQL Functions"})
-                                                    Return True
-                                                End Function)
-
-        Array.ForEach(SQL_OBJECTS.Split(" "), Function(item)
-                                                  MyAutocompleteMenu.AddItem(New SnippetAutocompleteItem(item) With {.ImageIndex = 3, .ToolTipTitle = "SQL Objects"})
-                                                  Return True
-                                              End Function)
     End Sub
 
     ''' <summary>
@@ -257,8 +69,7 @@ Public Class MainForm
     Private Sub ClearDgv()
         GlobalTableCounter = 0
         CurrentTable = Nothing
-        CurrentDGV = Nothing
-        TabControl.TabPages.Clear()
+        TablesTabControl.TabPages.Clear()
         btnSubmit.Enabled = False
     End Sub
 
@@ -270,42 +81,62 @@ Public Class MainForm
     ''' <param name="databaseName">Name of the database which the table belongs to.</param>
     ''' <param name="canBeUpdated">Used to indicate wether the table can be updated from the DGV or not.</param>
     Private Sub AddNewTable(dt As DataTable, tableName As String, databaseName As String, canBeUpdated As Boolean)
-        Dim tabNames = From tabs In TabControl.TabPages.Cast(Of TabPage)
+        Dim tabNames = From tabs In TablesTabControl.TabPages.Cast(Of TabPage)
                        Select tabs.Name
         Dim tabSymbol As String = IIf(canBeUpdated, "✎", "👁") & " "
 
         _ignoreTabControlSelectedEvent = True
         If Not tabNames.Contains(tableName) Then
             Dim tab As New TabPage() With {
-                .Text = tabSymbol & tableName & "       ",
+                .Text = tabSymbol & tableName & TabTextOffset,
                 .Name = tableName
             }
-            AddUserTableControl(tab, New UserTable(dt, canBeUpdated, tableName, databaseName))
+            AddControlToTab(tab, New UserTable(dt, canBeUpdated, tableName, databaseName))
 
-            TabControl.TabPages.Add(tab)
-            TabControl.SelectTab(tab)
+            TablesTabControl.AddTab(tab)
+            TablesTabControl.SelectTab(tab)
         Else
-            TabControl.SelectTab(tableName)
-            Dim tab = TabControl.SelectedTab
-            AddUserTableControl(tab, New UserTable(dt, canBeUpdated, tableName, databaseName))
+            TablesTabControl.SelectTab(tableName)
+            Dim tab = TablesTabControl.SelectedTab
+            AddControlToTab(tab, New UserTable(dt, canBeUpdated, tableName, databaseName))
         End If
 
         _ignoreTabControlSelectedEvent = False
     End Sub
 
+    Private Sub AddNewEditor()
+        If EditorsTabControl.TabPages.Count = 1 Then
+            EditorsTabControl.Visible = True
+        End If
+
+        GlobalNewEditorCounter += 1
+
+        Dim tab As New TabPage() With {
+            .Text = "New " & GlobalNewEditorCounter & TabTextOffset,
+            .Name = "New SQL File"
+        }
+        Dim userEditor As New UserEditor(GlobalNewEditorCounter)
+        AddControlToTab(tab, userEditor)
+
+        EditorsTabControl.AddTab(tab)
+        EditorsTabControl.SelectTab(tab)
+
+        userEditor.Scintilla.Select()
+    End Sub
+
     ''' <summary>
     ''' Updates all tabs if their tables got any changes made by the user after a manual insert, update or delete.
     ''' </summary>
-    Private Sub UpdateTabs()
-        For Each tab As TabPage In TabControl.TabPages
+    Private Sub UpdateAllTables()
+        For Each tab As TabPage In TablesTabControl.TabPages
             Dim userTable As UserTable = CType(tab.Controls(0), UserTable)
 
             If userTable.CanBeUpdated Then
                 userTable.UpdateTable()
             End If
 
-            If TabControl.SelectedTab Is tab Then
-                SetCurrentUserTable(userTable)
+            If TablesTabControl.SelectedTab Is tab Then
+                SetCurrentTable(userTable)
                 btnSubmit.Enabled = userTable.CanBeUpdated
             End If
         Next
@@ -486,18 +317,18 @@ Public Class MainForm
     ''' Submits all changes on the DGV to the server.
     ''' </summary>
     Private Sub SubmitChanges()
-        Dim tableName As String = CType(TabControl.SelectedTab.Controls(0), UserTable).TableName
-        Dim databaseName As String = CType(TabControl.SelectedTab.Controls(0), UserTable).DatabaseName
+        Dim tableName As String = CType(TablesTabControl.SelectedTab.Controls(0), UserTable).TableName
+        Dim databaseName As String = CType(TablesTabControl.SelectedTab.Controls(0), UserTable).DatabaseName
         If IsNothing(databaseName) Or IsNothing(tableName) Then Return
 
-        If CurrentTable.GetChanges() IsNot Nothing Then
+        If CurrentTable.Changes IsNot Nothing Then
             Dim dr As DialogResult = MessageBox.Show("Are you sure to submit changes?", "Submit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
 
             If dr = DialogResult.Yes Then
-                CurrentDGV.EndEdit()
+                CurrentTable.EndEdit()
 
                 Try
-                    DatabaseLogic.UpdateDataTable(tableName, databaseName, CurrentTable)
+                    DatabaseLogic.UpdateDataTable(tableName, databaseName, CurrentTable.DataTable)
                     Log("Changes submitted to server.")
                 Catch ex As Exception
                     Log(ex.Message)
@@ -512,11 +343,11 @@ Public Class MainForm
     ''' Executes the code written by user on the server.
     ''' </summary>
     Private Sub ExecuteCode()
-        If Not String.IsNullOrEmpty(MyScintilla.Text) Then
-            Dim sqlCode As String = IIf(MyScintilla.SelectedText.Length > 0, MyScintilla.SelectedText, MyScintilla.Text)
+        If Not String.IsNullOrEmpty(CurrentEditor.GetText) Then
+            Dim sqlCode As String = IIf(CurrentEditor.GetSelectedText.Length > 0, CurrentEditor.GetSelectedText, CurrentEditor.GetText)
             Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
 
-            If MyScintilla.Text.IndexOf("USE ", 0, StringComparison.CurrentCultureIgnoreCase) = -1 And Not IsNothing(databaseName) Then
+            If CurrentEditor.GetText.IndexOf("USE ", 0, StringComparison.CurrentCultureIgnoreCase) = -1 And Not IsNothing(databaseName) Then
                 sqlCode = "USE " & databaseName & vbNewLine & sqlCode
             End If
 
@@ -536,7 +367,7 @@ Public Class MainForm
                 Log("Execution succesful. " & recordsAffected & " record(s) affected.")
                 FillDatabasesComboBox()
                 FillTablesListBox()
-                UpdateTabs()
+                UpdateAllTables()
             Catch ex As Exception
                 Log(ex.Message)
             End Try
@@ -553,7 +384,7 @@ Public Class MainForm
     ''' Exports the current table that's being displayed in the DGV.
     ''' </summary>
     Private Sub Export()
-        If CurrentDGV IsNot Nothing AndAlso CurrentDGV.RowCount > 0 Then
+        If CurrentTable IsNot Nothing AndAlso CurrentTable.RowCount > 0 Then
             Dim sfd As New SaveFileDialog With {
                     .Filter = "CSV File(*.csv)|*.csv|XML File(*.xml)|*.xml",
                     .Title = "Export Table As...",
@@ -563,9 +394,9 @@ Public Class MainForm
             If sfd.ShowDialog() = DialogResult.OK Then
                 Select Case sfd.FilterIndex
                     Case 1 ' CSV
-                        FileLogic.ToCsv(CurrentDGV, sfd.FileName)
+                        FileLogic.ToCsv(CurrentTable.DataGridView, sfd.FileName)
                     Case 2 ' XML
-                        FileLogic.ToXml(CurrentTable, sfd.FileName)
+                        FileLogic.ToXml(CurrentTable.DataTable, sfd.FileName)
                 End Select
             End If
         Else
@@ -584,7 +415,7 @@ Public Class MainForm
         }
 
         If sfd.ShowDialog() = DialogResult.OK Then
-            FileLogic.ToSql(MyScintilla.Text, sfd.FileName)
+            FileLogic.ToSql(CurrentEditor.GetText, sfd.FileName)
         End If
     End Sub
 
@@ -596,12 +427,13 @@ Public Class MainForm
     ''' Executes the XPath expression written by the user.
     ''' </summary>
     Private Sub ExecuteXpath()
-        If CurrentDGV IsNot Nothing AndAlso CurrentDGV.RowCount > 0 Then
+        If CurrentTable IsNot Nothing AndAlso CurrentTable.RowCount > 0 Then
             Try
                 Dim sw = New StringWriter()
-                CurrentTable.TableName = "Item"
-                CurrentTable.WriteXml(sw, XmlWriteMode.IgnoreSchema)
-                CurrentTable.TableName = ""
+                Dim dataTable = CurrentTable.DataTable
+                dataTable.TableName = "Item"
+                dataTable.WriteXml(sw, XmlWriteMode.IgnoreSchema)
+                dataTable.TableName = ""
 
                 Dim xmlDoc As New XmlDocument
                 xmlDoc.LoadXml(sw.ToString)
@@ -664,14 +496,14 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub TabControl_Selected(sender As Object, e As TabControlEventArgs) Handles TabControl.Selected
-        Dim index As Integer = TabControl.SelectedIndex
+    Private Sub TablesTabControl_Selected(sender As Object, e As TabControlEventArgs) Handles TablesTabControl.Selected
+        Dim index As Integer = TablesTabControl.SelectedIndex
         _ignoreTableListIndexChangedEvent = True
 
         If index <> -1 And Not _ignoreTabControlSelectedEvent Then
-            Dim userTable As UserTable = CType(TabControl.TabPages(index).Controls(0), UserTable)
+            Dim userTable As UserTable = CType(TablesTabControl.TabPages(index).Controls(0), UserTable)
 
-            SetCurrentUserTable(userTable)
+            SetCurrentTable(userTable)
             btnSubmit.Enabled = userTable.CanBeUpdated
 
             If userTable.CanBeUpdated Then
@@ -687,35 +519,37 @@ Public Class MainForm
         _ignoreTableListIndexChangedEvent = False
     End Sub
 
+    Private Sub EditorsTabControl_Selected(sender As Object, e As TabControlEventArgs) Handles EditorsTabControl.Selected
+        Dim index As Integer = EditorsTabControl.SelectedIndex
+        Dim lastIndex As Integer = EditorsTabControl.TabPages.Count - 1
+
+        If index <> -1 And index <> lastIndex Then
+            Dim userEditor As UserEditor = CType(EditorsTabControl.TabPages(index).Controls(0), UserEditor)
+            userEditor.Zoom = CurrentZoom
+            userEditor.Scintilla.Select()
+
+            SetCurrentEditor(userEditor)
+        End If
+    End Sub
+
+    Private Sub EditorsTabControl_OnAddButtonClick() Handles EditorsTabControl.OnAddButtonClick
+        AddNewEditor()
+    End Sub
+
+    Private Sub EditorsTabControl_OnTabClose() Handles EditorsTabControl.OnTabClose
+        If EditorsTabControl.TabPages.Count = 1 Then
+            EditorsTabControl.Visible = False
+            GlobalNewEditorCounter = 0
+        End If
+    End Sub
+
     Private Sub BtnCloseTab_Click(sender As Object, e As EventArgs) Handles btnCloseTab.Click
-        TabControl.CloseTabAt(TabControl.SelectedIndex)
+        TablesTabControl.CloseTabAt(TablesTabControl.SelectedIndex)
     End Sub
 
     Private Sub BtnCloseAllTabs_Click(sender As Object, e As EventArgs) Handles btnCloseAllTabs.Click
         ClearDgv()
         lbTableList.SelectedIndex = -1
-    End Sub
-
-    Private Sub Scintilla_CharAdded(sender As Object, e As CharAddedEventArgs) Handles MyScintilla.CharAdded
-        Dim currentPos = MyScintilla.CurrentPosition
-
-        Select Case Chr(e.Char)
-            Case "("
-                MyScintilla.InsertText(currentPos, ")")
-            Case "{"
-                MyScintilla.InsertText(currentPos, "}")
-            Case "["
-                MyScintilla.InsertText(currentPos, "]")
-            Case Chr(34).ToString
-                MyScintilla.InsertText(currentPos, Chr(34).ToString)
-            Case "'"
-                MyScintilla.InsertText(currentPos, "'")
-        End Select
-    End Sub
-
-    Private Sub Scintilla_ZoomChanged(sender As Object, e As EventArgs) Handles MyScintilla.ZoomChanged
-        Dim zoom As Integer = MyScintilla.Zoom * 2
-        MyScintilla.Margins(0).Width = 50 + zoom
     End Sub
 
     Private Sub BtnOutput_Click(sender As Object, e As EventArgs) Handles btnOutput.Click
@@ -777,35 +611,35 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnUndo_Click(sender As Object, e As EventArgs) Handles btnUndo.Click
-        MyScintilla.Undo()
+        CurrentEditor.Undo()
     End Sub
 
     Private Sub BtnRedo_Click(sender As Object, e As EventArgs) Handles btnRedo.Click
-        MyScintilla.Redo()
+        CurrentEditor.Redo()
     End Sub
 
     Private Sub BtnCut_Click(sender As Object, e As EventArgs) Handles btnCut.Click
-        MyScintilla.Cut()
+        CurrentEditor.Cut()
     End Sub
 
     Private Sub BtnCopy_Click(sender As Object, e As EventArgs) Handles btnCopy.Click
-        MyScintilla.Copy()
+        CurrentEditor.Copy()
     End Sub
 
     Private Sub BtnPaste_Click(sender As Object, e As EventArgs) Handles btnPaste.Click
-        MyScintilla.Paste()
+        CurrentEditor.Paste()
     End Sub
 
     Private Sub BtnSelectAll_Click(sender As Object, e As EventArgs) Handles btnSelectAll.Click
-        MyScintilla.SelectAll()
+        CurrentEditor.SelectAll()
     End Sub
 
     Private Sub BtnFind_Click(sender As Object, e As EventArgs) Handles btnFind.Click
-        MyFindReplace.ShowFind()
+        CurrentEditor.ShowFind()
     End Sub
 
     Private Sub BtnReplace_Click(sender As Object, e As EventArgs) Handles btnReplace.Click
-        MyFindReplace.ShowReplace()
+        CurrentEditor.ShowReplace()
     End Sub
 
     Private Sub BtnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
@@ -814,6 +648,10 @@ Public Class MainForm
 
     Private Sub BtnSaveSql_Click(sender As Object, e As EventArgs) Handles btnSaveSql.Click
         SaveQuery()
+    End Sub
+
+    Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
+        AddNewEditor()
     End Sub
 
     Private Sub BtnExecuteXpath_Click(sender As Object, e As EventArgs) Handles btnExecuteXpath.Click

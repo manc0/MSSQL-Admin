@@ -103,6 +103,12 @@
     <Compile Include="Controls\CustomTabControl.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\UserEditor.Designer.vb">
+      <DependentUpon>UserEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UserEditor.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\UserTable.Designer.vb">
       <DependentUpon>UserTable.vb</DependentUpon>
     </Compile>
@@ -134,6 +140,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\UserEditor.resx">
+      <DependentUpon>UserEditor.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\UserTable.resx">
       <DependentUpon>UserTable.vb</DependentUpon>
     </EmbeddedResource>

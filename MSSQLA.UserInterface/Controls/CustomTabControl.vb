@@ -8,6 +8,9 @@ Public Class CustomTabControl
     Private HotTabColor As Color = Color.FromArgb(77, 144, 200)
     Private DefaultColor As Color = Color.FromArgb(40, 44, 52)
 
+    Public Event OnAddButtonClick()
+    Public Event OnTabClose()
+
 #Region " Windows Form Designer generated code "
 
     Public Sub New()
@@ -21,7 +24,6 @@ Public Class CustomTabControl
                  ControlStyles.DoubleBuffer Or
                  ControlStyles.ResizeRedraw Or
                  ControlStyles.UserPaint, True)
-
     End Sub
 
     'UserControl1 overrides dispose to clean up the component list.
@@ -50,6 +52,7 @@ Public Class CustomTabControl
 
     Private _backcolor As Color = Color.Empty
     Private _hotTabIndex As Integer = -1
+    Public _createAddButton As Boolean
 
     <Browsable(True),
     Description("The background color used to display text and graphics in a control.")>
@@ -73,9 +76,30 @@ Public Class CustomTabControl
         End Set
     End Property
 
-    Private ReadOnly Property CloseButtonHeight As Int32
+    <Browsable(True),
+    Description("Add new tab button")>
+    Public Property HasAddButton() As Boolean
+        Get
+            Return _createAddButton
+        End Get
+        Set(value As Boolean)
+            _createAddButton = value
+
+            If value Then
+                CreateAddButtonTab()
+            End If
+        End Set
+    End Property
+
+    Private ReadOnly Property CloseButtonHeight As Integer
         Get
             Return FontHeight
+        End Get
+    End Property
+
+    Private ReadOnly Property LastIndex As Integer
+        Get
+            Return TabPages.Count - 1
         End Get
     End Property
 
@@ -110,12 +134,13 @@ Public Class CustomTabControl
             m.LParam = MAKELPARAM(Me.Padding.X + CloseButtonHeight \ 2, Me.Padding.Y)
         End If
         If m.Msg = WM_MOUSEDOWN AndAlso Not Me.DesignMode Then
-            Dim pt As Point = Me.PointToClient(Cursor.Position)
-            Dim closeRect As Rectangle = GetCloseButtonRect(HotTabIndex)
-            If closeRect.Contains(pt) Then
-                CloseTabAt(HotTabIndex)
-
-                m.Msg = WM_NULL
+            If (HasAddButton And HotTabIndex < TabPages.Count - 1) Or Not HasAddButton Then
+                Dim pt As Point = Me.PointToClient(Cursor.Position)
+                Dim closeRect As Rectangle = GetCloseButtonRect(HotTabIndex)
+                If closeRect.Contains(pt) Then
+                    CloseTabAt(HotTabIndex)
+                    m.Msg = WM_NULL
+                End If
             End If
         End If
 
@@ -162,7 +187,7 @@ Public Class CustomTabControl
             End If
 
             'Draw a border around TabPage
-            Dim topRect = SelectedTab.Bounds
+            Dim topRect = TabPages(index).Bounds
             Dim borderBrush = New SolidBrush(SelectedTabColor)
             topRect.Inflate(2, 2)
 
@@ -177,12 +202,18 @@ Public Class CustomTabControl
                 borderBrush.Color, 4, ButtonBorderStyle.Solid)
 
             'Draw the text
-            r.Offset(0, -2)
-            DrawText(tab, r, e.Graphics, brush)
+            Dim rText As Rectangle = r
+            If index = LastIndex And HasAddButton Then
+                rText.Offset(0, -5)
+                DrawText(tab, rText, e.Graphics, brush)
+            Else
+                rText.Offset(0, -2)
+                DrawText(tab, rText, e.Graphics, brush)
+            End If
 
-            'Close Button
-            r.Offset(0, 2)
-            DrawCloseButton(r, e.Graphics, index)
+            If (HasAddButton And index < TabPages.Count - 1) Or Not HasAddButton Then
+                DrawCloseButton(r, e.Graphics, index)
+            End If
 
             e.Graphics.ResetTransform()
         Next
@@ -191,8 +222,17 @@ Public Class CustomTabControl
         MyBase.OnPaint(e)
     End Sub
 
-    Protected Overrides Sub OnMouseMove(e As System.Windows.Forms.MouseEventArgs)
+    Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
+        MyBase.OnMouseDown(e)
+
+        If GetTabRect(LastIndex).Contains(e.Location) And HasAddButton Then
+            RaiseEvent OnAddButtonClick()
+        End If
+    End Sub
+
+    Protected Overrides Sub OnMouseMove(e As MouseEventArgs)
         MyBase.OnMouseMove(e)
+
         Dim HTI As New TCHITTESTINFO(e.X, e.Y)
         HotTabIndex = SendMessage(Me.Handle, TCM_HITTEST, IntPtr.Zero, HTI)
     End Sub
@@ -202,9 +242,23 @@ Public Class CustomTabControl
         HotTabIndex = -1
     End Sub
 
+    Protected Overrides Sub OnSelecting(e As TabControlCancelEventArgs)
+        If e.TabPageIndex = LastIndex And HasAddButton And TabPages.Count > 1 Then
+            e.Cancel = True
+        End If
+    End Sub
+
 #End Region
 
 #Region "Public Methods"
+
+    Public Sub AddTab(tab As TabPage, Optional isAddButton As Boolean = False)
+        If HasAddButton And Not isAddButton Then
+            TabPages.Insert(LastIndex, tab)
+        Else
+            TabPages.Add(tab)
+        End If
+    End Sub
 
     ''' <summary>
     ''' Closes the specified tab and selects the next one.
@@ -213,7 +267,11 @@ Public Class CustomTabControl
     Public Sub CloseTabAt(index As Integer)
         If TabCount > 0 Then
             Try
-                SelectTab(index + 1)
+                If HasAddButton And index = LastIndex - 1 Then
+                    SelectTab(index - 1)
+                Else
+                    SelectTab(index + 1)
+                End If
             Catch
                 Try
                     SelectTab(index - 1)
@@ -223,11 +281,23 @@ Public Class CustomTabControl
                 TabPages.RemoveAt(index)
             End Try
         End If
+
+        RaiseEvent OnTabClose()
     End Sub
 
 #End Region
 
 #Region "Private Methods"
+
+    Private Sub CreateAddButtonTab()
+        Dim tab As New TabPage() With {
+            .Text = "+",
+            .Name = "+Tab"
+        }
+        tab.Font = New Font(Font.FontFamily, 16, FontStyle.Bold)
+        AddTab(tab, True)
+
+    End Sub
 
     Private Sub DrawText(tab As TabPage, tabRect As Rectangle, graphics As Graphics, brush As SolidBrush)
         Dim DrawFont As New Font(tab.Font.FontFamily, tab.Font.Size, FontStyle.Regular)

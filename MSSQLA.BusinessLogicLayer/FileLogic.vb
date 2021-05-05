@@ -53,6 +53,8 @@ Public Class FileLogic
     ''' <param name="text">Text to write.</param>
     ''' <param name="path">Path where it's going to save the file.</param>
     Public Sub ToSql(text As String, path As String)
-        File.WriteAllText(path, text, Encoding.UTF8)
+        Dim sw As New StreamWriter(path)
+        sw.Write(text)
+        sw.Close()
     End Sub
 End Class

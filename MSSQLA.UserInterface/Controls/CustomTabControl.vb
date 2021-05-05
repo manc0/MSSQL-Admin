@@ -6,6 +6,8 @@ Public Class CustomTabControl
 
     Private Const TabTextOffset As String = "      "
 
+    Private Const TabTextOffsetWithAsterik As String = "*     "
+
 #Region "Constructor"
 
     Public Sub New()
@@ -29,12 +31,28 @@ Public Class CustomTabControl
     ''' <summary>
     ''' Occurs when a tab is closed.
     ''' </summary>
-    Public Event OnTabClose()
+    Public Event OnTabClose As EventHandler
 
     ''' <summary>
     ''' Occurs when a new tab is added.
     ''' </summary>
     Public Event OnNewTab()
+
+    ''' <summary>
+    ''' Event Args used during the OnTabClose event.
+    ''' Index will return -1 if the tab collection was cleared.
+    ''' </summary>
+    Public Class CloseTabEventArgs
+        Inherits EventArgs
+
+        Public Property Cancel As Boolean
+        Public ReadOnly Property Index As Integer
+
+        Public Sub New(index As Integer)
+            Me.Index = index
+        End Sub
+
+    End Class
 
 #End Region
 
@@ -63,23 +81,26 @@ Public Class CustomTabControl
     ''' </summary>
     ''' <param name="index">Index of the tab to clsoe.</param>
     Public Sub CloseTabAt(index As Integer)
-        RaiseEvent OnTabClose()
+        Dim closeTabEventArs As New CloseTabEventArgs(index)
+        RaiseEvent OnTabClose(Me, closeTabEventArs)
 
-        If TabCount > 0 Then
-            Try
-                If HasAddButton And index = LastIndex - 1 Then
-                    SelectTab(index - 1)
-                Else
-                    SelectTab(index + 1)
-                End If
-            Catch
+        If Not closeTabEventArs.Cancel Then
+            If TabCount > 0 Then
                 Try
-                    SelectTab(index - 1)
+                    If HasAddButton And index = LastIndex - 1 Then
+                        SelectTab(index - 1)
+                    Else
+                        SelectTab(index + 1)
+                    End If
                 Catch
+                    Try
+                        SelectTab(index - 1)
+                    Catch
+                    End Try
+                Finally
+                    TabPages.RemoveAt(index)
                 End Try
-            Finally
-                TabPages.RemoveAt(index)
-            End Try
+            End If
         End If
     End Sub
 
@@ -92,7 +113,34 @@ Public Class CustomTabControl
             CreateAddButtonTab()
         End If
 
-        RaiseEvent OnTabClose()
+        RaiseEvent OnTabClose(Nothing, New CloseTabEventArgs(-1))
+    End Sub
+
+    ''' <summary>
+    ''' Modifies the name and text of the given tab.
+    ''' </summary>
+    ''' <param name="tab">Tab to modify.</param>
+    ''' <param name="name">New name and text.</param>
+    ''' <param name="edited">Indicates wether the tab has been edited or not.</param>
+    Public Sub EditTabNameAndText(tab As TabPage, name As String, edited As Boolean)
+        tab.Name = name
+        tab.Text = name & IIf(edited, TabTextOffsetWithAsterik, TabTextOffset)
+    End Sub
+
+    ''' <summary>
+    ''' Adds or removes an asterisk at the end of the given tab's text to indicate if it has been modified in some way.
+    ''' </summary>
+    ''' <param name="tab">The tab to modify.</param>
+    ''' <param name="edited">Indicates wether the tab has been edited or not.</param>
+    Public Sub SetTabEditMode(tab As TabPage, edited As Boolean)
+        If (HasAddButton And TabPages.IndexOf(tab) < LastIndex) Or Not HasAddButton Then
+            If edited And Not tab.Text.Contains(TabTextOffsetWithAsterik) Then
+                tab.Text = tab.Text.Replace(TabTextOffset, TabTextOffsetWithAsterik)
+            ElseIf Not edited And tab.Text.Contains(TabTextOffsetWithAsterik) Then
+                Dim asteriskIndex As Integer = tab.Text.LastIndexOf(TabTextOffsetWithAsterik)
+                tab.Text = tab.Text.Replace(TabTextOffsetWithAsterik, TabTextOffset)
+            End If
+        End If
     End Sub
 
 #End Region
@@ -276,6 +324,10 @@ Public Class CustomTabControl
         MyBase.OnPaint(e)
     End Sub
 
+    Private Structure RECT
+        Public Left, Top, Right, Bottom As Integer
+    End Structure
+
     Protected Overrides Sub WndProc(ByRef m As Message)
         ' Remove borders
         If m.Msg = &H1300 + 40 Then
@@ -446,7 +498,3 @@ Public Class CustomTabControl
 #End Region
 
 End Class
-
-Friend Structure RECT
-    Public Left, Top, Right, Bottom As Integer
-End Structure

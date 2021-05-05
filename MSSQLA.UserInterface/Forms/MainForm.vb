@@ -37,6 +37,8 @@ Public Class MainForm
         EditorsTabControl.SizeMode = TabSizeMode.Normal
         EditorsTabControl.DrawMode = DrawMode.OwnerDrawFixed
 
+        AddHandler UserEditor.TextModified, AddressOf CurrentEditor_TextModified
+
         Log("Welcome " & Environment.UserName & ".")
         MyBase.OnLoad(e)
     End Sub
@@ -114,12 +116,36 @@ Public Class MainForm
         _ignoreTabControlSelectedEvent = False
     End Sub
 
+    ''' <summary>
+    ''' Adds a new editor without path or filename or text.
+    ''' </summary>
     Private Sub AddNewEditor()
         Dim tab As New TabPage() With {
             .Text = "New " & GlobalNewEditorCounter,
-            .Name = "New SQL File"
+            .Name = "New " & GlobalNewEditorCounter
         }
-        Dim userEditor As New UserEditor(GlobalNewEditorCounter)
+        Dim userEditor As New UserEditor(String.Empty)
+        AddControlToTab(tab, userEditor)
+
+        EditorsTabControl.AddTab(tab)
+        EditorsTabControl.SelectTab(tab)
+
+        userEditor.Scintilla.Select()
+    End Sub
+
+    ''' <summary>
+    ''' Adds a new editor with path, filename and text.
+    ''' </summary>
+    ''' <param name="text">Initial text of the editor.</param>
+    ''' <param name="filePath">Absolute path to the file is being edited.</param>
+    Private Sub AddNewEditor(text As String, filePath As String)
+        Dim fileName = Path.GetFileName(filePath)
+        Dim tab As New TabPage() With {
+            .Text = fileName,
+            .Name = fileName
+        }
+
+        Dim userEditor As New UserEditor(text, filePath, fileName)
         AddControlToTab(tab, userEditor)
 
         EditorsTabControl.AddTab(tab)
@@ -322,7 +348,7 @@ Public Class MainForm
         If IsNothing(databaseName) Or IsNothing(tableName) Then Return
 
         If CurrentTable.Changes IsNot Nothing Then
-            Dim dr As DialogResult = MessageBox.Show("Are you sure to submit changes?", "Submit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+            Dim dr As DialogResult = MessageBox.Show("Are you sure to submit changes?", "MSSQL Admin", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
 
             If dr = DialogResult.Yes Then
                 CurrentTable.EndEdit()
@@ -405,21 +431,84 @@ Public Class MainForm
     End Sub
 
     ''' <summary>
-    ''' Saves the query as SQL.
+    ''' Saves the current query.
     ''' </summary>
-    Private Sub SaveQuery()
-        If CurrentEditor IsNot Nothing Then
-            Dim sfd As New SaveFileDialog With {
-                .Filter = "SQL File(*.sql)|*.sql",
-                .Title = "Save query",
-                .FileName = "query.sql"
-            }
+    Private Sub SaveQuery(tab As TabPage)
+        Dim userEditor As UserEditor = CType(tab.Controls(0), UserEditor)
 
-            If sfd.ShowDialog() = DialogResult.OK Then
-                FileLogic.ToSql(CurrentEditor.GetText, sfd.FileName)
+        If userEditor IsNot Nothing Then
+            If String.IsNullOrEmpty(userEditor.Path) Or String.IsNullOrEmpty(userEditor.FileName) Then
+                SaveQueryAs(tab)
+            Else
+                Dim filePath As String = userEditor.Path
+                Dim fileName As String = Path.GetFileName(filePath)
+
+                FileLogic.ToSql(userEditor.GetText(), filePath)
+                EditorsTabControl.SetTabEditMode(tab, False)
+                userEditor.LastSavedText = userEditor.GetText()
+                Log(fileName & " saved at " & Path.GetDirectoryName(filePath) & ".")
             End If
         Else
             Log("Nothing to save.")
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Saves the current editor in a new file.
+    ''' </summary>
+    Private Sub SaveQueryAs(tab As TabPage)
+        Dim userEditor As UserEditor = CType(tab.Controls(0), UserEditor)
+
+        If userEditor IsNot Nothing Then
+            Dim sfd As New SaveFileDialog With {
+               .Filter = "SQL File(*.sql)|*.sql",
+               .Title = "Save File",
+               .FileName = tab.Name
+            }
+
+            If sfd.ShowDialog() = DialogResult.OK Then
+                Dim filePath As String = sfd.FileName
+                Dim fileName As String = Path.GetFileName(filePath)
+
+                FileLogic.ToSql(userEditor.GetText, filePath)
+
+                EditorsTabControl.EditTabNameAndText(tab, fileName, False)
+                EditorsTabControl.SetTabEditMode(tab, False)
+
+                userEditor.Path = filePath
+                userEditor.FileName = fileName
+                userEditor.LastSavedText = userEditor.GetText()
+
+                Log(fileName & " saved at " & Path.GetDirectoryName(filePath) & ".")
+            End If
+        Else
+            Log("Nothing to save.")
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Opens a new file.
+    ''' </summary>
+    Private Sub OpenFile()
+        Dim ofd As New OpenFileDialog With {
+            .Filter = "SQL File(*.sql)|*.sql",
+            .Title = "Open SQL file"
+        }
+
+        If ofd.ShowDialog() = DialogResult.OK Then
+            Dim filePath As String = ofd.FileName
+            Dim fileName As String = Path.GetFileName(filePath)
+            Dim sr As New StreamReader(filePath)
+
+            If (From tab In EditorsTabControl.TabPages.Cast(Of TabPage)
+                Select tab.Name).ToList().Contains(fileName) Then
+                EditorsTabControl.SelectTab(fileName)
+            Else
+                AddNewEditor(sr.ReadToEnd(), filePath)
+            End If
+
+            sr.Close()
+            Log("Loaded " & filePath & ".")
         End If
     End Sub
 
@@ -513,7 +602,29 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub EditorsTabControl_OnTabClose() Handles EditorsTabControl.OnTabClose
+    Private Sub EditorsTabControl_OnTabClose(sender As Object, e As CustomTabControl.CloseTabEventArgs) Handles EditorsTabControl.OnTabClose
+        Dim index As Integer = e.Index
+
+        If index <> -1 Then
+            Dim tabToClose As TabPage = EditorsTabControl.TabPages(index)
+            Dim editor As UserEditor = CType(tabToClose.Controls(0), UserEditor)
+
+            If Not editor.IsSaved Then
+                Dim dr As DialogResult = MessageBox.Show("Do you want to save the changes you made to " & tabToClose.Name & "?", "MSSQL Admin", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
+
+                Select Case dr
+                    Case DialogResult.Yes
+                        e.Cancel = False
+                        SaveQuery(tabToClose)
+                    Case DialogResult.No
+                        e.Cancel = False
+                    Case DialogResult.Cancel
+                        e.Cancel = True
+                        Return
+                End Select
+            End If
+        End If
+
         If EditorsTabControl.TabPages.Count <= 2 Then
             EditorsTabControl.Visible = False
             splitter2.Visible = False
@@ -530,7 +641,7 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub TablesTabControl_OnTabClose() Handles TablesTabControl.OnTabClose
+    Private Sub TablesTabControl_OnTabClose(sender As Object, e As EventArgs) Handles TablesTabControl.OnTabClose
         If TablesTabControl.TabPages.Count <= 1 Then
             TablesTabControl.Visible = False
             splitter2.Visible = False
@@ -626,6 +737,44 @@ Public Class MainForm
         End If
     End Sub
 
+    Private Sub CurrentEditor_TextModified(sender As Object, e As EventArgs)
+        EditorsTabControl.SetTabEditMode(EditorsTabControl.SelectedTab, True)
+
+        If CurrentEditor.IsSaved() Then
+            EditorsTabControl.SetTabEditMode(EditorsTabControl.SelectedTab, False)
+        Else
+            EditorsTabControl.SetTabEditMode(EditorsTabControl.SelectedTab, True)
+        End If
+    End Sub
+
+    Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
+        Dim files() As String = e.Data.GetData(DataFormats.FileDrop)
+
+        For Each filePath In files
+            Dim fileExtension As String = Path.GetExtension(filePath).ToLower()
+
+            If fileExtension Like ".sql" Then
+                Dim fileName As String = Path.GetFileName(filePath)
+
+                Dim sr As New StreamReader(filePath)
+
+                If Not (From tab In EditorsTabControl.TabPages.Cast(Of TabPage)
+                        Select tab.Name).ToList().Contains(fileName) Then
+                    AddNewEditor(sr.ReadToEnd(), filePath)
+                    Log("Loaded " & filePath & ".")
+                End If
+
+                sr.Close()
+            End If
+        Next
+    End Sub
+
+    Private Sub MainForm_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.Copy
+        End If
+    End Sub
+
     Private Sub BtnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
         Connect()
     End Sub
@@ -710,11 +859,23 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnSaveSql_Click(sender As Object, e As EventArgs) Handles btnSaveSql.Click
-        SaveQuery()
+        SaveQuery(EditorsTabControl.SelectedTab)
+    End Sub
+
+    Private Sub BtnSaveAs_Click(sender As Object, e As EventArgs) Handles btnSaveAs.Click
+        SaveQueryAs(EditorsTabControl.SelectedTab)
+    End Sub
+
+    Private Sub BtnSaveAll_Click(sender As Object, e As EventArgs) Handles btnSaveAll.Click
+        EditorsTabControl.TabPages.Cast(Of TabPage).ToList().FindAll(Function(tab) tab.Controls.Count > 0).ForEach(Sub(tab) SaveQuery(tab))
     End Sub
 
     Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         AddNewEditor()
+    End Sub
+
+    Private Sub BtnOpen_Click(sender As Object, e As EventArgs) Handles btnOpen.Click
+        OpenFile()
     End Sub
 
     Private Sub BtnExecuteXpath_Click(sender As Object, e As EventArgs) Handles btnExecuteXpath.Click

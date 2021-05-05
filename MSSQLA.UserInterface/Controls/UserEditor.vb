@@ -5,9 +5,15 @@ Imports AutocompleteMenuNS
 
 Public Class UserEditor
 
-    Friend Property Id As Integer
+    Private ReadOnly _ignoreTextChangedEvent As Boolean
 
-    Public Property Zoom As Integer
+    Friend Property LastSavedText As String
+
+    Friend Property Path As String
+
+    Friend Property FileName As String
+
+    Friend Property Zoom As Integer
         Get
             Return Scintilla.Zoom
         End Get
@@ -16,9 +22,15 @@ Public Class UserEditor
         End Set
     End Property
 
+    Friend ReadOnly Property IsSaved As Boolean
+        Get
+            Return LastSavedText = Scintilla.Text
+        End Get
+    End Property
+
 #Region "Constructors"
 
-    Friend Sub New(id As Integer)
+    Friend Sub New(content As String)
         InitializeComponent()
         InitializeScintilla()
         InitializeAutoCompleteMenu()
@@ -26,7 +38,19 @@ Public Class UserEditor
         FindReplace = New FindReplace(Scintilla) With {
             .Scintilla = Scintilla
         }
-        Me.Id = id
+
+        _ignoreTextChangedEvent = True
+        Scintilla.Text = content
+        LastSavedText = content
+        _ignoreTextChangedEvent = False
+    End Sub
+
+    Friend Sub New(content As String, path As String, fileName As String)
+        Me.New(content)
+
+        Scintilla.EmptyUndoBuffer()
+        Me.Path = path
+        Me.FileName = fileName
     End Sub
 
 #End Region
@@ -285,6 +309,14 @@ Public Class UserEditor
         Scintilla.Margins(0).Width = 50 + zoom
 
         CurrentZoom = Scintilla.Zoom
+    End Sub
+
+    Public Shared Event TextModified As EventHandler
+
+    Private Sub Scintilla_TextChanged(sender As Object, e As EventArgs) Handles Scintilla.TextChanged
+        If Not _ignoreTextChangedEvent Then
+            RaiseEvent TextModified(sender, e)
+        End If
     End Sub
 
 #End Region

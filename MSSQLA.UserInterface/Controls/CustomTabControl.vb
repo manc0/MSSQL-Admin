@@ -4,6 +4,8 @@ Imports System.Runtime.InteropServices
 Public Class CustomTabControl
     Inherits TabControl
 
+    Private Const TabTextOffset As String = "      "
+
 #Region "Constructor"
 
     Public Sub New()
@@ -45,6 +47,7 @@ Public Class CustomTabControl
     ''' <param name="isAddButton">Check this if the given tab is the add button.</param>
     Public Sub AddTab(tab As TabPage, Optional isAddButton As Boolean = False)
         If Not isAddButton Then
+            tab.Text &= TabTextOffset
             RaiseEvent OnNewTab()
         End If
 

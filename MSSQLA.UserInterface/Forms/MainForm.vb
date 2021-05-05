@@ -98,7 +98,7 @@ Public Class MainForm
         _ignoreTabControlSelectedEvent = True
         If Not tabNames.Contains(tableName) Then
             Dim tab As New TabPage() With {
-                .Text = tabSymbol & tableName & TabTextOffset,
+                .Text = tabSymbol & tableName,
                 .Name = tableName
             }
             AddControlToTab(tab, New UserTable(dt, canBeUpdated, tableName, databaseName))
@@ -116,7 +116,7 @@ Public Class MainForm
 
     Private Sub AddNewEditor()
         Dim tab As New TabPage() With {
-            .Text = "New " & GlobalNewEditorCounter & TabTextOffset,
+            .Text = "New " & GlobalNewEditorCounter,
             .Name = "New SQL File"
         }
         Dim userEditor As New UserEditor(GlobalNewEditorCounter)

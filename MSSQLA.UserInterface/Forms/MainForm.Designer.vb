@@ -37,7 +37,6 @@ Partial Class MainForm
         Me.btnClearOutput = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnClearXpath = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnCloseTab = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnCloseAllEditors = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnCloseAllTables = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSeparator5 = New System.Windows.Forms.ToolStripSeparator()
@@ -70,7 +69,6 @@ Partial Class MainForm
         Me.tbPass = New System.Windows.Forms.TextBox()
         Me.cbDatabases = New System.Windows.Forms.ComboBox()
         Me.btnDisconnect = New FontAwesome.Sharp.IconButton()
-        Me.topPanel = New System.Windows.Forms.Panel()
         Me.splitter2 = New System.Windows.Forms.Splitter()
         Me.bottomPanel = New System.Windows.Forms.Panel()
         Me.xpathPanel = New System.Windows.Forms.Panel()
@@ -90,7 +88,6 @@ Partial Class MainForm
         Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
-        Me.topPanel.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
         Me.xpathPanel.SuspendLayout()
         Me.xpathEvaluatorPanel.SuspendLayout()
@@ -111,7 +108,7 @@ Partial Class MainForm
         '
         'tsmiFile
         '
-        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSaveSql, Me.btnSaveAs, Me.tsSeparator6, Me.btnExport, Me.btnClearOutput, Me.btnClearXpath, Me.tsSeparator1, Me.btnCloseTab, Me.btnCloseAllEditors, Me.btnCloseAllTables, Me.tsSeparator5, Me.btnExit})
+        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSaveSql, Me.btnSaveAs, Me.tsSeparator6, Me.btnExport, Me.btnClearOutput, Me.btnClearXpath, Me.tsSeparator1, Me.btnCloseAllEditors, Me.btnCloseAllTables, Me.tsSeparator5, Me.btnExit})
         Me.tsmiFile.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.tsmiFile.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.tsmiFile.Name = "tsmiFile"
@@ -126,7 +123,7 @@ Partial Class MainForm
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Padding = New System.Windows.Forms.Padding(2)
         Me.btnNew.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.N), System.Windows.Forms.Keys)
-        Me.btnNew.Size = New System.Drawing.Size(255, 24)
+        Me.btnNew.Size = New System.Drawing.Size(246, 24)
         Me.btnNew.Text = "New File"
         '
         'btnSaveSql
@@ -136,7 +133,7 @@ Partial Class MainForm
         Me.btnSaveSql.Name = "btnSaveSql"
         Me.btnSaveSql.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSaveSql.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.btnSaveSql.Size = New System.Drawing.Size(255, 24)
+        Me.btnSaveSql.Size = New System.Drawing.Size(246, 24)
         Me.btnSaveSql.Text = "Save "
         '
         'btnSaveAs
@@ -147,7 +144,7 @@ Partial Class MainForm
         Me.btnSaveAs.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSaveAs.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Alt) _
             Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.btnSaveAs.Size = New System.Drawing.Size(255, 24)
+        Me.btnSaveAs.Size = New System.Drawing.Size(246, 24)
         Me.btnSaveAs.Text = "Save As"
         '
         'tsSeparator6
@@ -156,7 +153,7 @@ Partial Class MainForm
         Me.tsSeparator6.ForeColor = System.Drawing.Color.White
         Me.tsSeparator6.Name = "tsSeparator6"
         Me.tsSeparator6.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator6.Size = New System.Drawing.Size(248, 6)
+        Me.tsSeparator6.Size = New System.Drawing.Size(239, 6)
         '
         'btnExport
         '
@@ -165,7 +162,7 @@ Partial Class MainForm
         Me.btnExport.Name = "btnExport"
         Me.btnExport.Padding = New System.Windows.Forms.Padding(2)
         Me.btnExport.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
-        Me.btnExport.Size = New System.Drawing.Size(255, 24)
+        Me.btnExport.Size = New System.Drawing.Size(246, 24)
         Me.btnExport.Text = "Export Table..."
         '
         'btnClearOutput
@@ -175,7 +172,7 @@ Partial Class MainForm
         Me.btnClearOutput.Name = "btnClearOutput"
         Me.btnClearOutput.Padding = New System.Windows.Forms.Padding(2)
         Me.btnClearOutput.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
-        Me.btnClearOutput.Size = New System.Drawing.Size(255, 24)
+        Me.btnClearOutput.Size = New System.Drawing.Size(246, 24)
         Me.btnClearOutput.Text = "Clear Output"
         '
         'btnClearXpath
@@ -186,7 +183,7 @@ Partial Class MainForm
         Me.btnClearXpath.Padding = New System.Windows.Forms.Padding(2)
         Me.btnClearXpath.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Alt) _
             Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
-        Me.btnClearXpath.Size = New System.Drawing.Size(255, 24)
+        Me.btnClearXpath.Size = New System.Drawing.Size(246, 24)
         Me.btnClearXpath.Text = "Clear XPath"
         '
         'tsSeparator1
@@ -195,17 +192,7 @@ Partial Class MainForm
         Me.tsSeparator1.ForeColor = System.Drawing.Color.White
         Me.tsSeparator1.Name = "tsSeparator1"
         Me.tsSeparator1.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator1.Size = New System.Drawing.Size(248, 6)
-        '
-        'btnCloseTab
-        '
-        Me.btnCloseTab.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
-        Me.btnCloseTab.ForeColor = System.Drawing.Color.White
-        Me.btnCloseTab.Name = "btnCloseTab"
-        Me.btnCloseTab.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnCloseTab.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
-        Me.btnCloseTab.Size = New System.Drawing.Size(255, 24)
-        Me.btnCloseTab.Text = "Close Current Tab"
+        Me.tsSeparator1.Size = New System.Drawing.Size(239, 6)
         '
         'btnCloseAllEditors
         '
@@ -214,7 +201,7 @@ Partial Class MainForm
         Me.btnCloseAllEditors.Name = "btnCloseAllEditors"
         Me.btnCloseAllEditors.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCloseAllEditors.ShortcutKeys = CType((System.Windows.Forms.Keys.Shift Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
-        Me.btnCloseAllEditors.Size = New System.Drawing.Size(255, 24)
+        Me.btnCloseAllEditors.Size = New System.Drawing.Size(246, 24)
         Me.btnCloseAllEditors.Text = "Close All Editors"
         '
         'btnCloseAllTables
@@ -223,9 +210,8 @@ Partial Class MainForm
         Me.btnCloseAllTables.ForeColor = System.Drawing.Color.White
         Me.btnCloseAllTables.Name = "btnCloseAllTables"
         Me.btnCloseAllTables.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnCloseAllTables.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
-            Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
-        Me.btnCloseAllTables.Size = New System.Drawing.Size(255, 24)
+        Me.btnCloseAllTables.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
+        Me.btnCloseAllTables.Size = New System.Drawing.Size(246, 24)
         Me.btnCloseAllTables.Text = "Close All Tables"
         '
         'tsSeparator5
@@ -234,7 +220,7 @@ Partial Class MainForm
         Me.tsSeparator5.ForeColor = System.Drawing.Color.White
         Me.tsSeparator5.Name = "tsSeparator5"
         Me.tsSeparator5.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator5.Size = New System.Drawing.Size(248, 6)
+        Me.tsSeparator5.Size = New System.Drawing.Size(239, 6)
         '
         'btnExit
         '
@@ -242,7 +228,7 @@ Partial Class MainForm
         Me.btnExit.ForeColor = System.Drawing.Color.White
         Me.btnExit.Name = "btnExit"
         Me.btnExit.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnExit.Size = New System.Drawing.Size(255, 24)
+        Me.btnExit.Size = New System.Drawing.Size(246, 24)
         Me.btnExit.Text = "Exit"
         '
         'tsmiEdit
@@ -641,15 +627,6 @@ Partial Class MainForm
         Me.btnDisconnect.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnDisconnect.UseVisualStyleBackColor = False
         '
-        'topPanel
-        '
-        Me.topPanel.Controls.Add(Me.EditorsTabControl)
-        Me.topPanel.Dock = System.Windows.Forms.DockStyle.Top
-        Me.topPanel.Location = New System.Drawing.Point(0, 0)
-        Me.topPanel.Name = "topPanel"
-        Me.topPanel.Size = New System.Drawing.Size(953, 284)
-        Me.topPanel.TabIndex = 10
-        '
         'splitter2
         '
         Me.splitter2.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
@@ -660,6 +637,7 @@ Partial Class MainForm
         Me.splitter2.Size = New System.Drawing.Size(953, 1)
         Me.splitter2.TabIndex = 11
         Me.splitter2.TabStop = False
+        Me.splitter2.Visible = False
         '
         'bottomPanel
         '
@@ -835,11 +813,11 @@ Partial Class MainForm
         'mainPanel
         '
         Me.mainPanel.Controls.Add(Me.TablesTabControl)
+        Me.mainPanel.Controls.Add(Me.splitter2)
         Me.mainPanel.Controls.Add(Me.splitter1)
         Me.mainPanel.Controls.Add(Me.bottomPanel)
-        Me.mainPanel.Controls.Add(Me.splitter2)
-        Me.mainPanel.Controls.Add(Me.topPanel)
         Me.mainPanel.Controls.Add(Me.MyToolStrip)
+        Me.mainPanel.Controls.Add(Me.EditorsTabControl)
         Me.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.mainPanel.Location = New System.Drawing.Point(269, 29)
         Me.mainPanel.Name = "mainPanel"
@@ -848,31 +826,41 @@ Partial Class MainForm
         '
         'TablesTabControl
         '
+        Me.TablesTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.TablesTabControl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TablesTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
         Me.TablesTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
         Me.TablesTabControl.HasAddButton = False
+        Me.TablesTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.TablesTabControl.Location = New System.Drawing.Point(0, 285)
         Me.TablesTabControl.Margin = New System.Windows.Forms.Padding(0)
         Me.TablesTabControl.Name = "TablesTabControl"
         Me.TablesTabControl.Padding = New System.Drawing.Point(0, 0)
         Me.TablesTabControl.SelectedIndex = 0
+        Me.TablesTabControl.SelectedTabColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.TablesTabControl.Size = New System.Drawing.Size(953, 225)
+        Me.TablesTabControl.TabForeColor = System.Drawing.Color.White
         Me.TablesTabControl.TabIndex = 14
+        Me.TablesTabControl.Visible = False
         '
         'EditorsTabControl
         '
-        Me.EditorsTabControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EditorsTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.EditorsTabControl.Dock = System.Windows.Forms.DockStyle.Top
         Me.EditorsTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
         Me.EditorsTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
         Me.EditorsTabControl.HasAddButton = True
+        Me.EditorsTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.EditorsTabControl.Location = New System.Drawing.Point(0, 0)
         Me.EditorsTabControl.Margin = New System.Windows.Forms.Padding(0)
         Me.EditorsTabControl.Name = "EditorsTabControl"
         Me.EditorsTabControl.Padding = New System.Drawing.Point(0, 0)
         Me.EditorsTabControl.SelectedIndex = 0
+        Me.EditorsTabControl.SelectedTabColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.EditorsTabControl.Size = New System.Drawing.Size(953, 284)
-        Me.EditorsTabControl.TabIndex = 15
+        Me.EditorsTabControl.TabForeColor = System.Drawing.Color.White
+        Me.EditorsTabControl.TabIndex = 16
+        Me.EditorsTabControl.Visible = False
         '
         'MainForm
         '
@@ -893,7 +881,6 @@ Partial Class MainForm
         Me.MyMenuStrip.PerformLayout()
         Me.leftPanel.ResumeLayout(False)
         Me.leftPanel.PerformLayout()
-        Me.topPanel.ResumeLayout(False)
         Me.bottomPanel.ResumeLayout(False)
         Me.xpathPanel.ResumeLayout(False)
         Me.xpathEvaluatorPanel.ResumeLayout(False)
@@ -923,7 +910,6 @@ Partial Class MainForm
     Friend WithEvents btnExecute As IconButton
     Friend WithEvents lbTableList As ListBox
     Friend WithEvents lblTables As Label
-    Friend WithEvents topPanel As Panel
     Friend WithEvents splitter2 As Splitter
     Friend WithEvents bottomPanel As Panel
     Friend WithEvents splitter1 As Splitter
@@ -957,15 +943,14 @@ Partial Class MainForm
     Friend WithEvents xpathEvaluatorPanel As Panel
     Friend WithEvents btnExecuteXpath As Button
     Friend WithEvents xpathExpression As TextBox
-    Friend WithEvents TablesTabControl As CustomTabControl
     Friend WithEvents btnReload As IconButton
-    Friend WithEvents btnCloseTab As ToolStripMenuItem
     Friend WithEvents btnCloseAllTables As ToolStripMenuItem
     Friend WithEvents tsSeparator5 As ToolStripSeparator
-    Friend WithEvents tsmiView As ToolStripMenuItem
-    Friend WithEvents EditorsTabControl As CustomTabControl
     Friend WithEvents btnNew As ToolStripMenuItem
     Friend WithEvents btnSaveAs As ToolStripMenuItem
     Friend WithEvents tsSeparator6 As ToolStripSeparator
     Friend WithEvents btnCloseAllEditors As ToolStripMenuItem
+    Friend WithEvents TablesTabControl As CustomTabControl
+    Friend WithEvents tsmiView As ToolStripMenuItem
+    Friend WithEvents EditorsTabControl As CustomTabControl
 End Class

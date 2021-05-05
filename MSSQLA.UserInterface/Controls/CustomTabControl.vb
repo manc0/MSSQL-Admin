@@ -4,46 +4,92 @@ Imports System.Runtime.InteropServices
 Public Class CustomTabControl
     Inherits TabControl
 
-    Private SelectedTabColor As Color = Color.FromArgb(77, 122, 200)
-    Private HotTabColor As Color = Color.FromArgb(77, 144, 200)
-    Private DefaultColor As Color = Color.FromArgb(40, 44, 52)
-
-    Public Event OnAddButtonClick()
-    Public Event OnTabClose()
-
-#Region " Windows Form Designer generated code "
+#Region "Constructor"
 
     Public Sub New()
         MyBase.New()
 
-        'This call is required by the Windows Form Designer.
-        InitializeComponent()
-
-        'Add any initialization after the InitializeComponent() call
         SetStyle(ControlStyles.AllPaintingInWmPaint Or
                  ControlStyles.DoubleBuffer Or
                  ControlStyles.ResizeRedraw Or
                  ControlStyles.UserPaint, True)
     End Sub
 
-    'UserControl1 overrides dispose to clean up the component list.
-    Protected Overloads Overrides Sub Dispose(disposing As Boolean)
-        If disposing Then
-            If Not (components Is Nothing) Then
-                components.Dispose()
-            End If
+#End Region
+
+#Region "Events"
+
+    ''' <summary>
+    ''' Occurs when the add button is clicked.
+    ''' </summary>
+    Public Event OnAddButtonClick()
+
+    ''' <summary>
+    ''' Occurs when a tab is closed.
+    ''' </summary>
+    Public Event OnTabClose()
+
+    ''' <summary>
+    ''' Occurs when a new tab is added.
+    ''' </summary>
+    Public Event OnNewTab()
+
+#End Region
+
+#Region "Public Methods"
+
+    ''' <summary>
+    ''' Adds a new tab and raises the OnNewTab event.
+    ''' </summary>
+    ''' <param name="tab">Tab to close.</param>
+    ''' <param name="isAddButton">Check this if the given tab is the add button.</param>
+    Public Sub AddTab(tab As TabPage, Optional isAddButton As Boolean = False)
+        If Not isAddButton Then
+            RaiseEvent OnNewTab()
         End If
-        MyBase.Dispose(disposing)
+
+        If HasAddButton And Not isAddButton Then
+            TabPages.Insert(LastIndex, tab)
+        Else
+            TabPages.Add(tab)
+        End If
     End Sub
 
-    'Required by the Windows Form Designer
-    Private components As System.ComponentModel.IContainer
+    ''' <summary>
+    ''' Closes the specified tab and selects the next one. Raises the OnTabClose event.
+    ''' </summary>
+    ''' <param name="index">Index of the tab to clsoe.</param>
+    Public Sub CloseTabAt(index As Integer)
+        RaiseEvent OnTabClose()
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        components = New System.ComponentModel.Container
+        If TabCount > 0 Then
+            Try
+                If HasAddButton And index = LastIndex - 1 Then
+                    SelectTab(index - 1)
+                Else
+                    SelectTab(index + 1)
+                End If
+            Catch
+                Try
+                    SelectTab(index - 1)
+                Catch
+                End Try
+            Finally
+                TabPages.RemoveAt(index)
+            End Try
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Clears the tab collection and raises the event OnTabClose.
+    ''' </summary>
+    Public Sub Clear()
+        TabPages.Clear()
+        If HasAddButton Then
+            CreateAddButtonTab()
+        End If
+
+        RaiseEvent OnTabClose()
     End Sub
 
 #End Region
@@ -53,6 +99,10 @@ Public Class CustomTabControl
     Private _backcolor As Color = Color.Empty
     Private _hotTabIndex As Integer = -1
     Public _createAddButton As Boolean
+    Private _selectedTabColor As Color = Color.Empty
+    Private _hotTabColor As Color = Color.Empty
+    Private _defaultTabColor As Color = Color.Empty
+    Private _tabForeColor As Color = Color.White
 
     <Browsable(True),
     Description("The background color used to display text and graphics in a control.")>
@@ -77,7 +127,51 @@ Public Class CustomTabControl
     End Property
 
     <Browsable(True),
-    Description("Add new tab button")>
+    Description("The background color of the selected tab.")>
+    Public Property SelectedTabColor() As Color
+        Get
+            Return _selectedTabColor
+        End Get
+        Set(Value As Color)
+            _selectedTabColor = Value
+        End Set
+    End Property
+
+    <Browsable(True),
+    Description("The background color of the hot tab.")>
+    Public Property HotTabColor() As Color
+        Get
+            Return _hotTabColor
+        End Get
+        Set(Value As Color)
+            _hotTabColor = Value
+        End Set
+    End Property
+
+    <Browsable(True),
+    Description("The default background color of tabs.")>
+    Public Property DefaultTabColor() As Color
+        Get
+            Return _defaultTabColor
+        End Get
+        Set(Value As Color)
+            _defaultTabColor = Value
+        End Set
+    End Property
+
+    <Browsable(True),
+    Description("The color to draw the title of the tab.")>
+    Public Property TabForeColor() As Color
+        Get
+            Return _tabForeColor
+        End Get
+        Set(Value As Color)
+            _tabForeColor = Value
+        End Set
+    End Property
+
+    <Browsable(True),
+    Description("Creates a button to add new tabs at the end of this TabControl.")>
     Public Property HasAddButton() As Boolean
         Get
             Return _createAddButton
@@ -103,7 +197,7 @@ Public Class CustomTabControl
         End Get
     End Property
 
-    Private Property HotTabIndex As Int32
+    Private Property HotTabIndex As Integer
         Get
             Return _hotTabIndex
         End Get
@@ -118,49 +212,6 @@ Public Class CustomTabControl
 #End Region
 
 #Region "Overridden Methods"
-
-    Protected Overrides Sub WndProc(ByRef m As Message)
-        ' Remove borders
-        If m.Msg = &H1300 + 40 Then
-            Dim rc As RECT = m.GetLParam(GetType(RECT))
-            rc.Left -= 4
-            rc.Right += 4
-            rc.Top -= 4
-            rc.Bottom += 4
-            Marshal.StructureToPtr(rc, m.LParam, True)
-        End If
-
-        If m.Msg = TCM_SETPADDING Then
-            m.LParam = MAKELPARAM(Me.Padding.X + CloseButtonHeight \ 2, Me.Padding.Y)
-        End If
-        If m.Msg = WM_MOUSEDOWN AndAlso Not Me.DesignMode Then
-            If (HasAddButton And HotTabIndex < TabPages.Count - 1) Or Not HasAddButton Then
-                Dim pt As Point = Me.PointToClient(Cursor.Position)
-                Dim closeRect As Rectangle = GetCloseButtonRect(HotTabIndex)
-                If closeRect.Contains(pt) Then
-                    CloseTabAt(HotTabIndex)
-                    m.Msg = WM_NULL
-                End If
-            End If
-        End If
-
-        MyBase.WndProc(m)
-    End Sub
-
-    Public Overrides Sub ResetBackColor()
-        _backcolor = Color.Empty
-        Invalidate()
-    End Sub
-
-    Protected Overrides Sub OnParentBackColorChanged(e As EventArgs)
-        MyBase.OnParentBackColorChanged(e)
-        Invalidate()
-    End Sub
-
-    Protected Overrides Sub OnSelectedIndexChanged(e As EventArgs)
-        MyBase.OnSelectedIndexChanged(e)
-        Invalidate()
-    End Sub
 
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         If TabCount <= 0 Then Return
@@ -183,7 +234,7 @@ Public Class CustomTabControl
             ElseIf index = HotTabIndex Then
                 brush = New SolidBrush(HotTabColor)
             Else
-                brush = New SolidBrush(DefaultColor)
+                brush = New SolidBrush(DefaultTabColor)
             End If
 
             'Draw a border around TabPage
@@ -222,6 +273,49 @@ Public Class CustomTabControl
         MyBase.OnPaint(e)
     End Sub
 
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        ' Remove borders
+        If m.Msg = &H1300 + 40 Then
+            Dim rc As RECT = m.GetLParam(GetType(RECT))
+            rc.Left -= 4
+            rc.Right += 4
+            rc.Top -= 4
+            rc.Bottom += 4
+            Marshal.StructureToPtr(rc, m.LParam, True)
+        End If
+
+        If m.Msg = TCM_SETPADDING Then
+            m.LParam = MakeLParam(Me.Padding.X + CloseButtonHeight \ 2, Me.Padding.Y)
+        End If
+        If m.Msg = WM_MOUSEDOWN AndAlso Not Me.DesignMode Then
+            If (HasAddButton And HotTabIndex < TabPages.Count - 1) Or Not HasAddButton Then
+                Dim pt As Point = Me.PointToClient(Cursor.Position)
+                Dim closeRect As Rectangle = GetCloseButtonRect(HotTabIndex)
+                If closeRect.Contains(pt) Then
+                    CloseTabAt(HotTabIndex)
+                    m.Msg = WM_NULL
+                End If
+            End If
+        End If
+
+        MyBase.WndProc(m)
+    End Sub
+
+    Public Overrides Sub ResetBackColor()
+        _backcolor = Color.Empty
+        Invalidate()
+    End Sub
+
+    Protected Overrides Sub OnParentBackColorChanged(e As EventArgs)
+        MyBase.OnParentBackColorChanged(e)
+        Invalidate()
+    End Sub
+
+    Protected Overrides Sub OnSelectedIndexChanged(e As EventArgs)
+        MyBase.OnSelectedIndexChanged(e)
+        Invalidate()
+    End Sub
+
     Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
         MyBase.OnMouseDown(e)
 
@@ -250,50 +344,6 @@ Public Class CustomTabControl
 
 #End Region
 
-#Region "Public Methods"
-
-    Public Sub AddTab(tab As TabPage, Optional isAddButton As Boolean = False)
-        If HasAddButton And Not isAddButton Then
-            TabPages.Insert(LastIndex, tab)
-        Else
-            TabPages.Add(tab)
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' Closes the specified tab and selects the next one.
-    ''' </summary>
-    ''' <param name="index"></param>
-    Public Sub CloseTabAt(index As Integer)
-        If TabCount > 0 Then
-            Try
-                If HasAddButton And index = LastIndex - 1 Then
-                    SelectTab(index - 1)
-                Else
-                    SelectTab(index + 1)
-                End If
-            Catch
-                Try
-                    SelectTab(index - 1)
-                Catch
-                End Try
-            Finally
-                TabPages.RemoveAt(index)
-            End Try
-        End If
-
-        RaiseEvent OnTabClose()
-    End Sub
-
-    Friend Sub Clear()
-        TabPages.Clear()
-        If HasAddButton Then
-            CreateAddButtonTab()
-        End If
-    End Sub
-
-#End Region
-
 #Region "Private Methods"
 
     Private Sub CreateAddButtonTab()
@@ -302,14 +352,14 @@ Public Class CustomTabControl
             .Name = "+Tab"
         }
         tab.Font = New Font(Font.FontFamily, 16, FontStyle.Bold)
-        AddTab(tab, True)
 
+        AddTab(tab, True)
     End Sub
 
     Private Sub DrawText(tab As TabPage, tabRect As Rectangle, graphics As Graphics, brush As SolidBrush)
         Dim DrawFont As New Font(tab.Font.FontFamily, tab.Font.Size, FontStyle.Regular)
         brush.Color = IIf(tab.Enabled, Color.White, Color.DarkGray)
-        TextRenderer.DrawText(graphics, tab.Text, DrawFont, tabRect, Color.White, Color.Transparent, TextFormatFlags.HorizontalCenter Or TextFormatFlags.NoPadding Or TextFormatFlags.SingleLine Or TextFormatFlags.VerticalCenter)
+        TextRenderer.DrawText(graphics, tab.Text, DrawFont, tabRect, TabForeColor, Color.Transparent, TextFormatFlags.HorizontalCenter Or TextFormatFlags.NoPadding Or TextFormatFlags.SingleLine Or TextFormatFlags.VerticalCenter)
     End Sub
 
     Private Sub DrawCloseButton(tabRect As Rectangle, graphics As Graphics, index As Integer)
@@ -326,7 +376,7 @@ Public Class CustomTabControl
                     Dim closeFont As Font = New Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular)
 
                     bmGraphics.FillRectangle(brush, closeRect)
-                    TextRenderer.DrawText(bmGraphics, "✖", closeFont, closeRect, Color.White, brush.Color, TextFormatFlags.HorizontalCenter Or TextFormatFlags.NoPadding Or TextFormatFlags.SingleLine Or TextFormatFlags.VerticalCenter)
+                    TextRenderer.DrawText(bmGraphics, "✖", closeFont, closeRect, TabForeColor, brush.Color, TextFormatFlags.HorizontalCenter Or TextFormatFlags.NoPadding Or TextFormatFlags.SingleLine Or TextFormatFlags.VerticalCenter)
                 End If
             End Using
 
@@ -350,7 +400,7 @@ Public Class CustomTabControl
         Return closeRect
     End Function
 
-    Private Function MAKELPARAM(lo As Integer, hi As Integer) As IntPtr
+    Private Function MakeLParam(lo As Integer, hi As Integer) As IntPtr
         Return New IntPtr((hi << 16) Or (lo And &HFFFF))
     End Function
 
@@ -363,14 +413,14 @@ Public Class CustomTabControl
     End Function
 
     <DllImport("user32.dll")>
-    Private Shared Function SendMessage(hwnd As IntPtr, msg As Int32, wParam As IntPtr, ByRef lParam As TCHITTESTINFO) As Int32
+    Private Shared Function SendMessage(hwnd As IntPtr, msg As Integer, wParam As IntPtr, ByRef lParam As TCHITTESTINFO) As Integer
     End Function
 
-    <System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)>
+    <StructLayout(LayoutKind.Sequential)>
     Private Structure TCHITTESTINFO
         Public pt As Point
         Public flags As TCHITTESTFLAGS
-        Public Sub New(x As Int32, y As Int32)
+        Public Sub New(x As Integer, y As Integer)
             pt = New Point(x, y)
         End Sub
     End Structure
@@ -383,10 +433,8 @@ Public Class CustomTabControl
         TCHT_ONITEM = TCHT_ONITEMICON Or TCHT_ONITEMLABEL
     End Enum
 
-    Private Const WM_NULL As Int32 = &H0
-    Private Const WM_SETFONT = &H30
-    Private Const WM_FONTCHANGE = &H1D
-    Private Const WM_MOUSEDOWN As Int32 = &H201
+    Private Const WM_NULL As Integer = &H0
+    Private Const WM_MOUSEDOWN As Integer = &H201
 
     Private Const TCM_FIRST = &H1300
     Private Const TCM_HITTEST = TCM_FIRST + 13

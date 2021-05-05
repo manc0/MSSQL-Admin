@@ -8,7 +8,7 @@ Public Class MainForm
     Private ReadOnly Property DatabaseLogic As New DatabaseLogic
     Private ReadOnly Property FileLogic As New FileLogic
     Private Property GlobalTableCounter As Integer
-    Private Property GlobalNewEditorCounter As Integer
+    Private Property GlobalNewEditorCounter As Integer = 1
 
     ' Flags that avoid triggering events recursively
     Private _ignoreTableListIndexChangedEvent As Boolean = False
@@ -36,7 +36,6 @@ Public Class MainForm
         EditorsTabControl.ItemSize = New Size(0, 25)
         EditorsTabControl.SizeMode = TabSizeMode.Normal
         EditorsTabControl.DrawMode = DrawMode.OwnerDrawFixed
-        EditorsTabControl.Visible = False
 
         Log("Welcome " & Environment.UserName & ".")
         MyBase.OnLoad(e)
@@ -64,13 +63,24 @@ Public Class MainForm
     End Sub
 
     ''' <summary>
-    ''' Empties the DGV.
+    ''' Removes all tables and sets the current one to null.
     ''' </summary>
-    Private Sub ClearDgv()
+    Private Sub ClearTables()
         GlobalTableCounter = 0
         CurrentTable = Nothing
         TablesTabControl.Clear()
+
         btnSubmit.Enabled = False
+        lbTableList.SelectedIndex = -1
+    End Sub
+
+    ''' <summary>
+    ''' Removes all editors and sets the current one to null.
+    ''' </summary>
+    Private Sub ClearEditors()
+        GlobalNewEditorCounter = 1
+        CurrentEditor = Nothing
+        EditorsTabControl.Clear()
     End Sub
 
     ''' <summary>
@@ -105,12 +115,6 @@ Public Class MainForm
     End Sub
 
     Private Sub AddNewEditor()
-        If EditorsTabControl.TabPages.Count = 1 Then
-            EditorsTabControl.Visible = True
-        End If
-
-        GlobalNewEditorCounter += 1
-
         Dim tab As New TabPage() With {
             .Text = "New " & GlobalNewEditorCounter & TabTextOffset,
             .Name = "New SQL File"
@@ -146,7 +150,7 @@ Public Class MainForm
     ''' Closes the current sesion and forces the user to connect again to the server.
     ''' </summary>
     Private Sub CloseSession()
-        ClearDgv()
+        ClearTables()
         cbDatabases.Items.Clear()
         lbTableList.Items.Clear()
         btnDisconnect.Enabled = False
@@ -192,10 +196,6 @@ Public Class MainForm
         Dim user As String = tbUser.Text
         Dim pass As String = tbPass.Text
         DatabaseLogic.SetConnection(server, user, pass, ConnectionTimeout)
-
-        ClearDgv()
-        cbDatabases.Items.Clear()
-        lbTableList.Items.Clear()
 
         Try
             lblConnStatus.Text = "Connecting..."
@@ -280,7 +280,7 @@ Public Class MainForm
                     If Not tableList.Contains(db) Then
                         If lbTableList.SelectedItem IsNot Nothing Then
                             If lbTableList.SelectedItem.ToString.Equals(db) Then
-                                ClearDgv()
+                                ClearTables()
                             End If
                         End If
 
@@ -408,14 +408,18 @@ Public Class MainForm
     ''' Saves the query as SQL.
     ''' </summary>
     Private Sub SaveQuery()
-        Dim sfd As New SaveFileDialog With {
+        If CurrentEditor IsNot Nothing Then
+            Dim sfd As New SaveFileDialog With {
                 .Filter = "SQL File(*.sql)|*.sql",
                 .Title = "Save query",
                 .FileName = "query.sql"
-        }
+            }
 
-        If sfd.ShowDialog() = DialogResult.OK Then
-            FileLogic.ToSql(CurrentEditor.GetText, sfd.FileName)
+            If sfd.ShowDialog() = DialogResult.OK Then
+                FileLogic.ToSql(CurrentEditor.GetText, sfd.FileName)
+            End If
+        Else
+            Log("Nothing to save.")
         End If
     End Sub
 
@@ -462,29 +466,9 @@ Public Class MainForm
 
 #Region "Events"
 
-    Private Sub BtnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
-        Connect()
-    End Sub
-
-    Private Sub BtnDisconnect_Click(sender As Object, e As EventArgs) Handles btnDisconnect.Click
-        CloseSession()
-    End Sub
-
-    Private Sub BtnReload_Click(sender As Object, e As EventArgs) Handles btnReload.Click
-        FillDatabasesComboBox()
-    End Sub
-
-    Private Sub BtnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
-        SubmitChanges()
-    End Sub
-
-    Private Sub BtnExecute_Click(sender As Object, e As EventArgs) Handles btnExecute.Click
-        ExecuteCode()
-    End Sub
-
     Private Sub CbDatabases_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbDatabases.SelectedIndexChanged
         lbTableList.Items.Clear()
-        ClearDgv()
+        ClearTables()
         FillTablesListBox()
     End Sub
 
@@ -511,9 +495,6 @@ Public Class MainForm
             Else
                 lbTableList.SelectedIndex = -1
             End If
-        ElseIf index = -1 Then
-            btnSubmit.Enabled = False
-            lbTableList.SelectedIndex = -1
         End If
 
         _ignoreTableListIndexChangedEvent = False
@@ -532,30 +513,72 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub EditorsTabControl_OnAddButtonClick() Handles EditorsTabControl.OnAddButtonClick
-        AddNewEditor()
-    End Sub
-
     Private Sub EditorsTabControl_OnTabClose() Handles EditorsTabControl.OnTabClose
-        If EditorsTabControl.TabPages.Count = 1 Then
+        If EditorsTabControl.TabPages.Count <= 2 Then
             EditorsTabControl.Visible = False
-            GlobalNewEditorCounter = 0
+            splitter2.Visible = False
+            GlobalNewEditorCounter = 1
+            CurrentEditor = Nothing
+
+            If Not TablesTabControl.Visible Then
+                EditorsTabControl.Dock = DockStyle.Top
+                TablesTabControl.Dock = DockStyle.Fill
+
+                EditorsTabControl.SendToBack()
+                TablesTabControl.BringToFront()
+            End If
         End If
     End Sub
 
-    Private Sub BtnCloseTab_Click(sender As Object, e As EventArgs) Handles btnCloseTab.Click
-        TablesTabControl.CloseTabAt(TablesTabControl.SelectedIndex)
+    Private Sub TablesTabControl_OnTabClose() Handles TablesTabControl.OnTabClose
+        If TablesTabControl.TabPages.Count <= 1 Then
+            TablesTabControl.Visible = False
+            splitter2.Visible = False
+            GlobalTableCounter = 0
+            CurrentTable = Nothing
+            btnSubmit.Enabled = False
+            lbTableList.SelectedIndex = -1
+
+            If EditorsTabControl.Visible Then
+                EditorsTabControl.Dock = DockStyle.Fill
+                TablesTabControl.Dock = DockStyle.Bottom
+
+                EditorsTabControl.BringToFront()
+                TablesTabControl.SendToBack()
+            End If
+        End If
     End Sub
 
-    Private Sub BtnCloseAllEditors_Click(sender As Object, e As EventArgs) Handles btnCloseAllEditors.Click
-        EditorsTabControl.Clear()
-        EditorsTabControl.Visible = False
-        GlobalNewEditorCounter = 0
+    Private Sub EditorsTabControl_OnNewTab() Handles EditorsTabControl.OnNewTab
+        If EditorsTabControl.TabPages.Count = 1 Then
+            EditorsTabControl.Visible = True
+            splitter2.Visible = TablesTabControl.Visible
+
+            If Not TablesTabControl.Visible Then
+                EditorsTabControl.Dock = DockStyle.Fill
+                TablesTabControl.Dock = DockStyle.Bottom
+
+                EditorsTabControl.BringToFront()
+                TablesTabControl.SendToBack()
+            End If
+        End If
+
+        GlobalNewEditorCounter += 1
     End Sub
 
-    Private Sub BtnCloseAllTabs_Click(sender As Object, e As EventArgs) Handles btnCloseAllTables.Click
-        ClearDgv()
-        lbTableList.SelectedIndex = -1
+    Private Sub TablesTabControl_OnNewTab() Handles TablesTabControl.OnNewTab
+        If TablesTabControl.TabPages.Count = 0 Then
+            TablesTabControl.Visible = True
+            splitter2.Visible = EditorsTabControl.Visible
+
+            If EditorsTabControl.Visible Then
+                EditorsTabControl.Dock = DockStyle.Top
+                TablesTabControl.Dock = DockStyle.Fill
+
+                EditorsTabControl.SendToBack()
+                TablesTabControl.BringToFront()
+            End If
+        End If
     End Sub
 
     Private Sub BtnOutput_Click(sender As Object, e As EventArgs) Handles btnOutput.Click
@@ -601,6 +624,40 @@ Public Class MainForm
                 xpathExpression.SelectionStart = selectionIndex + 1
             End If
         End If
+    End Sub
+
+    Private Sub BtnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
+        Connect()
+    End Sub
+
+    Private Sub BtnDisconnect_Click(sender As Object, e As EventArgs) Handles btnDisconnect.Click
+        CloseSession()
+    End Sub
+
+    Private Sub BtnReload_Click(sender As Object, e As EventArgs) Handles btnReload.Click
+        FillDatabasesComboBox()
+    End Sub
+
+    Private Sub BtnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
+        SubmitChanges()
+    End Sub
+
+    Private Sub BtnExecute_Click(sender As Object, e As EventArgs) Handles btnExecute.Click
+        ExecuteCode()
+    End Sub
+
+    Private Sub EditorsTabControl_OnAddButtonClick() Handles EditorsTabControl.OnAddButtonClick
+        AddNewEditor()
+    End Sub
+
+    Private Sub BtnCloseAllEditors_Click(sender As Object, e As EventArgs) Handles btnCloseAllEditors.Click
+        EditorsTabControl.Visible = False 'Added here to prevent a color flash
+        ClearEditors()
+    End Sub
+
+    Private Sub BtnCloseAllTables_Click(sender As Object, e As EventArgs) Handles btnCloseAllTables.Click
+        TablesTabControl.Visible = False 'Added here to prevent a color flash
+        ClearTables()
     End Sub
 
     Private Sub BtnClearOutput_Click(sender As Object, e As EventArgs) Handles btnClearOutput.Click

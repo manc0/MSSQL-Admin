@@ -69,7 +69,7 @@ Public Class MainForm
     Private Sub ClearDgv()
         GlobalTableCounter = 0
         CurrentTable = Nothing
-        TablesTabControl.TabPages.Clear()
+        TablesTabControl.Clear()
         btnSubmit.Enabled = False
     End Sub
 
@@ -547,7 +547,13 @@ Public Class MainForm
         TablesTabControl.CloseTabAt(TablesTabControl.SelectedIndex)
     End Sub
 
-    Private Sub BtnCloseAllTabs_Click(sender As Object, e As EventArgs) Handles btnCloseAllTabs.Click
+    Private Sub BtnCloseAllEditors_Click(sender As Object, e As EventArgs) Handles btnCloseAllEditors.Click
+        EditorsTabControl.Clear()
+        EditorsTabControl.Visible = False
+        GlobalNewEditorCounter = 0
+    End Sub
+
+    Private Sub BtnCloseAllTabs_Click(sender As Object, e As EventArgs) Handles btnCloseAllTables.Click
         ClearDgv()
         lbTableList.SelectedIndex = -1
     End Sub

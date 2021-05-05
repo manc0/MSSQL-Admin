@@ -85,7 +85,7 @@ Public Class CustomTabControl
         Set(value As Boolean)
             _createAddButton = value
 
-            If value Then
+            If value And Not Me.DesignMode Then
                 CreateAddButtonTab()
             End If
         End Set
@@ -283,6 +283,13 @@ Public Class CustomTabControl
         End If
 
         RaiseEvent OnTabClose()
+    End Sub
+
+    Friend Sub Clear()
+        TabPages.Clear()
+        If HasAddButton Then
+            CreateAddButtonTab()
+        End If
     End Sub
 
 #End Region

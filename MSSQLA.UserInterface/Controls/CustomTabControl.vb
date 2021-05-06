@@ -31,7 +31,7 @@ Public Class CustomTabControl
     ''' <summary>
     ''' Occurs when a tab is closed.
     ''' </summary>
-    Public Event OnTabClose As EventHandler
+    Public Event OnTabClose As EventHandler(Of CloseTabEventArgs)
 
     ''' <summary>
     ''' Occurs when a new tab is added.

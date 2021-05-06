@@ -902,6 +902,36 @@ Public Class MainForm
         SwitchIconButtonColor(sender)
     End Sub
 
+    Private Sub BtnZoomIn_Click(sender As Object, e As EventArgs) Handles btnZoomIn.Click
+        If CurrentEditor IsNot Nothing Then CurrentEditor.Zoom += 1
+    End Sub
+
+    Private Sub BtnZoomOut_Click(sender As Object, e As EventArgs) Handles btnZoomOut.Click
+        If CurrentEditor IsNot Nothing Then CurrentEditor.Zoom -= 1
+    End Sub
+
+    Private Sub BtnResetZoom_Click(sender As Object, e As EventArgs) Handles btnResetZoom.Click
+        If CurrentEditor IsNot Nothing Then CurrentEditor.Zoom = 0
+    End Sub
+
+    Private Sub BtnTableMode_Click(sender As Object, e As EventArgs) Handles btnTableMode.Click
+
+    End Sub
+
+    Private Sub BtnFullscreen_Click(sender As Object, e As EventArgs) Handles btnFullscreen.Click
+        If btnFullscreen.Checked Then
+            FormBorderStyle = FormBorderStyle.None
+            WindowState = FormWindowState.Maximized
+        Else
+            FormBorderStyle = FormBorderStyle.Sizable
+            WindowState = FormWindowState.Normal
+        End If
+    End Sub
+
+    Private Sub TablesTabControl_OnTabClose(sender As Object, e As CustomTabControl.CloseTabEventArgs) Handles TablesTabControl.OnTabClose
+
+    End Sub
+
 #End Region
 
 End Class

@@ -50,6 +50,7 @@ Public Class MainForm
         tbServer.Text = My.Settings.Server
         tbUser.Text = My.Settings.User
         tbPass.Text = My.Settings.Pass
+        tbTimeout.Text = My.Settings.Timeout
     End Sub
 
 #End Region
@@ -221,18 +222,20 @@ Public Class MainForm
         Dim server As String = tbServer.Text
         Dim user As String = tbUser.Text
         Dim pass As String = tbPass.Text
-        DatabaseLogic.SetConnection(server, user, pass, ConnectionTimeout)
+        Dim timeout As Integer = tbTimeout.Text
+        DatabaseLogic.SetConnection(server, user, pass, timeout)
 
         Try
             lblConnStatus.Text = "Connecting..."
             lblConnStatus.ForeColor = Color.Orange
             btnConnect.Enabled = False
             CurrentStatus = ConnectionStatus.Connecting
-            Await DatabaseLogic.TestConnection(ConnectionTimeout)
+            Await DatabaseLogic.TestConnection(timeout)
 
             My.Settings.Server = server
             My.Settings.User = user
             My.Settings.Pass = pass
+            My.Settings.Timeout = timeout
             My.Settings.Save()
 
             btnExecute.Enabled = True
@@ -825,35 +828,35 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnUndo_Click(sender As Object, e As EventArgs) Handles btnUndo.Click
-        CurrentEditor.Undo()
+        CurrentEditor?.Undo()
     End Sub
 
     Private Sub BtnRedo_Click(sender As Object, e As EventArgs) Handles btnRedo.Click
-        CurrentEditor.Redo()
+        CurrentEditor?.Redo()
     End Sub
 
     Private Sub BtnCut_Click(sender As Object, e As EventArgs) Handles btnCut.Click
-        CurrentEditor.Cut()
+        CurrentEditor?.Cut()
     End Sub
 
     Private Sub BtnCopy_Click(sender As Object, e As EventArgs) Handles btnCopy.Click
-        CurrentEditor.Copy()
+        CurrentEditor?.Copy()
     End Sub
 
     Private Sub BtnPaste_Click(sender As Object, e As EventArgs) Handles btnPaste.Click
-        CurrentEditor.Paste()
+        CurrentEditor?.Paste()
     End Sub
 
     Private Sub BtnSelectAll_Click(sender As Object, e As EventArgs) Handles btnSelectAll.Click
-        CurrentEditor.SelectAll()
+        CurrentEditor?.SelectAll()
     End Sub
 
     Private Sub BtnFind_Click(sender As Object, e As EventArgs) Handles btnFind.Click
-        CurrentEditor.ShowFind()
+        CurrentEditor?.ShowFind()
     End Sub
 
     Private Sub BtnReplace_Click(sender As Object, e As EventArgs) Handles btnReplace.Click
-        CurrentEditor.ShowReplace()
+        CurrentEditor?.ShowReplace()
     End Sub
 
     Private Sub BtnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
@@ -919,8 +922,10 @@ Public Class MainForm
     Private Sub BtnTableMode_Click(sender As Object, e As EventArgs) Handles btnTableMode.Click
         If btnTableMode.Checked Then
             CurrentColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            btnTableMode.IconChar = IconChar.Check
         Else
             CurrentColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+            btnTableMode.IconChar = IconChar.None
         End If
 
         If CurrentTable IsNot Nothing Then CurrentTable.ColumnsMode = CurrentColumnsMode
@@ -933,6 +938,88 @@ Public Class MainForm
         Else
             FormBorderStyle = FormBorderStyle.Sizable
             WindowState = FormWindowState.Normal
+        End If
+    End Sub
+
+    Private Sub TbServer_Enter(sender As Object, e As EventArgs) Handles tbServer.Enter
+        If tbServer.Text = "Server" Then
+            tbServer.Text = String.Empty
+        End If
+    End Sub
+
+    Private Sub TbServer_Leave(sender As Object, e As EventArgs) Handles tbServer.Leave
+        If String.IsNullOrEmpty(tbServer.Text) Then
+            tbServer.Text = "Server"
+        End If
+    End Sub
+
+    Private Sub TbServer_TextChanged(sender As Object, e As EventArgs) Handles tbServer.TextChanged
+        If tbServer.Text = "Server" Then
+            tbServer.ForeColor = Color.Gray
+        Else
+            tbServer.ForeColor = Color.LightGray
+        End If
+    End Sub
+
+    Private Sub TbTimeout_Enter(sender As Object, e As EventArgs) Handles tbTimeout.Enter
+        If tbTimeout.Text = "Timeout" Then
+            tbTimeout.Text = String.Empty
+        End If
+    End Sub
+
+    Private Sub TbTimeout_Leave(sender As Object, e As EventArgs) Handles tbTimeout.Leave
+        If String.IsNullOrEmpty(tbTimeout.Text) Then
+            tbTimeout.Text = "Timeout"
+        End If
+    End Sub
+
+    Private Sub TbTimeout_TextChanged(sender As Object, e As EventArgs) Handles tbTimeout.TextChanged
+        If tbTimeout.Text = "Timeout" Then
+            tbTimeout.ForeColor = Color.Gray
+        Else
+            tbTimeout.ForeColor = Color.LightGray
+        End If
+    End Sub
+
+    Private Sub TbUser_Enter(sender As Object, e As EventArgs) Handles tbUser.Enter
+        If tbUser.Text = "User" Then
+            tbUser.Text = String.Empty
+        End If
+    End Sub
+
+    Private Sub TbUser_Leave(sender As Object, e As EventArgs) Handles tbUser.Leave
+        If String.IsNullOrEmpty(tbUser.Text) Then
+            tbUser.Text = "User"
+        End If
+    End Sub
+
+    Private Sub TbUser_TextChanged(sender As Object, e As EventArgs) Handles tbUser.TextChanged
+        If tbUser.Text = "User" Then
+            tbUser.ForeColor = Color.Gray
+        Else
+            tbUser.ForeColor = Color.LightGray
+        End If
+    End Sub
+
+    Private Sub TbPass_Enter(sender As Object, e As EventArgs) Handles tbPass.Enter
+        If tbPass.Text = "Password" Then
+            tbPass.Text = String.Empty
+        End If
+    End Sub
+
+    Private Sub TbPass_Leave(sender As Object, e As EventArgs) Handles tbPass.Leave
+        If String.IsNullOrEmpty(tbPass.Text) Then
+            tbPass.Text = "Password"
+        End If
+    End Sub
+
+    Private Sub TbPass_TextChanged(sender As Object, e As EventArgs) Handles tbPass.TextChanged
+        If tbPass.Text = "Password" Then
+            tbPass.ForeColor = Color.Gray
+            tbPass.UseSystemPasswordChar = False
+        Else
+            tbPass.ForeColor = Color.LightGray
+            tbPass.UseSystemPasswordChar = True
         End If
     End Sub
 

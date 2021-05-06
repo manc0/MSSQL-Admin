@@ -28,49 +28,49 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.MyMenuStrip = New System.Windows.Forms.MenuStrip()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiFile = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnOpen = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnNew = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnOpen = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnNew = New FontAwesome.Sharp.IconMenuItem()
         Me.tsSeparator7 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnSaveSql = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnSaveSql = New FontAwesome.Sharp.IconMenuItem()
         Me.btnSaveAs = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnSaveAll = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnExport = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnExport = New FontAwesome.Sharp.IconMenuItem()
         Me.tsSeparator6 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnClearOutput = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnClearOutput = New FontAwesome.Sharp.IconMenuItem()
         Me.btnClearXpath = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnCloseAllEditors = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnCloseAllEditors = New FontAwesome.Sharp.IconMenuItem()
         Me.btnCloseAllTables = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSeparator5 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnExit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnExit = New FontAwesome.Sharp.IconMenuItem()
         Me.tsmiEdit = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnUndo = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnRedo = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnUndo = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnRedo = New FontAwesome.Sharp.IconMenuItem()
         Me.tsSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnCut = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnCopy = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnPaste = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnSelectAll = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnCut = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnCopy = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnPaste = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnSelectAll = New FontAwesome.Sharp.IconMenuItem()
         Me.tsSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnReplace = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnFind = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnReplace = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnFind = New FontAwesome.Sharp.IconMenuItem()
         Me.tsmiView = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnFullscreen = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnFullscreen = New FontAwesome.Sharp.IconMenuItem()
         Me.tsSeparator9 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnZoomIn = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnZoomOut = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnZoomIn = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnZoomOut = New FontAwesome.Sharp.IconMenuItem()
         Me.btnResetZoom = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSeparator8 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnTableMode = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnTableMode = New FontAwesome.Sharp.IconMenuItem()
         Me.leftPanel = New System.Windows.Forms.Panel()
+        Me.tbTimeout = New System.Windows.Forms.TextBox()
         Me.btnReload = New FontAwesome.Sharp.IconButton()
         Me.btnExecute = New FontAwesome.Sharp.IconButton()
         Me.btnSubmit = New FontAwesome.Sharp.IconButton()
         Me.lblTables = New System.Windows.Forms.Label()
         Me.lblServer = New System.Windows.Forms.Label()
-        Me.lblUser = New System.Windows.Forms.Label()
-        Me.lblPass = New System.Windows.Forms.Label()
         Me.lblDatabases = New System.Windows.Forms.Label()
         Me.lbTableList = New System.Windows.Forms.ListBox()
         Me.tbServer = New System.Windows.Forms.TextBox()
@@ -89,13 +89,13 @@ Partial Class MainForm
         Me.outputArea = New System.Windows.Forms.RichTextBox()
         Me.MyToolStrip = New System.Windows.Forms.ToolStrip()
         Me.lblConnStatus = New System.Windows.Forms.ToolStripLabel()
-        Me.btnOutput = New System.Windows.Forms.ToolStripButton()
         Me.tsSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnXpath = New System.Windows.Forms.ToolStripButton()
         Me.splitter1 = New System.Windows.Forms.Splitter()
         Me.mainPanel = New System.Windows.Forms.Panel()
         Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
+        Me.btnOutput = New FontAwesome.Sharp.IconToolStripButton()
+        Me.btnXpath = New FontAwesome.Sharp.IconToolStripButton()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
@@ -108,13 +108,21 @@ Partial Class MainForm
         'MyMenuStrip
         '
         Me.MyMenuStrip.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
-        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile, Me.tsmiEdit, Me.tsmiView})
+        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.tsmiFile, Me.tsmiEdit, Me.tsmiView})
         Me.MyMenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MyMenuStrip.Name = "MyMenuStrip"
         Me.MyMenuStrip.Padding = New System.Windows.Forms.Padding(0)
         Me.MyMenuStrip.Size = New System.Drawing.Size(1222, 31)
         Me.MyMenuStrip.TabIndex = 0
         Me.MyMenuStrip.Text = "MenuStrip1"
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.Image = Global.MSSQLA.UserInterface.My.Resources.Resources.icon
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Padding = New System.Windows.Forms.Padding(5)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(30, 31)
+        Me.ToolStripMenuItem1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'tsmiFile
         '
@@ -124,12 +132,15 @@ Partial Class MainForm
         Me.tsmiFile.Name = "tsmiFile"
         Me.tsmiFile.Padding = New System.Windows.Forms.Padding(15, 5, 15, 5)
         Me.tsmiFile.Size = New System.Drawing.Size(61, 31)
-        Me.tsmiFile.Text = "File"
+        Me.tsmiFile.Text = "&File"
         '
         'btnOpen
         '
         Me.btnOpen.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnOpen.ForeColor = System.Drawing.Color.White
+        Me.btnOpen.IconChar = FontAwesome.Sharp.IconChar.FileAlt
+        Me.btnOpen.IconColor = System.Drawing.Color.White
+        Me.btnOpen.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnOpen.Name = "btnOpen"
         Me.btnOpen.Padding = New System.Windows.Forms.Padding(2)
         Me.btnOpen.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
@@ -140,6 +151,9 @@ Partial Class MainForm
         '
         Me.btnNew.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnNew.ForeColor = System.Drawing.Color.White
+        Me.btnNew.IconChar = FontAwesome.Sharp.IconChar.FileCode
+        Me.btnNew.IconColor = System.Drawing.Color.White
+        Me.btnNew.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Padding = New System.Windows.Forms.Padding(2)
         Me.btnNew.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.N), System.Windows.Forms.Keys)
@@ -158,6 +172,9 @@ Partial Class MainForm
         '
         Me.btnSaveSql.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnSaveSql.ForeColor = System.Drawing.Color.White
+        Me.btnSaveSql.IconChar = FontAwesome.Sharp.IconChar.Save
+        Me.btnSaveSql.IconColor = System.Drawing.Color.White
+        Me.btnSaveSql.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnSaveSql.Name = "btnSaveSql"
         Me.btnSaveSql.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSaveSql.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
@@ -190,6 +207,9 @@ Partial Class MainForm
         '
         Me.btnExport.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnExport.ForeColor = System.Drawing.Color.White
+        Me.btnExport.IconChar = FontAwesome.Sharp.IconChar.Table
+        Me.btnExport.IconColor = System.Drawing.Color.White
+        Me.btnExport.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnExport.Name = "btnExport"
         Me.btnExport.Padding = New System.Windows.Forms.Padding(2)
         Me.btnExport.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
@@ -208,6 +228,9 @@ Partial Class MainForm
         '
         Me.btnClearOutput.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnClearOutput.ForeColor = System.Drawing.Color.White
+        Me.btnClearOutput.IconChar = FontAwesome.Sharp.IconChar.TrashAlt
+        Me.btnClearOutput.IconColor = System.Drawing.Color.White
+        Me.btnClearOutput.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnClearOutput.Name = "btnClearOutput"
         Me.btnClearOutput.Padding = New System.Windows.Forms.Padding(2)
         Me.btnClearOutput.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
@@ -237,6 +260,9 @@ Partial Class MainForm
         '
         Me.btnCloseAllEditors.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnCloseAllEditors.ForeColor = System.Drawing.Color.White
+        Me.btnCloseAllEditors.IconChar = FontAwesome.Sharp.IconChar.Times
+        Me.btnCloseAllEditors.IconColor = System.Drawing.Color.White
+        Me.btnCloseAllEditors.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnCloseAllEditors.Name = "btnCloseAllEditors"
         Me.btnCloseAllEditors.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCloseAllEditors.ShortcutKeys = CType((System.Windows.Forms.Keys.Shift Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
@@ -265,6 +291,9 @@ Partial Class MainForm
         '
         Me.btnExit.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnExit.ForeColor = System.Drawing.Color.White
+        Me.btnExit.IconChar = FontAwesome.Sharp.IconChar.DoorOpen
+        Me.btnExit.IconColor = System.Drawing.Color.White
+        Me.btnExit.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnExit.Name = "btnExit"
         Me.btnExit.Padding = New System.Windows.Forms.Padding(2)
         Me.btnExit.Size = New System.Drawing.Size(230, 24)
@@ -278,12 +307,15 @@ Partial Class MainForm
         Me.tsmiEdit.Name = "tsmiEdit"
         Me.tsmiEdit.Padding = New System.Windows.Forms.Padding(15, 5, 15, 5)
         Me.tsmiEdit.Size = New System.Drawing.Size(64, 31)
-        Me.tsmiEdit.Text = "Edit"
+        Me.tsmiEdit.Text = "&Edit"
         '
         'btnUndo
         '
         Me.btnUndo.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnUndo.ForeColor = System.Drawing.Color.White
+        Me.btnUndo.IconChar = FontAwesome.Sharp.IconChar.Undo
+        Me.btnUndo.IconColor = System.Drawing.Color.White
+        Me.btnUndo.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnUndo.Name = "btnUndo"
         Me.btnUndo.Padding = New System.Windows.Forms.Padding(2)
         Me.btnUndo.ShortcutKeyDisplayString = "Ctrl+Z"
@@ -294,6 +326,9 @@ Partial Class MainForm
         '
         Me.btnRedo.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnRedo.ForeColor = System.Drawing.Color.White
+        Me.btnRedo.IconChar = FontAwesome.Sharp.IconChar.Redo
+        Me.btnRedo.IconColor = System.Drawing.Color.White
+        Me.btnRedo.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnRedo.Name = "btnRedo"
         Me.btnRedo.Padding = New System.Windows.Forms.Padding(2)
         Me.btnRedo.ShortcutKeyDisplayString = "Ctrl+Y"
@@ -312,6 +347,9 @@ Partial Class MainForm
         '
         Me.btnCut.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnCut.ForeColor = System.Drawing.Color.White
+        Me.btnCut.IconChar = FontAwesome.Sharp.IconChar.Cut
+        Me.btnCut.IconColor = System.Drawing.Color.White
+        Me.btnCut.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnCut.Name = "btnCut"
         Me.btnCut.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCut.ShortcutKeyDisplayString = "Ctrl+X"
@@ -322,6 +360,9 @@ Partial Class MainForm
         '
         Me.btnCopy.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnCopy.ForeColor = System.Drawing.Color.White
+        Me.btnCopy.IconChar = FontAwesome.Sharp.IconChar.Copy
+        Me.btnCopy.IconColor = System.Drawing.Color.White
+        Me.btnCopy.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnCopy.Name = "btnCopy"
         Me.btnCopy.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCopy.ShortcutKeyDisplayString = "Ctrl+C"
@@ -332,6 +373,9 @@ Partial Class MainForm
         '
         Me.btnPaste.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnPaste.ForeColor = System.Drawing.Color.White
+        Me.btnPaste.IconChar = FontAwesome.Sharp.IconChar.Paste
+        Me.btnPaste.IconColor = System.Drawing.Color.White
+        Me.btnPaste.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnPaste.Name = "btnPaste"
         Me.btnPaste.Padding = New System.Windows.Forms.Padding(2)
         Me.btnPaste.ShortcutKeyDisplayString = "Ctrl+V"
@@ -342,6 +386,9 @@ Partial Class MainForm
         '
         Me.btnSelectAll.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnSelectAll.ForeColor = System.Drawing.Color.White
+        Me.btnSelectAll.IconChar = FontAwesome.Sharp.IconChar.Stream
+        Me.btnSelectAll.IconColor = System.Drawing.Color.White
+        Me.btnSelectAll.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnSelectAll.Name = "btnSelectAll"
         Me.btnSelectAll.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSelectAll.ShortcutKeyDisplayString = "Ctrl+A"
@@ -360,6 +407,9 @@ Partial Class MainForm
         '
         Me.btnReplace.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnReplace.ForeColor = System.Drawing.Color.White
+        Me.btnReplace.IconChar = FontAwesome.Sharp.IconChar.Wpforms
+        Me.btnReplace.IconColor = System.Drawing.Color.White
+        Me.btnReplace.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnReplace.Name = "btnReplace"
         Me.btnReplace.Padding = New System.Windows.Forms.Padding(2)
         Me.btnReplace.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
@@ -370,6 +420,9 @@ Partial Class MainForm
         '
         Me.btnFind.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnFind.ForeColor = System.Drawing.Color.White
+        Me.btnFind.IconChar = FontAwesome.Sharp.IconChar.Search
+        Me.btnFind.IconColor = System.Drawing.Color.White
+        Me.btnFind.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnFind.Name = "btnFind"
         Me.btnFind.Padding = New System.Windows.Forms.Padding(2)
         Me.btnFind.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
@@ -384,13 +437,16 @@ Partial Class MainForm
         Me.tsmiView.Name = "tsmiView"
         Me.tsmiView.Padding = New System.Windows.Forms.Padding(15, 5, 15, 5)
         Me.tsmiView.Size = New System.Drawing.Size(69, 31)
-        Me.tsmiView.Text = "View"
+        Me.tsmiView.Text = "&View"
         '
         'btnFullscreen
         '
         Me.btnFullscreen.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnFullscreen.CheckOnClick = True
         Me.btnFullscreen.ForeColor = System.Drawing.Color.White
+        Me.btnFullscreen.IconChar = FontAwesome.Sharp.IconChar.ExpandAlt
+        Me.btnFullscreen.IconColor = System.Drawing.Color.White
+        Me.btnFullscreen.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnFullscreen.Name = "btnFullscreen"
         Me.btnFullscreen.Padding = New System.Windows.Forms.Padding(2)
         Me.btnFullscreen.ShortcutKeyDisplayString = ""
@@ -410,6 +466,9 @@ Partial Class MainForm
         '
         Me.btnZoomIn.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnZoomIn.ForeColor = System.Drawing.Color.White
+        Me.btnZoomIn.IconChar = FontAwesome.Sharp.IconChar.SearchPlus
+        Me.btnZoomIn.IconColor = System.Drawing.Color.White
+        Me.btnZoomIn.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnZoomIn.Name = "btnZoomIn"
         Me.btnZoomIn.Padding = New System.Windows.Forms.Padding(2)
         Me.btnZoomIn.ShortcutKeyDisplayString = "Ctrl++"
@@ -421,6 +480,9 @@ Partial Class MainForm
         '
         Me.btnZoomOut.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
         Me.btnZoomOut.ForeColor = System.Drawing.Color.White
+        Me.btnZoomOut.IconChar = FontAwesome.Sharp.IconChar.SearchMinus
+        Me.btnZoomOut.IconColor = System.Drawing.Color.White
+        Me.btnZoomOut.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnZoomOut.Name = "btnZoomOut"
         Me.btnZoomOut.Padding = New System.Windows.Forms.Padding(2)
         Me.btnZoomOut.ShortcutKeyDisplayString = "Ctrl+-"
@@ -454,6 +516,9 @@ Partial Class MainForm
         Me.btnTableMode.CheckOnClick = True
         Me.btnTableMode.CheckState = System.Windows.Forms.CheckState.Checked
         Me.btnTableMode.ForeColor = System.Drawing.Color.White
+        Me.btnTableMode.IconChar = FontAwesome.Sharp.IconChar.Check
+        Me.btnTableMode.IconColor = System.Drawing.Color.CornflowerBlue
+        Me.btnTableMode.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnTableMode.Name = "btnTableMode"
         Me.btnTableMode.Padding = New System.Windows.Forms.Padding(2)
         Me.btnTableMode.Size = New System.Drawing.Size(244, 24)
@@ -462,13 +527,12 @@ Partial Class MainForm
         'leftPanel
         '
         Me.leftPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.leftPanel.Controls.Add(Me.tbTimeout)
         Me.leftPanel.Controls.Add(Me.btnReload)
         Me.leftPanel.Controls.Add(Me.btnExecute)
         Me.leftPanel.Controls.Add(Me.btnSubmit)
         Me.leftPanel.Controls.Add(Me.lblTables)
         Me.leftPanel.Controls.Add(Me.lblServer)
-        Me.leftPanel.Controls.Add(Me.lblUser)
-        Me.leftPanel.Controls.Add(Me.lblPass)
         Me.leftPanel.Controls.Add(Me.lblDatabases)
         Me.leftPanel.Controls.Add(Me.lbTableList)
         Me.leftPanel.Controls.Add(Me.tbServer)
@@ -482,6 +546,22 @@ Partial Class MainForm
         Me.leftPanel.Name = "leftPanel"
         Me.leftPanel.Size = New System.Drawing.Size(269, 708)
         Me.leftPanel.TabIndex = 1
+        '
+        'tbTimeout
+        '
+        Me.tbTimeout.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tbTimeout.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.tbTimeout.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.tbTimeout.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbTimeout.ForeColor = System.Drawing.Color.Gray
+        Me.tbTimeout.Location = New System.Drawing.Point(202, 629)
+        Me.tbTimeout.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
+        Me.tbTimeout.MaxLength = 2
+        Me.tbTimeout.Name = "tbTimeout"
+        Me.tbTimeout.Size = New System.Drawing.Size(53, 25)
+        Me.tbTimeout.TabIndex = 14
+        Me.tbTimeout.Text = "Timeout"
         '
         'btnReload
         '
@@ -559,7 +639,7 @@ Partial Class MainForm
         Me.lblTables.Name = "lblTables"
         Me.lblTables.Size = New System.Drawing.Size(274, 20)
         Me.lblTables.TabIndex = 12
-        Me.lblTables.Text = "TABLES"
+        Me.lblTables.Text = "OBJECT EXPLORER"
         '
         'lblServer
         '
@@ -568,40 +648,12 @@ Partial Class MainForm
         Me.lblServer.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.lblServer.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblServer.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblServer.Location = New System.Drawing.Point(0, 466)
+        Me.lblServer.Location = New System.Drawing.Point(0, 529)
         Me.lblServer.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lblServer.Name = "lblServer"
         Me.lblServer.Size = New System.Drawing.Size(271, 20)
         Me.lblServer.TabIndex = 9
-        Me.lblServer.Text = "SERVER"
-        '
-        'lblUser
-        '
-        Me.lblUser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblUser.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.lblUser.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblUser.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblUser.Location = New System.Drawing.Point(-2, 531)
-        Me.lblUser.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
-        Me.lblUser.Name = "lblUser"
-        Me.lblUser.Size = New System.Drawing.Size(271, 20)
-        Me.lblUser.TabIndex = 7
-        Me.lblUser.Text = "USER"
-        '
-        'lblPass
-        '
-        Me.lblPass.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblPass.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.lblPass.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblPass.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblPass.Location = New System.Drawing.Point(-2, 596)
-        Me.lblPass.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
-        Me.lblPass.Name = "lblPass"
-        Me.lblPass.Size = New System.Drawing.Size(271, 20)
-        Me.lblPass.TabIndex = 5
-        Me.lblPass.Text = "PASSWORD"
+        Me.lblServer.Text = "CONNECTION"
         '
         'lblDatabases
         '
@@ -631,7 +683,7 @@ Partial Class MainForm
         Me.lbTableList.Location = New System.Drawing.Point(15, 141)
         Me.lbTableList.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lbTableList.Name = "lbTableList"
-        Me.lbTableList.Size = New System.Drawing.Size(240, 289)
+        Me.lbTableList.Size = New System.Drawing.Size(240, 374)
         Me.lbTableList.TabIndex = 4
         '
         'tbServer
@@ -641,12 +693,13 @@ Partial Class MainForm
         Me.tbServer.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.tbServer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tbServer.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbServer.ForeColor = System.Drawing.Color.LightGray
-        Me.tbServer.Location = New System.Drawing.Point(15, 496)
+        Me.tbServer.ForeColor = System.Drawing.Color.Gray
+        Me.tbServer.Location = New System.Drawing.Point(15, 559)
         Me.tbServer.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.tbServer.Name = "tbServer"
         Me.tbServer.Size = New System.Drawing.Size(240, 25)
         Me.tbServer.TabIndex = 5
+        Me.tbServer.Text = "Server"
         '
         'tbUser
         '
@@ -655,12 +708,13 @@ Partial Class MainForm
         Me.tbUser.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.tbUser.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tbUser.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbUser.ForeColor = System.Drawing.Color.LightGray
-        Me.tbUser.Location = New System.Drawing.Point(15, 561)
+        Me.tbUser.ForeColor = System.Drawing.Color.Gray
+        Me.tbUser.Location = New System.Drawing.Point(15, 594)
         Me.tbUser.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.tbUser.Name = "tbUser"
         Me.tbUser.Size = New System.Drawing.Size(240, 25)
         Me.tbUser.TabIndex = 6
+        Me.tbUser.Text = "User"
         '
         'btnConnect
         '
@@ -676,7 +730,7 @@ Partial Class MainForm
         Me.btnConnect.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnConnect.IconSize = 24
         Me.btnConnect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnConnect.Location = New System.Drawing.Point(15, 661)
+        Me.btnConnect.Location = New System.Drawing.Point(15, 664)
         Me.btnConnect.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.btnConnect.Name = "btnConnect"
         Me.btnConnect.Size = New System.Drawing.Size(117, 30)
@@ -692,13 +746,13 @@ Partial Class MainForm
         Me.tbPass.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.tbPass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tbPass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbPass.ForeColor = System.Drawing.Color.LightGray
-        Me.tbPass.Location = New System.Drawing.Point(15, 626)
+        Me.tbPass.ForeColor = System.Drawing.Color.Gray
+        Me.tbPass.Location = New System.Drawing.Point(15, 629)
         Me.tbPass.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.tbPass.Name = "tbPass"
-        Me.tbPass.Size = New System.Drawing.Size(240, 25)
+        Me.tbPass.Size = New System.Drawing.Size(182, 25)
         Me.tbPass.TabIndex = 7
-        Me.tbPass.UseSystemPasswordChar = True
+        Me.tbPass.Text = "Password"
         '
         'cbDatabases
         '
@@ -731,7 +785,7 @@ Partial Class MainForm
         Me.btnDisconnect.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnDisconnect.IconSize = 24
         Me.btnDisconnect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnDisconnect.Location = New System.Drawing.Point(138, 661)
+        Me.btnDisconnect.Location = New System.Drawing.Point(138, 664)
         Me.btnDisconnect.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.btnDisconnect.Name = "btnDisconnect"
         Me.btnDisconnect.Size = New System.Drawing.Size(117, 30)
@@ -745,9 +799,9 @@ Partial Class MainForm
         Me.splitter2.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
         Me.splitter2.Cursor = System.Windows.Forms.Cursors.SizeNS
         Me.splitter2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.splitter2.Location = New System.Drawing.Point(0, 284)
+        Me.splitter2.Location = New System.Drawing.Point(0, 289)
         Me.splitter2.Name = "splitter2"
-        Me.splitter2.Size = New System.Drawing.Size(953, 1)
+        Me.splitter2.Size = New System.Drawing.Size(953, 2)
         Me.splitter2.TabIndex = 11
         Me.splitter2.TabStop = False
         Me.splitter2.Visible = False
@@ -881,44 +935,20 @@ Partial Class MainForm
         Me.lblConnStatus.Size = New System.Drawing.Size(86, 21)
         Me.lblConnStatus.Text = "Disconnected"
         '
-        'btnOutput
-        '
-        Me.btnOutput.AutoToolTip = False
-        Me.btnOutput.CheckOnClick = True
-        Me.btnOutput.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.btnOutput.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnOutput.Image = CType(resources.GetObject("btnOutput.Image"), System.Drawing.Image)
-        Me.btnOutput.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnOutput.Name = "btnOutput"
-        Me.btnOutput.Size = New System.Drawing.Size(52, 21)
-        Me.btnOutput.Text = "Output"
-        '
         'tsSeparator4
         '
         Me.tsSeparator4.ForeColor = System.Drawing.Color.LightGray
         Me.tsSeparator4.Name = "tsSeparator4"
         Me.tsSeparator4.Size = New System.Drawing.Size(6, 24)
         '
-        'btnXpath
-        '
-        Me.btnXpath.AutoToolTip = False
-        Me.btnXpath.CheckOnClick = True
-        Me.btnXpath.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.btnXpath.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.btnXpath.Image = CType(resources.GetObject("btnXpath.Image"), System.Drawing.Image)
-        Me.btnXpath.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnXpath.Name = "btnXpath"
-        Me.btnXpath.Size = New System.Drawing.Size(103, 21)
-        Me.btnXpath.Text = "XPath Evaluator"
-        '
         'splitter1
         '
         Me.splitter1.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
         Me.splitter1.Cursor = System.Windows.Forms.Cursors.SizeNS
         Me.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.splitter1.Location = New System.Drawing.Point(0, 508)
+        Me.splitter1.Location = New System.Drawing.Point(0, 507)
         Me.splitter1.Name = "splitter1"
-        Me.splitter1.Size = New System.Drawing.Size(953, 1)
+        Me.splitter1.Size = New System.Drawing.Size(953, 2)
         Me.splitter1.TabIndex = 13
         Me.splitter1.TabStop = False
         Me.splitter1.Visible = False
@@ -934,6 +964,7 @@ Partial Class MainForm
         Me.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.mainPanel.Location = New System.Drawing.Point(269, 31)
         Me.mainPanel.Name = "mainPanel"
+        Me.mainPanel.Padding = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.mainPanel.Size = New System.Drawing.Size(953, 708)
         Me.mainPanel.TabIndex = 3
         '
@@ -945,13 +976,13 @@ Partial Class MainForm
         Me.TablesTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
         Me.TablesTabControl.HasAddButton = False
         Me.TablesTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(200, Byte), Integer))
-        Me.TablesTabControl.Location = New System.Drawing.Point(0, 285)
+        Me.TablesTabControl.Location = New System.Drawing.Point(0, 291)
         Me.TablesTabControl.Margin = New System.Windows.Forms.Padding(0)
         Me.TablesTabControl.Name = "TablesTabControl"
         Me.TablesTabControl.Padding = New System.Drawing.Point(0, 0)
         Me.TablesTabControl.SelectedIndex = 0
         Me.TablesTabControl.SelectedTabColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
-        Me.TablesTabControl.Size = New System.Drawing.Size(953, 223)
+        Me.TablesTabControl.Size = New System.Drawing.Size(953, 216)
         Me.TablesTabControl.TabForeColor = System.Drawing.Color.White
         Me.TablesTabControl.TabIndex = 14
         Me.TablesTabControl.Visible = False
@@ -964,7 +995,7 @@ Partial Class MainForm
         Me.EditorsTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
         Me.EditorsTabControl.HasAddButton = True
         Me.EditorsTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(144, Byte), Integer), CType(CType(200, Byte), Integer))
-        Me.EditorsTabControl.Location = New System.Drawing.Point(0, 0)
+        Me.EditorsTabControl.Location = New System.Drawing.Point(0, 5)
         Me.EditorsTabControl.Margin = New System.Windows.Forms.Padding(0)
         Me.EditorsTabControl.Name = "EditorsTabControl"
         Me.EditorsTabControl.Padding = New System.Drawing.Point(0, 0)
@@ -974,6 +1005,32 @@ Partial Class MainForm
         Me.EditorsTabControl.TabForeColor = System.Drawing.Color.White
         Me.EditorsTabControl.TabIndex = 16
         Me.EditorsTabControl.Visible = False
+        '
+        'btnOutput
+        '
+        Me.btnOutput.AutoToolTip = False
+        Me.btnOutput.CheckOnClick = True
+        Me.btnOutput.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.btnOutput.IconChar = FontAwesome.Sharp.IconChar.Terminal
+        Me.btnOutput.IconColor = System.Drawing.Color.CornflowerBlue
+        Me.btnOutput.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnOutput.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnOutput.Name = "btnOutput"
+        Me.btnOutput.Size = New System.Drawing.Size(68, 21)
+        Me.btnOutput.Text = "Output"
+        '
+        'btnXpath
+        '
+        Me.btnXpath.AutoToolTip = False
+        Me.btnXpath.CheckOnClick = True
+        Me.btnXpath.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.btnXpath.IconChar = FontAwesome.Sharp.IconChar.Code
+        Me.btnXpath.IconColor = System.Drawing.Color.CornflowerBlue
+        Me.btnXpath.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnXpath.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnXpath.Name = "btnXpath"
+        Me.btnXpath.Size = New System.Drawing.Size(119, 21)
+        Me.btnXpath.Text = "XPath Evaluator"
         '
         'MainForm
         '
@@ -1016,10 +1073,8 @@ Partial Class MainForm
     Friend WithEvents tbPass As TextBox
     Friend WithEvents cbDatabases As ComboBox
     Friend WithEvents lblDatabases As Label
-    Friend WithEvents lblPass As Label
     Friend WithEvents lblServer As Label
     Friend WithEvents tbServer As TextBox
-    Friend WithEvents lblUser As Label
     Friend WithEvents tbUser As TextBox
     Friend WithEvents btnExecute As IconButton
     Friend WithEvents lbTableList As ListBox
@@ -1031,26 +1086,12 @@ Partial Class MainForm
     Friend WithEvents outputArea As RichTextBox
     Friend WithEvents MyToolStrip As ToolStrip
     Friend WithEvents lblConnStatus As ToolStripLabel
-    Friend WithEvents btnOutput As ToolStripButton
     Friend WithEvents tsSeparator4 As ToolStripSeparator
-    Friend WithEvents btnXpath As ToolStripButton
     Friend WithEvents btnSubmit As IconButton
-    Friend WithEvents btnClearOutput As ToolStripMenuItem
-    Friend WithEvents btnExport As ToolStripMenuItem
-    Friend WithEvents btnExit As ToolStripMenuItem
     Friend WithEvents tsSeparator1 As ToolStripSeparator
-    Friend WithEvents btnUndo As ToolStripMenuItem
-    Friend WithEvents btnRedo As ToolStripMenuItem
     Friend WithEvents tsSeparator2 As ToolStripSeparator
-    Friend WithEvents btnCut As ToolStripMenuItem
-    Friend WithEvents btnCopy As ToolStripMenuItem
-    Friend WithEvents btnPaste As ToolStripMenuItem
     Friend WithEvents tsSeparator3 As ToolStripSeparator
-    Friend WithEvents btnFind As ToolStripMenuItem
-    Friend WithEvents btnReplace As ToolStripMenuItem
-    Friend WithEvents btnSaveSql As ToolStripMenuItem
     Friend WithEvents btnDisconnect As IconButton
-    Friend WithEvents btnSelectAll As ToolStripMenuItem
     Friend WithEvents btnClearXpath As ToolStripMenuItem
     Friend WithEvents xpathPanel As Panel
     Friend WithEvents xpathArea As RichTextBox
@@ -1060,21 +1101,37 @@ Partial Class MainForm
     Friend WithEvents btnReload As IconButton
     Friend WithEvents btnCloseAllTables As ToolStripMenuItem
     Friend WithEvents tsSeparator5 As ToolStripSeparator
-    Friend WithEvents btnNew As ToolStripMenuItem
     Friend WithEvents btnSaveAs As ToolStripMenuItem
     Friend WithEvents tsSeparator6 As ToolStripSeparator
-    Friend WithEvents btnCloseAllEditors As ToolStripMenuItem
     Friend WithEvents TablesTabControl As CustomTabControl
     Friend WithEvents EditorsTabControl As CustomTabControl
-    Friend WithEvents btnOpen As ToolStripMenuItem
     Friend WithEvents tsSeparator7 As ToolStripSeparator
     Friend WithEvents btnSaveAll As ToolStripMenuItem
     Friend WithEvents tsmiView As ToolStripMenuItem
-    Friend WithEvents btnZoomIn As ToolStripMenuItem
-    Friend WithEvents btnZoomOut As ToolStripMenuItem
     Friend WithEvents btnResetZoom As ToolStripMenuItem
     Friend WithEvents tsSeparator8 As ToolStripSeparator
-    Friend WithEvents btnTableMode As ToolStripMenuItem
-    Friend WithEvents btnFullscreen As ToolStripMenuItem
     Friend WithEvents tsSeparator9 As ToolStripSeparator
+    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents btnOpen As IconMenuItem
+    Friend WithEvents btnSaveSql As IconMenuItem
+    Friend WithEvents btnNew As IconMenuItem
+    Friend WithEvents btnExport As IconMenuItem
+    Friend WithEvents btnClearOutput As IconMenuItem
+    Friend WithEvents btnCloseAllEditors As IconMenuItem
+    Friend WithEvents btnExit As IconMenuItem
+    Friend WithEvents btnUndo As IconMenuItem
+    Friend WithEvents btnRedo As IconMenuItem
+    Friend WithEvents btnCut As IconMenuItem
+    Friend WithEvents btnCopy As IconMenuItem
+    Friend WithEvents btnPaste As IconMenuItem
+    Friend WithEvents btnSelectAll As IconMenuItem
+    Friend WithEvents btnReplace As IconMenuItem
+    Friend WithEvents btnFind As IconMenuItem
+    Friend WithEvents btnFullscreen As IconMenuItem
+    Friend WithEvents btnZoomIn As IconMenuItem
+    Friend WithEvents btnZoomOut As IconMenuItem
+    Friend WithEvents btnTableMode As IconMenuItem
+    Friend WithEvents tbTimeout As TextBox
+    Friend WithEvents btnOutput As IconToolStripButton
+    Friend WithEvents btnXpath As IconToolStripButton
 End Class

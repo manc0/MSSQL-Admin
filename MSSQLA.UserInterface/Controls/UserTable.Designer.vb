@@ -31,7 +31,7 @@ Partial Class UserTable
         '
         'DataGridView
         '
-        Me.DataGridView.AllowUserToResizeRows = False
+        Me.DataGridView.AllowUserToOrderColumns = True
         Me.DataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridView.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.DataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None

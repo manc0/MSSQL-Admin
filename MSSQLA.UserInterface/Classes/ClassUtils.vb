@@ -8,7 +8,6 @@
     Public Shared Property CurrentTable As UserTable
     Public Shared Property CurrentEditor As UserEditor
     Public Shared Property CurrentZoom As Integer
-    Public Shared Property ConnectionTimeout As Integer = 5
     Public Shared Property CurrentColumnsMode As DataGridViewAutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
 
     Public Enum ConnectionStatus

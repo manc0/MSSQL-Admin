@@ -28,7 +28,7 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.MyMenuStrip = New System.Windows.Forms.MenuStrip()
-        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsLogo = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnOpen = New FontAwesome.Sharp.IconMenuItem()
         Me.btnNew = New FontAwesome.Sharp.IconMenuItem()
@@ -89,13 +89,13 @@ Partial Class MainForm
         Me.outputArea = New System.Windows.Forms.RichTextBox()
         Me.MyToolStrip = New System.Windows.Forms.ToolStrip()
         Me.lblConnStatus = New System.Windows.Forms.ToolStripLabel()
+        Me.btnOutput = New FontAwesome.Sharp.IconToolStripButton()
         Me.tsSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnXpath = New FontAwesome.Sharp.IconToolStripButton()
         Me.splitter1 = New System.Windows.Forms.Splitter()
         Me.mainPanel = New System.Windows.Forms.Panel()
         Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
-        Me.btnOutput = New FontAwesome.Sharp.IconToolStripButton()
-        Me.btnXpath = New FontAwesome.Sharp.IconToolStripButton()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
@@ -108,7 +108,7 @@ Partial Class MainForm
         'MyMenuStrip
         '
         Me.MyMenuStrip.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
-        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.tsmiFile, Me.tsmiEdit, Me.tsmiView})
+        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsLogo, Me.tsmiFile, Me.tsmiEdit, Me.tsmiView})
         Me.MyMenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MyMenuStrip.Name = "MyMenuStrip"
         Me.MyMenuStrip.Padding = New System.Windows.Forms.Padding(0)
@@ -116,13 +116,13 @@ Partial Class MainForm
         Me.MyMenuStrip.TabIndex = 0
         Me.MyMenuStrip.Text = "MenuStrip1"
         '
-        'ToolStripMenuItem1
+        'tsLogo
         '
-        Me.ToolStripMenuItem1.Image = Global.MSSQLA.UserInterface.My.Resources.Resources.icon
-        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Padding = New System.Windows.Forms.Padding(5)
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(30, 31)
-        Me.ToolStripMenuItem1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.tsLogo.Image = Global.MSSQLA.UserInterface.My.Resources.Resources.icon
+        Me.tsLogo.Name = "tsLogo"
+        Me.tsLogo.Padding = New System.Windows.Forms.Padding(5)
+        Me.tsLogo.Size = New System.Drawing.Size(30, 31)
+        Me.tsLogo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'tsmiFile
         '
@@ -935,11 +935,37 @@ Partial Class MainForm
         Me.lblConnStatus.Size = New System.Drawing.Size(86, 21)
         Me.lblConnStatus.Text = "Disconnected"
         '
+        'btnOutput
+        '
+        Me.btnOutput.AutoToolTip = False
+        Me.btnOutput.CheckOnClick = True
+        Me.btnOutput.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.btnOutput.IconChar = FontAwesome.Sharp.IconChar.Terminal
+        Me.btnOutput.IconColor = System.Drawing.Color.CornflowerBlue
+        Me.btnOutput.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnOutput.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnOutput.Name = "btnOutput"
+        Me.btnOutput.Size = New System.Drawing.Size(68, 21)
+        Me.btnOutput.Text = "Output"
+        '
         'tsSeparator4
         '
         Me.tsSeparator4.ForeColor = System.Drawing.Color.LightGray
         Me.tsSeparator4.Name = "tsSeparator4"
         Me.tsSeparator4.Size = New System.Drawing.Size(6, 24)
+        '
+        'btnXpath
+        '
+        Me.btnXpath.AutoToolTip = False
+        Me.btnXpath.CheckOnClick = True
+        Me.btnXpath.ForeColor = System.Drawing.Color.DodgerBlue
+        Me.btnXpath.IconChar = FontAwesome.Sharp.IconChar.Code
+        Me.btnXpath.IconColor = System.Drawing.Color.CornflowerBlue
+        Me.btnXpath.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnXpath.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnXpath.Name = "btnXpath"
+        Me.btnXpath.Size = New System.Drawing.Size(119, 21)
+        Me.btnXpath.Text = "XPath Evaluator"
         '
         'splitter1
         '
@@ -1005,32 +1031,6 @@ Partial Class MainForm
         Me.EditorsTabControl.TabForeColor = System.Drawing.Color.White
         Me.EditorsTabControl.TabIndex = 16
         Me.EditorsTabControl.Visible = False
-        '
-        'btnOutput
-        '
-        Me.btnOutput.AutoToolTip = False
-        Me.btnOutput.CheckOnClick = True
-        Me.btnOutput.ForeColor = System.Drawing.Color.DodgerBlue
-        Me.btnOutput.IconChar = FontAwesome.Sharp.IconChar.Terminal
-        Me.btnOutput.IconColor = System.Drawing.Color.CornflowerBlue
-        Me.btnOutput.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnOutput.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnOutput.Name = "btnOutput"
-        Me.btnOutput.Size = New System.Drawing.Size(68, 21)
-        Me.btnOutput.Text = "Output"
-        '
-        'btnXpath
-        '
-        Me.btnXpath.AutoToolTip = False
-        Me.btnXpath.CheckOnClick = True
-        Me.btnXpath.ForeColor = System.Drawing.Color.DodgerBlue
-        Me.btnXpath.IconChar = FontAwesome.Sharp.IconChar.Code
-        Me.btnXpath.IconColor = System.Drawing.Color.CornflowerBlue
-        Me.btnXpath.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnXpath.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnXpath.Name = "btnXpath"
-        Me.btnXpath.Size = New System.Drawing.Size(119, 21)
-        Me.btnXpath.Text = "XPath Evaluator"
         '
         'MainForm
         '
@@ -1111,7 +1111,7 @@ Partial Class MainForm
     Friend WithEvents btnResetZoom As ToolStripMenuItem
     Friend WithEvents tsSeparator8 As ToolStripSeparator
     Friend WithEvents tsSeparator9 As ToolStripSeparator
-    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents tsLogo As ToolStripMenuItem
     Friend WithEvents btnOpen As IconMenuItem
     Friend WithEvents btnSaveSql As IconMenuItem
     Friend WithEvents btnNew As IconMenuItem

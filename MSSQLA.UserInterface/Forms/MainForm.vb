@@ -25,9 +25,9 @@ Public Class MainForm
             End If
         Next
 
-        MyMenuStrip.Renderer = New ToolStripProfessionalRenderer(New MenuColorTable())
+        MyMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
         MyToolStrip.RenderMode = ToolStripRenderMode.System
-        MyToolStrip.Renderer = New CustomToolStripRenderer()
+        MyToolStrip.Renderer = New CustomToolStripSystemRenderer()
 
         TablesTabControl.ItemSize = New Size(0, 25)
         TablesTabControl.SizeMode = TabSizeMode.Normal

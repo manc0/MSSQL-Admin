@@ -1,4 +1,4 @@
-﻿Public Class CustomToolStripRenderer
+﻿Public Class CustomToolStripSystemRenderer
     Inherits ToolStripSystemRenderer
 
     Protected Overrides Sub OnRenderToolStripBorder(e As ToolStripRenderEventArgs)

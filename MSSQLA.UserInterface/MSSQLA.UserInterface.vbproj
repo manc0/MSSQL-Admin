@@ -97,8 +97,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\CustomToolStripProfessionalRenderer.vb" />
     <Compile Include="Classes\ClassUtils.vb" />
-    <Compile Include="Classes\CustomToolStripRenderer.vb" />
+    <Compile Include="Classes\CustomToolStripSystemRenderer.vb" />
     <Compile Include="Classes\MenuColorTable.vb" />
     <Compile Include="Controls\CustomTabControl.vb">
       <SubType>Component</SubType>

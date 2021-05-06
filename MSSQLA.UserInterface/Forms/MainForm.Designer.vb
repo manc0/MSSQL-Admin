@@ -65,6 +65,7 @@ Partial Class MainForm
         Me.tsSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnTableMode = New FontAwesome.Sharp.IconMenuItem()
         Me.leftPanel = New System.Windows.Forms.Panel()
+        Me.tvObjectExplorer = New System.Windows.Forms.TreeView()
         Me.tbTimeout = New System.Windows.Forms.TextBox()
         Me.btnReload = New FontAwesome.Sharp.IconButton()
         Me.btnExecute = New FontAwesome.Sharp.IconButton()
@@ -72,7 +73,6 @@ Partial Class MainForm
         Me.lblTables = New System.Windows.Forms.Label()
         Me.lblServer = New System.Windows.Forms.Label()
         Me.lblDatabases = New System.Windows.Forms.Label()
-        Me.lbTableList = New System.Windows.Forms.ListBox()
         Me.tbServer = New System.Windows.Forms.TextBox()
         Me.tbUser = New System.Windows.Forms.TextBox()
         Me.btnConnect = New FontAwesome.Sharp.IconButton()
@@ -120,8 +120,8 @@ Partial Class MainForm
         '
         Me.tsLogo.Image = Global.MSSQLA.UserInterface.My.Resources.Resources.icon
         Me.tsLogo.Name = "tsLogo"
-        Me.tsLogo.Padding = New System.Windows.Forms.Padding(5)
-        Me.tsLogo.Size = New System.Drawing.Size(30, 31)
+        Me.tsLogo.Padding = New System.Windows.Forms.Padding(15, 5, 5, 5)
+        Me.tsLogo.Size = New System.Drawing.Size(40, 31)
         Me.tsLogo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'tsmiFile
@@ -319,7 +319,7 @@ Partial Class MainForm
         Me.btnUndo.Name = "btnUndo"
         Me.btnUndo.Padding = New System.Windows.Forms.Padding(2)
         Me.btnUndo.ShortcutKeyDisplayString = "Ctrl+Z"
-        Me.btnUndo.Size = New System.Drawing.Size(184, 24)
+        Me.btnUndo.Size = New System.Drawing.Size(177, 24)
         Me.btnUndo.Text = "Undo"
         '
         'btnRedo
@@ -332,7 +332,7 @@ Partial Class MainForm
         Me.btnRedo.Name = "btnRedo"
         Me.btnRedo.Padding = New System.Windows.Forms.Padding(2)
         Me.btnRedo.ShortcutKeyDisplayString = "Ctrl+Y"
-        Me.btnRedo.Size = New System.Drawing.Size(184, 24)
+        Me.btnRedo.Size = New System.Drawing.Size(177, 24)
         Me.btnRedo.Text = "Redo"
         '
         'tsSeparator2
@@ -341,7 +341,7 @@ Partial Class MainForm
         Me.tsSeparator2.ForeColor = System.Drawing.Color.White
         Me.tsSeparator2.Name = "tsSeparator2"
         Me.tsSeparator2.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator2.Size = New System.Drawing.Size(177, 6)
+        Me.tsSeparator2.Size = New System.Drawing.Size(170, 6)
         '
         'btnCut
         '
@@ -353,7 +353,7 @@ Partial Class MainForm
         Me.btnCut.Name = "btnCut"
         Me.btnCut.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCut.ShortcutKeyDisplayString = "Ctrl+X"
-        Me.btnCut.Size = New System.Drawing.Size(184, 24)
+        Me.btnCut.Size = New System.Drawing.Size(177, 24)
         Me.btnCut.Text = "Cut"
         '
         'btnCopy
@@ -366,7 +366,7 @@ Partial Class MainForm
         Me.btnCopy.Name = "btnCopy"
         Me.btnCopy.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCopy.ShortcutKeyDisplayString = "Ctrl+C"
-        Me.btnCopy.Size = New System.Drawing.Size(184, 24)
+        Me.btnCopy.Size = New System.Drawing.Size(177, 24)
         Me.btnCopy.Text = "Copy"
         '
         'btnPaste
@@ -379,7 +379,7 @@ Partial Class MainForm
         Me.btnPaste.Name = "btnPaste"
         Me.btnPaste.Padding = New System.Windows.Forms.Padding(2)
         Me.btnPaste.ShortcutKeyDisplayString = "Ctrl+V"
-        Me.btnPaste.Size = New System.Drawing.Size(184, 24)
+        Me.btnPaste.Size = New System.Drawing.Size(177, 24)
         Me.btnPaste.Text = "Paste"
         '
         'btnSelectAll
@@ -392,7 +392,7 @@ Partial Class MainForm
         Me.btnSelectAll.Name = "btnSelectAll"
         Me.btnSelectAll.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSelectAll.ShortcutKeyDisplayString = "Ctrl+A"
-        Me.btnSelectAll.Size = New System.Drawing.Size(184, 24)
+        Me.btnSelectAll.Size = New System.Drawing.Size(177, 24)
         Me.btnSelectAll.Text = "Select All"
         '
         'tsSeparator3
@@ -401,7 +401,7 @@ Partial Class MainForm
         Me.tsSeparator3.ForeColor = System.Drawing.Color.White
         Me.tsSeparator3.Name = "tsSeparator3"
         Me.tsSeparator3.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator3.Size = New System.Drawing.Size(177, 6)
+        Me.tsSeparator3.Size = New System.Drawing.Size(170, 6)
         '
         'btnReplace
         '
@@ -413,7 +413,7 @@ Partial Class MainForm
         Me.btnReplace.Name = "btnReplace"
         Me.btnReplace.Padding = New System.Windows.Forms.Padding(2)
         Me.btnReplace.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
-        Me.btnReplace.Size = New System.Drawing.Size(184, 24)
+        Me.btnReplace.Size = New System.Drawing.Size(177, 24)
         Me.btnReplace.Text = "Replace"
         '
         'btnFind
@@ -426,7 +426,7 @@ Partial Class MainForm
         Me.btnFind.Name = "btnFind"
         Me.btnFind.Padding = New System.Windows.Forms.Padding(2)
         Me.btnFind.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.btnFind.Size = New System.Drawing.Size(184, 24)
+        Me.btnFind.Size = New System.Drawing.Size(177, 24)
         Me.btnFind.Text = "Find"
         '
         'tsmiView
@@ -527,6 +527,7 @@ Partial Class MainForm
         'leftPanel
         '
         Me.leftPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.leftPanel.Controls.Add(Me.tvObjectExplorer)
         Me.leftPanel.Controls.Add(Me.tbTimeout)
         Me.leftPanel.Controls.Add(Me.btnReload)
         Me.leftPanel.Controls.Add(Me.btnExecute)
@@ -534,7 +535,6 @@ Partial Class MainForm
         Me.leftPanel.Controls.Add(Me.lblTables)
         Me.leftPanel.Controls.Add(Me.lblServer)
         Me.leftPanel.Controls.Add(Me.lblDatabases)
-        Me.leftPanel.Controls.Add(Me.lbTableList)
         Me.leftPanel.Controls.Add(Me.tbServer)
         Me.leftPanel.Controls.Add(Me.tbUser)
         Me.leftPanel.Controls.Add(Me.btnConnect)
@@ -546,6 +546,20 @@ Partial Class MainForm
         Me.leftPanel.Name = "leftPanel"
         Me.leftPanel.Size = New System.Drawing.Size(269, 708)
         Me.leftPanel.TabIndex = 1
+        '
+        'tvObjectExplorer
+        '
+        Me.tvObjectExplorer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.tvObjectExplorer.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.tvObjectExplorer.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.tvObjectExplorer.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.tvObjectExplorer.ForeColor = System.Drawing.Color.LightGray
+        Me.tvObjectExplorer.LineColor = System.Drawing.Color.LightGray
+        Me.tvObjectExplorer.Location = New System.Drawing.Point(0, 132)
+        Me.tvObjectExplorer.Name = "tvObjectExplorer"
+        Me.tvObjectExplorer.Size = New System.Drawing.Size(269, 397)
+        Me.tvObjectExplorer.TabIndex = 0
         '
         'tbTimeout
         '
@@ -637,7 +651,7 @@ Partial Class MainForm
         Me.lblTables.Location = New System.Drawing.Point(0, 111)
         Me.lblTables.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lblTables.Name = "lblTables"
-        Me.lblTables.Size = New System.Drawing.Size(274, 20)
+        Me.lblTables.Size = New System.Drawing.Size(269, 20)
         Me.lblTables.TabIndex = 12
         Me.lblTables.Text = "OBJECT EXPLORER"
         '
@@ -651,7 +665,7 @@ Partial Class MainForm
         Me.lblServer.Location = New System.Drawing.Point(0, 529)
         Me.lblServer.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lblServer.Name = "lblServer"
-        Me.lblServer.Size = New System.Drawing.Size(271, 20)
+        Me.lblServer.Size = New System.Drawing.Size(269, 20)
         Me.lblServer.TabIndex = 9
         Me.lblServer.Text = "CONNECTION"
         '
@@ -665,26 +679,9 @@ Partial Class MainForm
         Me.lblDatabases.Location = New System.Drawing.Point(0, 0)
         Me.lblDatabases.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lblDatabases.Name = "lblDatabases"
-        Me.lblDatabases.Size = New System.Drawing.Size(274, 20)
+        Me.lblDatabases.Size = New System.Drawing.Size(269, 20)
         Me.lblDatabases.TabIndex = 0
         Me.lblDatabases.Text = "DATABASES"
-        '
-        'lbTableList
-        '
-        Me.lbTableList.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lbTableList.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
-        Me.lbTableList.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.lbTableList.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbTableList.ForeColor = System.Drawing.Color.LightGray
-        Me.lbTableList.FormattingEnabled = True
-        Me.lbTableList.ItemHeight = 17
-        Me.lbTableList.Location = New System.Drawing.Point(15, 141)
-        Me.lbTableList.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
-        Me.lbTableList.Name = "lbTableList"
-        Me.lbTableList.Size = New System.Drawing.Size(240, 374)
-        Me.lbTableList.TabIndex = 4
         '
         'tbServer
         '
@@ -1077,7 +1074,6 @@ Partial Class MainForm
     Friend WithEvents tbServer As TextBox
     Friend WithEvents tbUser As TextBox
     Friend WithEvents btnExecute As IconButton
-    Friend WithEvents lbTableList As ListBox
     Friend WithEvents lblTables As Label
     Friend WithEvents splitter2 As Splitter
     Friend WithEvents bottomPanel As Panel
@@ -1134,4 +1130,5 @@ Partial Class MainForm
     Friend WithEvents tbTimeout As TextBox
     Friend WithEvents btnOutput As IconToolStripButton
     Friend WithEvents btnXpath As IconToolStripButton
+    Friend WithEvents tvObjectExplorer As TreeView
 End Class

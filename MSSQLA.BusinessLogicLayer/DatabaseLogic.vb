@@ -33,16 +33,55 @@ Public Class DatabaseLogic
     ''' <param name="database">Name of the database.</param>
     ''' <returns></returns>
     Public Function GetTablesListFromDatabase(database As String) As List(Of String)
-        Dim tableList As New List(Of String)()
+        Dim tablesList As New List(Of String)()
         Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM " & database & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'"
         Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
 
         While (reader.Read())
-            tableList.Add(reader.GetString(0) + "." + reader.GetString(1))
+            tablesList.Add(reader.GetString(0) + "." + reader.GetString(1))
         End While
 
         reader.Close()
-        Return tableList
+        Return tablesList
+    End Function
+
+    Public Function GetProceduresListFromDatabase(database As String) As List(Of String)
+        Dim proceduresList As New List(Of String)()
+        Dim sqlQuery = "SELECT SPECIFIC_SCHEMA, SPECIFIC_NAME FROM " & database & ".INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'  "
+        Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
+
+        While (reader.Read())
+            proceduresList.Add(reader.GetString(0) + "." + reader.GetString(1))
+        End While
+
+        reader.Close()
+        Return proceduresList
+    End Function
+
+    Public Function GetFunctionsListFromDatabase(database As String) As List(Of String)
+        Dim functionsList As New List(Of String)()
+        Dim sqlQuery = "SELECT SPECIFIC_SCHEMA, SPECIFIC_NAME FROM " & database & ".INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'FUNCTION'  "
+        Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
+
+        While (reader.Read())
+            functionsList.Add(reader.GetString(0) + "." + reader.GetString(1))
+        End While
+
+        reader.Close()
+        Return functionsList
+    End Function
+
+    Public Function GetViewsListFromDatabase(database As String) As List(Of String)
+        Dim viewsList As New List(Of String)()
+        Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM " & database & ".INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME <> 'sysdiagrams'"
+        Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
+
+        While (reader.Read())
+            viewsList.Add(reader.GetString(0) + "." + reader.GetString(1))
+        End While
+
+        reader.Close()
+        Return viewsList
     End Function
 
     ''' <summary>
@@ -98,4 +137,5 @@ Public Class DatabaseLogic
     Public Async Function TestConnection(timeout As Integer) As Task
         Await DatabaseConnection.Open(timeout)
     End Function
+
 End Class

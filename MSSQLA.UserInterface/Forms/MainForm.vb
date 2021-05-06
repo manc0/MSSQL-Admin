@@ -11,7 +11,7 @@ Public Class MainForm
     Private Property GlobalNewEditorCounter As Integer = 1
 
     ' Flags that avoid triggering events recursively
-    Private _ignoreTableListIndexChangedEvent As Boolean = False
+    Private _ignoreObjectExplorerAfterSelected As Boolean = False
     Private _ignoreTabControlSelectedEvent As Boolean = False
 
 #Region "Form Initialization"
@@ -74,7 +74,7 @@ Public Class MainForm
         TablesTabControl.Clear()
 
         btnSubmit.Enabled = False
-        lbTableList.SelectedIndex = -1
+        tvObjectExplorer.SelectedNode = Nothing
     End Sub
 
     ''' <summary>
@@ -179,7 +179,7 @@ Public Class MainForm
     Private Sub CloseSession()
         ClearTables()
         cbDatabases.Items.Clear()
-        lbTableList.Items.Clear()
+        tvObjectExplorer.Nodes.Clear()
         btnDisconnect.Enabled = False
         btnConnect.Enabled = True
         btnExecute.Enabled = False
@@ -289,35 +289,55 @@ Public Class MainForm
     End Sub
 
     ''' <summary>
-    ''' Fills the ListBox Gets containing the tables from the selected database.
+    ''' Fills the object explorer containing the database items.
     ''' </summary>
-    Private Sub FillTablesListBox()
+    Private Sub FillObjectExplorer()
         Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
         If IsNothing(databaseName) Then Return
 
         Try
-            Dim tableList As List(Of String) = DatabaseLogic.GetTablesListFromDatabase(databaseName)
+            Dim tablesList As List(Of String) = DatabaseLogic.GetTablesListFromDatabase(databaseName)
+            Dim proceduresList As List(Of String) = DatabaseLogic.GetProceduresListFromDatabase(databaseName)
+            Dim functionsList As List(Of String) = DatabaseLogic.GetFunctionsListFromDatabase(databaseName)
+            Dim viewsList As List(Of String) = DatabaseLogic.GetViewsListFromDatabase(databaseName)
 
-            For Each table In tableList
-                If Not lbTableList.Items.Contains(table) Then
-                    lbTableList.Items.Add(table)
+            Dim rootNode As New TreeNode(databaseName)
+            Dim tablesNode As New TreeNode("Tables")
+            Dim proceduresNode As New TreeNode("Procedures")
+            Dim functionsNode As New TreeNode("Functions")
+            Dim viewsNode As New TreeNode("Views")
+            Dim treeNodeArray() = New TreeNode() {tablesNode, viewsNode, proceduresNode, functionsNode}
+
+
+            For Each table In tablesList
+                If Not tvObjectExplorer.Nodes.ContainsKey(table) Then
+                    tablesNode.Nodes.Add(table)
                 End If
             Next
 
-            Try
-                For Each db In lbTableList.Items
-                    If Not tableList.Contains(db) Then
-                        If lbTableList.SelectedItem IsNot Nothing Then
-                            If lbTableList.SelectedItem.ToString.Equals(db) Then
-                                ClearTables()
-                            End If
-                        End If
+            For Each procedure In proceduresList
+                If Not tvObjectExplorer.Nodes.ContainsKey(procedure) Then
+                    proceduresNode.Nodes.Add(procedure)
+                End If
+            Next
 
-                        lbTableList.Items.Remove(db)
-                    End If
-                Next
-            Catch
-            End Try
+            For Each func In functionsList
+                If Not tvObjectExplorer.Nodes.ContainsKey(func) Then
+                    functionsNode.Nodes.Add(func)
+                End If
+            Next
+
+            For Each view In viewsList
+                If Not tvObjectExplorer.Nodes.ContainsKey(view) Then
+                    viewsNode.Nodes.Add(view)
+                End If
+            Next
+
+            tvObjectExplorer.Nodes.Clear()
+            tvObjectExplorer.Nodes.Add(rootNode)
+            rootNode.Nodes.AddRange(treeNodeArray)
+
+            tvObjectExplorer.ExpandAll()
         Catch ex As Exception
             Log(ex.Message)
         End Try
@@ -327,19 +347,21 @@ Public Class MainForm
     ''' <summary>
     ''' Sets the current table to be shown on the DGV.
     ''' </summary>
-    Private Sub SetSelectedTable()
-        Dim tableName As String = lbTableList.SelectedItem?.ToString
+    Private Sub SetSelectedTable(node As TreeNode)
         Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
-        If IsNothing(databaseName) Or IsNothing(tableName) Then Return
+        If IsNothing(databaseName) Or IsNothing(node.Parent) Then Return
 
-        Try
-            Dim dt As DataTable = DatabaseLogic.GetTableFromDataBase(tableName, databaseName)
-            AddNewTable(dt, tableName, databaseName, True)
+        If node.Parent.Text = "Tables" Or node.Parent.Text = "Views" Then
+            Try
+                Dim dt As DataTable = DatabaseLogic.GetTableFromDataBase(node.Text, databaseName)
+                AddNewTable(dt, node.Text, databaseName, True)
 
-            btnSubmit.Enabled = True
-        Catch ex As Exception
-            Log(ex.Message)
-        End Try
+                btnSubmit.Enabled = True
+            Catch ex As Exception
+                Log(ex.Message)
+            End Try
+        End If
+
     End Sub
 
     ''' <summary>
@@ -372,7 +394,7 @@ Public Class MainForm
     ''' Executes the code written by user on the server.
     ''' </summary>
     Private Sub ExecuteCode()
-        If Not String.IsNullOrEmpty(CurrentEditor.GetText) Then
+        If CurrentEditor IsNot Nothing AndAlso Not String.IsNullOrEmpty(CurrentEditor.GetText) Then
             Dim sqlCode As String = IIf(CurrentEditor.GetSelectedText.Length > 0, CurrentEditor.GetSelectedText, CurrentEditor.GetText)
             Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
 
@@ -388,14 +410,14 @@ Public Class MainForm
                 For Each dt As DataTable In dtList
                     GlobalTableCounter += 1
                     AddNewTable(dt, "Table " & GlobalTableCounter, databaseName, False)
-                    lbTableList.SelectedIndex = -1
+                    tvObjectExplorer.SelectedNode = Nothing
                 Next
 
                 If recordsAffected = -1 Then recordsAffected = 0
 
                 Log("Execution succesful. " & recordsAffected & " record(s) affected.")
                 FillDatabasesComboBox()
-                FillTablesListBox()
+                FillObjectExplorer()
                 UpdateAllTables()
             Catch ex As Exception
                 Log(ex.Message)
@@ -437,6 +459,8 @@ Public Class MainForm
     ''' Saves the current query.
     ''' </summary>
     Private Sub SaveQuery(tab As TabPage)
+        If tab.Controls.Count = 0 Then Return
+
         Dim userEditor As UserEditor = CType(tab.Controls(0), UserEditor)
 
         If userEditor IsNot Nothing Then
@@ -460,6 +484,8 @@ Public Class MainForm
     ''' Saves the current editor in a new file.
     ''' </summary>
     Private Sub SaveQueryAs(tab As TabPage)
+        If tab.Controls.Count = 0 Then Return
+
         Dim userEditor As UserEditor = CType(tab.Controls(0), UserEditor)
 
         If userEditor IsNot Nothing Then
@@ -559,22 +585,22 @@ Public Class MainForm
 #Region "Events"
 
     Private Sub CbDatabases_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbDatabases.SelectedIndexChanged
-        lbTableList.Items.Clear()
+        tvObjectExplorer.Nodes.Clear()
         ClearTables()
-        FillTablesListBox()
+        FillObjectExplorer()
     End Sub
 
-    Private Sub TableList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lbTableList.SelectedIndexChanged
-        If Not _ignoreTableListIndexChangedEvent And lbTableList.SelectedIndex <> -1 Then
+    Private Sub tvObjectExplorer_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles tvObjectExplorer.AfterSelect
+        If Not _ignoreObjectExplorerAfterSelected And tvObjectExplorer.SelectedNode IsNot Nothing Then
             _ignoreTabControlSelectedEvent = True
-            SetSelectedTable()
+            SetSelectedTable(e.Node)
             _ignoreTabControlSelectedEvent = False
         End If
     End Sub
 
     Private Sub TablesTabControl_Selected(sender As Object, e As TabControlEventArgs) Handles TablesTabControl.Selected
         Dim index As Integer = TablesTabControl.SelectedIndex
-        _ignoreTableListIndexChangedEvent = True
+        _ignoreObjectExplorerAfterSelected = True
 
         If index <> -1 And Not _ignoreTabControlSelectedEvent Then
             Dim userTable As UserTable = CType(TablesTabControl.TabPages(index).Controls(0), UserTable)
@@ -583,14 +609,10 @@ Public Class MainForm
             btnSubmit.Enabled = userTable.CanBeUpdated
             userTable.ColumnsMode = CurrentColumnsMode
 
-            If userTable.CanBeUpdated Then
-                lbTableList.SelectedItem = userTable.TableName
-            Else
-                lbTableList.SelectedIndex = -1
-            End If
+            tvObjectExplorer.SelectedNode = Nothing
         End If
 
-        _ignoreTableListIndexChangedEvent = False
+        _ignoreObjectExplorerAfterSelected = False
     End Sub
 
     Private Sub EditorsTabControl_Selected(sender As Object, e As TabControlEventArgs) Handles EditorsTabControl.Selected
@@ -652,7 +674,7 @@ Public Class MainForm
             GlobalTableCounter = 0
             CurrentTable = Nothing
             btnSubmit.Enabled = False
-            lbTableList.SelectedIndex = -1
+            tvObjectExplorer.SelectedNode = Nothing
 
             If EditorsTabControl.Visible Then
                 EditorsTabControl.Dock = DockStyle.Fill
@@ -805,6 +827,10 @@ Public Class MainForm
 
     Private Sub BtnCloseAllEditors_Click(sender As Object, e As EventArgs) Handles btnCloseAllEditors.Click
         EditorsTabControl.Visible = False 'Added here to prevent a color flash
+        EditorsTabControl.TabPages.Cast(Of TabPage).ToList() _
+            .FindAll(Function(tab) tab.Controls.Count > 0 AndAlso Not CType(tab.Controls(0), UserEditor).IsSaved) _
+            .ForEach(Sub(tab) SaveQuery(tab))
+
         ClearEditors()
     End Sub
 
@@ -872,7 +898,9 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnSaveAll_Click(sender As Object, e As EventArgs) Handles btnSaveAll.Click
-        EditorsTabControl.TabPages.Cast(Of TabPage).ToList().FindAll(Function(tab) tab.Controls.Count > 0).ForEach(Sub(tab) SaveQuery(tab))
+        EditorsTabControl.TabPages.Cast(Of TabPage).ToList() _
+            .FindAll(Function(tab) tab.Controls.Count > 0) _
+            .ForEach(Sub(tab) SaveQuery(tab))
     End Sub
 
     Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click

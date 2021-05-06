@@ -61,7 +61,7 @@ Public Class CustomTabControl
     ''' <summary>
     ''' Adds a new tab and raises the OnNewTab event.
     ''' </summary>
-    ''' <param name="tab">Tab to close.</param>
+    ''' <param name="tab">Tab to add.</param>
     ''' <param name="isAddButton">Check this if the given tab is the add button.</param>
     Public Sub AddTab(tab As TabPage, Optional isAddButton As Boolean = False)
         If Not isAddButton Then

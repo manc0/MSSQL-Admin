@@ -1,4 +1,5 @@
 ﻿Imports MSSQLA.BusinessLogicLayer
+Imports MSSQLA.UserInterface.ClassUtils
 
 Public Class UserTable
 
@@ -17,6 +18,15 @@ Public Class UserTable
         End Get
     End Property
 
+    Friend Property ColumnsMode As DataGridViewAutoSizeColumnMode
+        Set(value As DataGridViewAutoSizeColumnMode)
+            DataGridView.AutoSizeColumnsMode = value
+        End Set
+        Get
+            Return DataGridView.AutoSizeColumnsMode
+        End Get
+    End Property
+
 
 #Region "Constructors"
 
@@ -31,6 +41,7 @@ Public Class UserTable
         DataGridView.ReadOnly = Not Me.CanBeUpdated
         DataGridView.AllowUserToDeleteRows = Me.CanBeUpdated
         DataGridView.AllowUserToAddRows = Me.CanBeUpdated
+        ColumnsMode = CurrentColumnsMode
     End Sub
 
 #End Region

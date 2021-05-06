@@ -578,6 +578,7 @@ Public Class MainForm
 
             SetCurrentTable(userTable)
             btnSubmit.Enabled = userTable.CanBeUpdated
+            userTable.ColumnsMode = CurrentColumnsMode
 
             If userTable.CanBeUpdated Then
                 lbTableList.SelectedItem = userTable.TableName
@@ -641,7 +642,7 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub TablesTabControl_OnTabClose(sender As Object, e As EventArgs) Handles TablesTabControl.OnTabClose
+    Private Sub TablesTabControl_OnTabClose(sender As Object, e As CustomTabControl.CloseTabEventArgs) Handles TablesTabControl.OnTabClose
         If TablesTabControl.TabPages.Count <= 1 Then
             TablesTabControl.Visible = False
             splitter2.Visible = False
@@ -820,6 +821,7 @@ Public Class MainForm
 
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
         CloseSession()
+        Application.Exit()
     End Sub
 
     Private Sub BtnUndo_Click(sender As Object, e As EventArgs) Handles btnUndo.Click
@@ -915,7 +917,13 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnTableMode_Click(sender As Object, e As EventArgs) Handles btnTableMode.Click
+        If btnTableMode.Checked Then
+            CurrentColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        Else
+            CurrentColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        End If
 
+        If CurrentTable IsNot Nothing Then CurrentTable.ColumnsMode = CurrentColumnsMode
     End Sub
 
     Private Sub BtnFullscreen_Click(sender As Object, e As EventArgs) Handles btnFullscreen.Click
@@ -926,10 +934,6 @@ Public Class MainForm
             FormBorderStyle = FormBorderStyle.Sizable
             WindowState = FormWindowState.Normal
         End If
-    End Sub
-
-    Private Sub TablesTabControl_OnTabClose(sender As Object, e As CustomTabControl.CloseTabEventArgs) Handles TablesTabControl.OnTabClose
-
     End Sub
 
 #End Region

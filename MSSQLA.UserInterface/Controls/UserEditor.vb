@@ -109,6 +109,12 @@ Public Class UserEditor
             .Styles(Style.Sql.CommentLine).Italic = True
             .Styles(Style.Sql.CommentLine).Underline = False
 
+            .Styles(Style.Sql.CommentDoc).ForeColor = Color.FromArgb(255, 87, 159, 56)
+            .Styles(Style.Sql.CommentDoc).BackColor = backColor
+            .Styles(Style.Sql.CommentDoc).Bold = False
+            .Styles(Style.Sql.CommentDoc).Italic = True
+            .Styles(Style.Sql.CommentDoc).Underline = False
+
             .Styles(Style.Sql.CommentLineDoc).ForeColor = Color.FromArgb(255, 87, 159, 56)
             .Styles(Style.Sql.CommentLineDoc).BackColor = backColor
             .Styles(Style.Sql.CommentLineDoc).Bold = False
@@ -168,6 +174,9 @@ Public Class UserEditor
             .Styles(Style.Sql.Character).Bold = False
             .Styles(Style.Sql.Character).Italic = False
             .Styles(Style.Sql.Character).Underline = False
+
+            .Styles(Style.IndentGuide).ForeColor = Color.FromArgb(1, 149, 159, 161)
+            .Styles(Style.IndentGuide).BackColor = Color.FromArgb(1, 149, 159, 161)
         End With
 
         ' Keywords
@@ -187,15 +196,15 @@ Public Class UserEditor
         Scintilla.Margins(2).Width = 13
 
         ' Configure folding markers with respective symbols
-        Scintilla.Markers(Marker.Folder).Symbol = MarkerSymbol.Arrow
-        Scintilla.Markers(Marker.FolderOpen).Symbol = MarkerSymbol.ArrowDown
-        Scintilla.Markers(Marker.FolderEnd).Symbol = MarkerSymbol.Arrow
+        Scintilla.Markers(Marker.Folder).Symbol = MarkerSymbol.BoxPlus
+        Scintilla.Markers(Marker.FolderOpen).Symbol = MarkerSymbol.BoxMinus
+        Scintilla.Markers(Marker.FolderEnd).Symbol = MarkerSymbol.BoxPlusConnected
 
-        Scintilla.Markers(Marker.FolderMidTail).Symbol = MarkerSymbol.VLine
-        Scintilla.Markers(Marker.FolderOpenMid).Symbol = MarkerSymbol.ArrowDown
+        Scintilla.Markers(Marker.FolderMidTail).Symbol = MarkerSymbol.TCorner
+        Scintilla.Markers(Marker.FolderOpenMid).Symbol = MarkerSymbol.BoxMinusConnected
 
         Scintilla.Markers(Marker.FolderSub).Symbol = MarkerSymbol.VLine
-        Scintilla.Markers(Marker.FolderTail).Symbol = MarkerSymbol.VLine
+        Scintilla.Markers(Marker.FolderTail).Symbol = MarkerSymbol.LCorner
 
         ' Set colors for all folding markers
         For i As Integer = Marker.FolderEnd To Marker.FolderOpen

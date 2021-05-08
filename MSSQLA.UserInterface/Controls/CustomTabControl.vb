@@ -440,19 +440,23 @@ Public Class CustomTabControl
     End Sub
 
     Private Function GetCloseButtonRect(index As Integer) As Rectangle
-        Dim tabRect As Rectangle = GetTabRect(index)
-        Dim closeRect As Rectangle = New Rectangle(tabRect.Left, tabRect.Top, CloseButtonHeight, CloseButtonHeight)
+        If index <> -1 Then
+            Dim tabRect As Rectangle = GetTabRect(index)
+            Dim closeRect As Rectangle = New Rectangle(tabRect.Left, tabRect.Top, CloseButtonHeight, CloseButtonHeight)
 
-        Select Case Alignment
-            Case TabAlignment.Left
-                closeRect.Offset((tabRect.Width - closeRect.Width) \ 2, 0)
-            Case TabAlignment.Right
-                closeRect.Offset((tabRect.Width - closeRect.Width) \ 2, tabRect.Height - closeRect.Height)
-            Case Else
-                closeRect.Offset(tabRect.Width - closeRect.Width, (tabRect.Height - closeRect.Height) \ 2)
-        End Select
+            Select Case Alignment
+                Case TabAlignment.Left
+                    closeRect.Offset((tabRect.Width - closeRect.Width) \ 2, 0)
+                Case TabAlignment.Right
+                    closeRect.Offset((tabRect.Width - closeRect.Width) \ 2, tabRect.Height - closeRect.Height)
+                Case Else
+                    closeRect.Offset(tabRect.Width - closeRect.Width, (tabRect.Height - closeRect.Height) \ 2)
+            End Select
 
-        Return closeRect
+            Return closeRect
+        Else
+            Return Nothing
+        End If
     End Function
 
     Private Function MakeLParam(lo As Integer, hi As Integer) As IntPtr

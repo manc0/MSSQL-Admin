@@ -11,7 +11,6 @@ Public Class MainForm
     Private Property GlobalNewEditorCounter As Integer = 1
 
     ' Flags that avoid triggering events recursively
-    Private _ignoreObjectExplorerAfterSelected As Boolean = False
     Private _ignoreTabControlSelectedEvent As Boolean = False
 
 #Region "Form Initialization"
@@ -28,6 +27,8 @@ Public Class MainForm
         MyMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
         MyToolStrip.RenderMode = ToolStripRenderMode.System
         MyToolStrip.Renderer = New CustomToolStripSystemRenderer()
+        TablesAndViewsMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
+        ProceduresMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
 
         TablesTabControl.ItemSize = New Size(0, 25)
         TablesTabControl.SizeMode = TabSizeMode.Normal
@@ -74,7 +75,6 @@ Public Class MainForm
         TablesTabControl.Clear()
 
         btnSubmit.Enabled = False
-        tvObjectExplorer.SelectedNode = Nothing
     End Sub
 
     ''' <summary>
@@ -120,12 +120,12 @@ Public Class MainForm
     ''' <summary>
     ''' Adds a new editor without path or filename or text.
     ''' </summary>
-    Private Sub AddNewEditor()
+    Private Sub AddNewEditor(Optional text As String = "")
         Dim tab As New TabPage() With {
             .Text = "New " & GlobalNewEditorCounter,
             .Name = "New " & GlobalNewEditorCounter
         }
-        Dim userEditor As New UserEditor(String.Empty)
+        Dim userEditor As New UserEditor(text)
         AddControlToTab(tab, userEditor)
 
         EditorsTabControl.AddTab(tab)
@@ -301,35 +301,34 @@ Public Class MainForm
             Dim functionsList As List(Of String) = DatabaseLogic.GetFunctionsListFromDatabase(databaseName)
             Dim viewsList As List(Of String) = DatabaseLogic.GetViewsListFromDatabase(databaseName)
 
-            Dim rootNode As New TreeNode(databaseName)
-            Dim tablesNode As New TreeNode("Tables")
-            Dim proceduresNode As New TreeNode("Procedures")
-            Dim functionsNode As New TreeNode("Functions")
-            Dim viewsNode As New TreeNode("Views")
+            Dim rootNode As New TreeNode(databaseName, 0, 0)
+            Dim tablesNode As New TreeNode("Tables", 1, 1)
+            Dim viewsNode As New TreeNode("Views", 2, 2)
+            Dim proceduresNode As New TreeNode("Procedures", 3, 3)
+            Dim functionsNode As New TreeNode("Functions", 4, 4)
             Dim treeNodeArray() = New TreeNode() {tablesNode, viewsNode, proceduresNode, functionsNode}
-
 
             For Each table In tablesList
                 If Not tvObjectExplorer.Nodes.ContainsKey(table) Then
-                    tablesNode.Nodes.Add(table)
-                End If
-            Next
-
-            For Each procedure In proceduresList
-                If Not tvObjectExplorer.Nodes.ContainsKey(procedure) Then
-                    proceduresNode.Nodes.Add(procedure)
-                End If
-            Next
-
-            For Each func In functionsList
-                If Not tvObjectExplorer.Nodes.ContainsKey(func) Then
-                    functionsNode.Nodes.Add(func)
+                    tablesNode.Nodes.Add(table, table, 1, 1)
                 End If
             Next
 
             For Each view In viewsList
                 If Not tvObjectExplorer.Nodes.ContainsKey(view) Then
-                    viewsNode.Nodes.Add(view)
+                    viewsNode.Nodes.Add(view, view, 2, 2)
+                End If
+            Next
+
+            For Each procedure In proceduresList
+                If Not tvObjectExplorer.Nodes.ContainsKey(procedure) Then
+                    proceduresNode.Nodes.Add(procedure, procedure, 3, 3)
+                End If
+            Next
+
+            For Each func In functionsList
+                If Not tvObjectExplorer.Nodes.ContainsKey(func) Then
+                    functionsNode.Nodes.Add(func, func, 4, 4)
                 End If
             Next
 
@@ -397,20 +396,20 @@ Public Class MainForm
         If CurrentEditor IsNot Nothing AndAlso Not String.IsNullOrEmpty(CurrentEditor.GetText) Then
             Dim sqlCode As String = IIf(CurrentEditor.GetSelectedText.Length > 0, CurrentEditor.GetSelectedText, CurrentEditor.GetText)
             Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+            Dim useDatabase As Boolean = False
 
-            If CurrentEditor.GetText.IndexOf("USE ", 0, StringComparison.CurrentCultureIgnoreCase) = -1 And Not IsNothing(databaseName) Then
-                sqlCode = "USE " & databaseName & vbNewLine & sqlCode
+            If CurrentEditor.GetText.IndexOf("USE ", 0, StringComparison.CurrentCultureIgnoreCase) = -1 AndAlso Not IsNothing(databaseName) Then
+                useDatabase = True
             End If
 
             Try
-                Dim codeExecution = DatabaseLogic.ExecuteSqlCode(sqlCode)
+                Dim codeExecution = If(useDatabase, DatabaseLogic.ExecuteSqlCode(sqlCode, databaseName), DatabaseLogic.ExecuteSqlCode(sqlCode, Nothing))
                 Dim dtList As List(Of DataTable) = codeExecution(0)
                 Dim recordsAffected = codeExecution(1)
 
                 For Each dt As DataTable In dtList
                     GlobalTableCounter += 1
                     AddNewTable(dt, "Table " & GlobalTableCounter, databaseName, False)
-                    tvObjectExplorer.SelectedNode = Nothing
                 Next
 
                 If recordsAffected = -1 Then recordsAffected = 0
@@ -425,6 +424,37 @@ Public Class MainForm
         Else
             Log("Nothing to execute.")
         End If
+    End Sub
+
+    ''' <summary>
+    ''' Opens a form to execute the given procedure.
+    ''' </summary>
+    Private Sub ExecuteProcedure(procedureName As String)
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        If IsNothing(databaseName) Or IsNothing(procedureName) Then Return
+
+        Using form As New ProcedureExecutionForm(procedureName, databaseName)
+            Dim result = form.ShowDialog()
+
+            If result = DialogResult.OK Then
+                Try
+                    Dim params = form.ParamsConfig
+                    Dim dtList As List(Of DataTable) = DatabaseLogic.ExecuteProcedure(procedureName, databaseName, params)
+
+                    For Each dt As DataTable In dtList
+                        GlobalTableCounter += 1
+                        AddNewTable(dt, "Table " & GlobalTableCounter, databaseName, False)
+                    Next
+
+                    Log("Execution of " & procedureName & " was succesful.")
+                    FillDatabasesComboBox()
+                    FillObjectExplorer()
+                    UpdateAllTables()
+                Catch ex As Exception
+                    Log(ex.Message)
+                End Try
+            End If
+        End Using
     End Sub
 
 #End Region
@@ -590,17 +620,37 @@ Public Class MainForm
         FillObjectExplorer()
     End Sub
 
-    Private Sub tvObjectExplorer_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles tvObjectExplorer.AfterSelect
-        If Not _ignoreObjectExplorerAfterSelected And tvObjectExplorer.SelectedNode IsNot Nothing Then
-            _ignoreTabControlSelectedEvent = True
-            SetSelectedTable(e.Node)
-            _ignoreTabControlSelectedEvent = False
+    Private Sub TvObjectExplorer_NodeMouseDoubleClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles tvObjectExplorer.NodeMouseDoubleClick
+        Dim myNode As TreeNode = tvObjectExplorer.SelectedNode
+
+        If myNode IsNot Nothing And myNode.Parent IsNot Nothing Then
+            If myNode.Parent.Text = "Tables" Or myNode.Parent.Text = "Views" Then
+                _ignoreTabControlSelectedEvent = True
+                SetSelectedTable(e.Node)
+                _ignoreTabControlSelectedEvent = False
+            ElseIf myNode.Parent.Text = "Procedures" Then
+                btnExecuteProcedure.PerformClick()
+            End If
+        End If
+    End Sub
+
+    Private Sub TvObjectExplorer_MouseDown(sender As Object, e As MouseEventArgs) Handles tvObjectExplorer.MouseDown
+        If e.Button = MouseButtons.Right Then
+            tvObjectExplorer.SelectedNode = tvObjectExplorer.GetNodeAt(e.X, e.Y)
+            Dim myNode As TreeNode = tvObjectExplorer.SelectedNode
+
+            If myNode IsNot Nothing And myNode.Parent IsNot Nothing Then
+                If myNode.Parent.Text = "Tables" Or myNode.Parent.Text = "Views" Then
+                    TablesAndViewsMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y)
+                ElseIf myNode.Parent.Text = "Procedures" Then
+                    ProceduresMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y)
+                End If
+            End If
         End If
     End Sub
 
     Private Sub TablesTabControl_Selected(sender As Object, e As TabControlEventArgs) Handles TablesTabControl.Selected
         Dim index As Integer = TablesTabControl.SelectedIndex
-        _ignoreObjectExplorerAfterSelected = True
 
         If index <> -1 And Not _ignoreTabControlSelectedEvent Then
             Dim userTable As UserTable = CType(TablesTabControl.TabPages(index).Controls(0), UserTable)
@@ -608,11 +658,7 @@ Public Class MainForm
             SetCurrentTable(userTable)
             btnSubmit.Enabled = userTable.CanBeUpdated
             userTable.ColumnsMode = CurrentColumnsMode
-
-            tvObjectExplorer.SelectedNode = Nothing
         End If
-
-        _ignoreObjectExplorerAfterSelected = False
     End Sub
 
     Private Sub EditorsTabControl_Selected(sender As Object, e As TabControlEventArgs) Handles EditorsTabControl.Selected
@@ -674,7 +720,6 @@ Public Class MainForm
             GlobalTableCounter = 0
             CurrentTable = Nothing
             btnSubmit.Enabled = False
-            tvObjectExplorer.SelectedNode = Nothing
 
             If EditorsTabControl.Visible Then
                 EditorsTabControl.Dock = DockStyle.Fill
@@ -764,13 +809,7 @@ Public Class MainForm
     End Sub
 
     Private Sub CurrentEditor_TextModified(sender As Object, e As EventArgs)
-        EditorsTabControl.SetTabEditMode(EditorsTabControl.SelectedTab, True)
-
-        If CurrentEditor.IsSaved() Then
-            EditorsTabControl.SetTabEditMode(EditorsTabControl.SelectedTab, False)
-        Else
-            EditorsTabControl.SetTabEditMode(EditorsTabControl.SelectedTab, True)
-        End If
+        EditorsTabControl.SetTabEditMode(EditorsTabControl.SelectedTab, Not CurrentEditor.IsSaved())
     End Sub
 
     Private Sub MainForm_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
@@ -945,6 +984,86 @@ Public Class MainForm
 
     Private Sub BtnResetZoom_Click(sender As Object, e As EventArgs) Handles btnResetZoom.Click
         If CurrentEditor IsNot Nothing Then CurrentEditor.Zoom = 0
+    End Sub
+
+    Private Sub BtnEditTable_Click(sender As Object, e As EventArgs) Handles btnEditTable.Click
+        SetSelectedTable(tvObjectExplorer.SelectedNode)
+    End Sub
+
+    Private Sub BtnTruncateTable_Click(sender As Object, e As EventArgs) Handles btnTruncateTable.Click
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        Dim tableName As String = tvObjectExplorer.SelectedNode?.Text
+        If IsNothing(databaseName) Or IsNothing(tableName) Then Return
+
+        Try
+            Dim dr As DialogResult = MessageBox.Show("Are you sure to truncate " & tableName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+
+            If dr = DialogResult.Yes Then
+                DatabaseLogic.TruncateTable(tableName, databaseName)
+                FillObjectExplorer()
+                UpdateAllTables()
+
+                Log(tableName & " was successfuly truncated.")
+            End If
+        Catch ex As Exception
+            Log(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub BtnDropTable_Click(sender As Object, e As EventArgs) Handles btnDropTable.Click
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        Dim tableName As String = tvObjectExplorer.SelectedNode?.Text
+        If IsNothing(databaseName) Or IsNothing(tableName) Then Return
+
+        Try
+            Dim dr As DialogResult = MessageBox.Show("Are you sure to drop " & tableName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+
+            If dr = DialogResult.Yes Then
+                DatabaseLogic.DropTable(tableName, databaseName)
+                FillObjectExplorer()
+                UpdateAllTables()
+
+                Log(tableName & " was successfuly dropped.")
+            End If
+        Catch ex As Exception
+            Log(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub BtnExecuteProcedure_Click(sender As Object, e As EventArgs) Handles btnExecuteProcedure.Click
+        ExecuteProcedure(tvObjectExplorer.SelectedNode.Text)
+    End Sub
+
+    Private Sub BtnShowProcedureDefinition_Click(sender As Object, e As EventArgs) Handles btnShowProcedureDefinition.Click
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        Dim procedureName As String = tvObjectExplorer.SelectedNode?.Text
+        If IsNothing(databaseName) Or IsNothing(procedureName) Then Return
+
+        Try
+            Dim definition As String = DatabaseLogic.GetProcedureDefinition(procedureName, databaseName)
+            AddNewEditor(definition)
+        Catch ex As Exception
+            Log(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub BtnDropProcedure_Click(sender As Object, e As EventArgs) Handles btnDropProcedure.Click
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        Dim procedureName As String = tvObjectExplorer.SelectedNode?.Text
+        If IsNothing(databaseName) Or IsNothing(procedureName) Then Return
+
+        Try
+            Dim dr As DialogResult = MessageBox.Show("Are you sure to drop " & procedureName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+
+            If dr = DialogResult.Yes Then
+                DatabaseLogic.DropProcedure(procedureName, databaseName)
+                FillObjectExplorer()
+
+                Log(procedureName & " was successfuly dropped.")
+            End If
+        Catch ex As Exception
+            Log(ex.Message)
+        End Try
     End Sub
 
     Private Sub BtnTableMode_Click(sender As Object, e As EventArgs) Handles btnTableMode.Click

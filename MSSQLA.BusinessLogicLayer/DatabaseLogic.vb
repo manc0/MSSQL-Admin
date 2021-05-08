@@ -31,7 +31,7 @@ Public Class DatabaseLogic
     ''' Returns a list of all tables from the given database.
     ''' </summary>
     ''' <param name="database">Name of the database.</param>
-    ''' <returns></returns>
+    ''' <returns>A list containing all the table names from the given database.</returns>
     Public Function GetTablesListFromDatabase(database As String) As List(Of String)
         Dim tablesList As New List(Of String)()
         Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM " & database & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'"
@@ -45,6 +45,11 @@ Public Class DatabaseLogic
         Return tablesList
     End Function
 
+    ''' <summary>
+    ''' Returns a list of all procedures from the given database.
+    ''' </summary>
+    ''' <param name="database">Name of the database.</param>
+    ''' <returns>A list containing all the procedure names from the given database.</returns>
     Public Function GetProceduresListFromDatabase(database As String) As List(Of String)
         Dim proceduresList As New List(Of String)()
         Dim sqlQuery = "SELECT SPECIFIC_SCHEMA, SPECIFIC_NAME FROM " & database & ".INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'  "
@@ -58,6 +63,11 @@ Public Class DatabaseLogic
         Return proceduresList
     End Function
 
+    ''' <summary>
+    ''' Returns a list of all functions from the given database.
+    ''' </summary>
+    ''' <param name="database">Name of the database.</param>
+    ''' <returns>A list containing all the function names from the given database.</returns>
     Public Function GetFunctionsListFromDatabase(database As String) As List(Of String)
         Dim functionsList As New List(Of String)()
         Dim sqlQuery = "SELECT SPECIFIC_SCHEMA, SPECIFIC_NAME FROM " & database & ".INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'FUNCTION'  "
@@ -71,6 +81,11 @@ Public Class DatabaseLogic
         Return functionsList
     End Function
 
+    ''' <summary>
+    ''' Returns a list of all views from the given database.
+    ''' </summary>
+    ''' <param name="database">Name of the database.</param>
+    ''' <returns>A list containing all the view names from the given database.</returns>
     Public Function GetViewsListFromDatabase(database As String) As List(Of String)
         Dim viewsList As New List(Of String)()
         Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM " & database & ".INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME <> 'sysdiagrams'"
@@ -98,8 +113,8 @@ Public Class DatabaseLogic
     ''' Updates a table from the database.
     ''' </summary>
     ''' <param name="table">Name of the table.</param>
-    ''' <param name="database"></param>
-    ''' <param name="dataTable"></param>
+    ''' <param name="database">Name of the database.</param>
+    ''' <param name="dataTable">Changes to update.</param>
     Public Sub UpdateDataTable(table As String, database As String, dataTable As DataTable)
         DatabaseConnection.UpdateDataTable(table, database, dataTable)
     End Sub
@@ -108,9 +123,10 @@ Public Class DatabaseLogic
     ''' Executes the given code on the server.
     ''' </summary>
     ''' <param name="sqlCode">Code to be executed on the server.</param>
+    ''' <param name="database">Optinal parameter to indicate the database. Ignore it if the query contains a USE statement.</param>
     ''' <returns>Returns a new list of DataTables and the number of rows affected.</returns>
-    Public Function ExecuteSqlCode(sqlCode As String) As Object
-        Using reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlCode)
+    Public Function ExecuteSqlCode(sqlCode As String, Optional database As String = Nothing) As Object
+        Using reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlCode, database)
             Dim rowsAffected As Integer = reader.RecordsAffected
             Dim dtList As New List(Of DataTable)()
             Dim dt As DataTable
@@ -130,10 +146,74 @@ Public Class DatabaseLogic
     End Function
 
     ''' <summary>
+    ''' Executes the given procedure.
+    ''' </summary>
+    ''' <param name="procedureName">Name of the procedure.</param>
+    ''' <param name="database">Name of the database.</param>
+    ''' <param name="parameters">Dictionary of parameters with their respective values.</param>
+    ''' <returns>Returns a new list of DataTables.</returns>
+    Public Function ExecuteProcedure(procedureName As String, database As String, parameters As Dictionary(Of Dictionary(Of String, SqlDbType), Object)) As List(Of DataTable)
+        Using reader As SqlDataReader = DatabaseConnection.ExecuteStoredProcedures(procedureName, database, parameters)
+            Dim dtList As New List(Of DataTable)()
+            Dim dt As DataTable
+
+            While Not reader.IsClosed
+                dt = New DataTable()
+                dt.Load(reader)
+                dtList.Add(dt)
+            End While
+
+            dtList = (From table In dtList
+                      Select table
+                      Where table.Rows.Count <> 0 Or table.Columns.Count <> 0).ToList()
+
+            Return dtList
+        End Using
+    End Function
+
+
+    ''' <summary>
+    ''' Truncates the given table.
+    ''' </summary>
+    ''' <param name="table">Name of the table.</param>
+    ''' <param name="database">Name of the database.</param>
+    Public Sub TruncateTable(table As String, database As String)
+        DatabaseConnection.PerformAction("TRUNCATE TABLE " & table, database)
+    End Sub
+
+    ''' <summary>
+    ''' Drops the given table.
+    ''' </summary>
+    ''' <param name="table">Name of the table.</param>
+    ''' <param name="database">Name of the database.</param>
+    Public Sub DropTable(table As String, database As String)
+        DatabaseConnection.PerformAction("DROP TABLE " & table, database)
+    End Sub
+
+    ''' <summary>
+    ''' Drops the given procedure.
+    ''' </summary>
+    ''' <param name="procedureName">Name of the procedure.</param>
+    ''' <param name="database">Name of the database.</param>
+    Public Sub DropProcedure(procedureName As String, database As String)
+        DatabaseConnection.PerformAction("DROP PROCEDURE " & procedureName, database)
+    End Sub
+
+    ''' <summary>
+    ''' Returns the definition of the given procedure.
+    ''' </summary>
+    ''' <param name="procedureName">Name of the procedure.</param>
+    ''' <param name="database">Name of the database.</param>
+    ''' <returns>A string object containing the definition.</returns>
+    Public Function GetProcedureDefinition(procedureName As String, database As String) As String
+        Return DatabaseConnection.PerformScalar("SELECT OBJECT_DEFINITION (OBJECT_ID('" & procedureName & "'))", database).ToString()
+    End Function
+
+    ''' <summary>
     ''' Test the connection to the server.
     ''' </summary>
     ''' <param name="timeout">Connection timeout.</param>
-    ''' <returns></returns>
+    ''' <returns>Task.</returns>
     Public Async Function TestConnection(timeout As Integer) As Task
         Await DatabaseConnection.Open(timeout)
     End Function

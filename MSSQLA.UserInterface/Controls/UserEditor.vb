@@ -43,12 +43,13 @@ Public Class UserEditor
         Scintilla.Text = content
         LastSavedText = content
         _ignoreTextChangedEvent = False
+
+        Scintilla.EmptyUndoBuffer()
     End Sub
 
     Friend Sub New(content As String, path As String, fileName As String)
         Me.New(content)
 
-        Scintilla.EmptyUndoBuffer()
         Me.Path = path
         Me.FileName = fileName
     End Sub

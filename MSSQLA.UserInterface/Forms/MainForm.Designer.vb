@@ -26,6 +26,7 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.MyMenuStrip = New System.Windows.Forms.MenuStrip()
         Me.tsLogo = New System.Windows.Forms.ToolStripMenuItem()
@@ -66,6 +67,7 @@ Partial Class MainForm
         Me.btnTableMode = New FontAwesome.Sharp.IconMenuItem()
         Me.leftPanel = New System.Windows.Forms.Panel()
         Me.tvObjectExplorer = New System.Windows.Forms.TreeView()
+        Me.NodeImageList = New System.Windows.Forms.ImageList(Me.components)
         Me.tbTimeout = New System.Windows.Forms.TextBox()
         Me.btnReload = New FontAwesome.Sharp.IconButton()
         Me.btnExecute = New FontAwesome.Sharp.IconButton()
@@ -96,6 +98,16 @@ Partial Class MainForm
         Me.mainPanel = New System.Windows.Forms.Panel()
         Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
+        Me.TablesAndViewsMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.btnEditTable = New FontAwesome.Sharp.IconMenuItem()
+        Me.tsSeparator10 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnTruncateTable = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnDropTable = New FontAwesome.Sharp.IconMenuItem()
+        Me.ProceduresMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.btnExecuteProcedure = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnShowProcedureDefinition = New FontAwesome.Sharp.IconMenuItem()
+        Me.tsSeparator11 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnDropProcedure = New FontAwesome.Sharp.IconMenuItem()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
@@ -103,6 +115,8 @@ Partial Class MainForm
         Me.xpathEvaluatorPanel.SuspendLayout()
         Me.MyToolStrip.SuspendLayout()
         Me.mainPanel.SuspendLayout()
+        Me.TablesAndViewsMenuStrip.SuspendLayout()
+        Me.ProceduresMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'MyMenuStrip
@@ -555,11 +569,24 @@ Partial Class MainForm
         Me.tvObjectExplorer.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.tvObjectExplorer.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.tvObjectExplorer.ForeColor = System.Drawing.Color.LightGray
+        Me.tvObjectExplorer.ImageIndex = 0
+        Me.tvObjectExplorer.ImageList = Me.NodeImageList
         Me.tvObjectExplorer.LineColor = System.Drawing.Color.LightGray
         Me.tvObjectExplorer.Location = New System.Drawing.Point(0, 132)
         Me.tvObjectExplorer.Name = "tvObjectExplorer"
+        Me.tvObjectExplorer.SelectedImageIndex = 0
         Me.tvObjectExplorer.Size = New System.Drawing.Size(269, 397)
         Me.tvObjectExplorer.TabIndex = 0
+        '
+        'NodeImageList
+        '
+        Me.NodeImageList.ImageStream = CType(resources.GetObject("NodeImageList.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.NodeImageList.TransparentColor = System.Drawing.Color.Transparent
+        Me.NodeImageList.Images.SetKeyName(0, "root.png")
+        Me.NodeImageList.Images.SetKeyName(1, "table.png")
+        Me.NodeImageList.Images.SetKeyName(2, "view.png")
+        Me.NodeImageList.Images.SetKeyName(3, "procedure.png")
+        Me.NodeImageList.Images.SetKeyName(4, "function.png")
         '
         'tbTimeout
         '
@@ -1029,6 +1056,118 @@ Partial Class MainForm
         Me.EditorsTabControl.TabIndex = 16
         Me.EditorsTabControl.Visible = False
         '
+        'TablesAndViewsMenuStrip
+        '
+        Me.TablesAndViewsMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnEditTable, Me.tsSeparator10, Me.btnTruncateTable, Me.btnDropTable})
+        Me.TablesAndViewsMenuStrip.Name = "TablesAndViewsMenuStrip"
+        Me.TablesAndViewsMenuStrip.Size = New System.Drawing.Size(125, 82)
+        '
+        'btnEditTable
+        '
+        Me.btnEditTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnEditTable.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnEditTable.ForeColor = System.Drawing.Color.White
+        Me.btnEditTable.IconChar = FontAwesome.Sharp.IconChar.PencilAlt
+        Me.btnEditTable.IconColor = System.Drawing.Color.White
+        Me.btnEditTable.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnEditTable.Name = "btnEditTable"
+        Me.btnEditTable.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnEditTable.ShortcutKeyDisplayString = ""
+        Me.btnEditTable.Size = New System.Drawing.Size(128, 24)
+        Me.btnEditTable.Text = "Edit"
+        '
+        'tsSeparator10
+        '
+        Me.tsSeparator10.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.tsSeparator10.ForeColor = System.Drawing.Color.White
+        Me.tsSeparator10.Name = "tsSeparator10"
+        Me.tsSeparator10.Padding = New System.Windows.Forms.Padding(2)
+        Me.tsSeparator10.Size = New System.Drawing.Size(121, 6)
+        '
+        'btnTruncateTable
+        '
+        Me.btnTruncateTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnTruncateTable.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnTruncateTable.ForeColor = System.Drawing.Color.White
+        Me.btnTruncateTable.IconChar = FontAwesome.Sharp.IconChar.Eraser
+        Me.btnTruncateTable.IconColor = System.Drawing.Color.White
+        Me.btnTruncateTable.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnTruncateTable.Name = "btnTruncateTable"
+        Me.btnTruncateTable.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnTruncateTable.ShortcutKeyDisplayString = ""
+        Me.btnTruncateTable.Size = New System.Drawing.Size(128, 24)
+        Me.btnTruncateTable.Text = "Truncate"
+        '
+        'btnDropTable
+        '
+        Me.btnDropTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnDropTable.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnDropTable.ForeColor = System.Drawing.Color.White
+        Me.btnDropTable.IconChar = FontAwesome.Sharp.IconChar.Trash
+        Me.btnDropTable.IconColor = System.Drawing.Color.White
+        Me.btnDropTable.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnDropTable.Name = "btnDropTable"
+        Me.btnDropTable.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnDropTable.ShortcutKeyDisplayString = ""
+        Me.btnDropTable.Size = New System.Drawing.Size(128, 24)
+        Me.btnDropTable.Text = "Drop"
+        '
+        'ProceduresMenuStrip
+        '
+        Me.ProceduresMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnExecuteProcedure, Me.btnShowProcedureDefinition, Me.tsSeparator11, Me.btnDropProcedure})
+        Me.ProceduresMenuStrip.Name = "TablesAndViewsMenuStrip"
+        Me.ProceduresMenuStrip.Size = New System.Drawing.Size(166, 82)
+        '
+        'btnExecuteProcedure
+        '
+        Me.btnExecuteProcedure.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnExecuteProcedure.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnExecuteProcedure.ForeColor = System.Drawing.Color.White
+        Me.btnExecuteProcedure.IconChar = FontAwesome.Sharp.IconChar.Play
+        Me.btnExecuteProcedure.IconColor = System.Drawing.Color.White
+        Me.btnExecuteProcedure.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnExecuteProcedure.Name = "btnExecuteProcedure"
+        Me.btnExecuteProcedure.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnExecuteProcedure.ShortcutKeyDisplayString = ""
+        Me.btnExecuteProcedure.Size = New System.Drawing.Size(169, 24)
+        Me.btnExecuteProcedure.Text = "Execute"
+        '
+        'btnShowProcedureDefinition
+        '
+        Me.btnShowProcedureDefinition.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnShowProcedureDefinition.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnShowProcedureDefinition.ForeColor = System.Drawing.Color.White
+        Me.btnShowProcedureDefinition.IconChar = FontAwesome.Sharp.IconChar.BookOpen
+        Me.btnShowProcedureDefinition.IconColor = System.Drawing.Color.White
+        Me.btnShowProcedureDefinition.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnShowProcedureDefinition.Name = "btnShowProcedureDefinition"
+        Me.btnShowProcedureDefinition.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnShowProcedureDefinition.ShortcutKeyDisplayString = ""
+        Me.btnShowProcedureDefinition.Size = New System.Drawing.Size(169, 24)
+        Me.btnShowProcedureDefinition.Text = "Show Definition"
+        '
+        'tsSeparator11
+        '
+        Me.tsSeparator11.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.tsSeparator11.ForeColor = System.Drawing.Color.White
+        Me.tsSeparator11.Name = "tsSeparator11"
+        Me.tsSeparator11.Padding = New System.Windows.Forms.Padding(2)
+        Me.tsSeparator11.Size = New System.Drawing.Size(162, 6)
+        '
+        'btnDropProcedure
+        '
+        Me.btnDropProcedure.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnDropProcedure.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnDropProcedure.ForeColor = System.Drawing.Color.White
+        Me.btnDropProcedure.IconChar = FontAwesome.Sharp.IconChar.Trash
+        Me.btnDropProcedure.IconColor = System.Drawing.Color.White
+        Me.btnDropProcedure.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnDropProcedure.Name = "btnDropProcedure"
+        Me.btnDropProcedure.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnDropProcedure.ShortcutKeyDisplayString = ""
+        Me.btnDropProcedure.Size = New System.Drawing.Size(169, 24)
+        Me.btnDropProcedure.Text = "Drop"
+        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -1057,6 +1196,8 @@ Partial Class MainForm
         Me.MyToolStrip.PerformLayout()
         Me.mainPanel.ResumeLayout(False)
         Me.mainPanel.PerformLayout()
+        Me.TablesAndViewsMenuStrip.ResumeLayout(False)
+        Me.ProceduresMenuStrip.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1131,4 +1272,15 @@ Partial Class MainForm
     Friend WithEvents btnOutput As IconToolStripButton
     Friend WithEvents btnXpath As IconToolStripButton
     Friend WithEvents tvObjectExplorer As TreeView
+    Friend WithEvents NodeImageList As ImageList
+    Friend WithEvents TablesAndViewsMenuStrip As ContextMenuStrip
+    Friend WithEvents ProceduresMenuStrip As ContextMenuStrip
+    Friend WithEvents btnEditTable As IconMenuItem
+    Friend WithEvents tsSeparator10 As ToolStripSeparator
+    Friend WithEvents btnTruncateTable As IconMenuItem
+    Friend WithEvents btnDropTable As IconMenuItem
+    Friend WithEvents btnExecuteProcedure As IconMenuItem
+    Friend WithEvents btnShowProcedureDefinition As IconMenuItem
+    Friend WithEvents tsSeparator11 As ToolStripSeparator
+    Friend WithEvents btnDropProcedure As IconMenuItem
 End Class

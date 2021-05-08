@@ -36,14 +36,13 @@ Partial Class ProcedureExecutionForm
         'mainPanel
         '
         Me.mainPanel.AutoSize = True
-        Me.mainPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.mainPanel.Controls.Add(Me.paramsTable)
         Me.mainPanel.Controls.Add(Me.bottomPanel)
         Me.mainPanel.Controls.Add(Me.lblProcedureName)
         Me.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.mainPanel.Location = New System.Drawing.Point(1, 1)
         Me.mainPanel.Name = "mainPanel"
-        Me.mainPanel.Size = New System.Drawing.Size(559, 84)
+        Me.mainPanel.Size = New System.Drawing.Size(559, 83)
         Me.mainPanel.TabIndex = 0
         '
         'paramsTable
@@ -59,7 +58,7 @@ Partial Class ProcedureExecutionForm
         Me.paramsTable.Padding = New System.Windows.Forms.Padding(10)
         Me.paramsTable.RowCount = 1
         Me.paramsTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.paramsTable.Size = New System.Drawing.Size(557, 1)
+        Me.paramsTable.Size = New System.Drawing.Size(559, 2)
         Me.paramsTable.TabIndex = 17
         '
         'bottomPanel
@@ -72,11 +71,11 @@ Partial Class ProcedureExecutionForm
         Me.bottomPanel.Controls.Add(Me.lblNoParams)
         Me.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.bottomPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.bottomPanel.Location = New System.Drawing.Point(0, 39)
+        Me.bottomPanel.Location = New System.Drawing.Point(0, 40)
         Me.bottomPanel.Margin = New System.Windows.Forms.Padding(0)
         Me.bottomPanel.Name = "bottomPanel"
         Me.bottomPanel.Padding = New System.Windows.Forms.Padding(0, 0, 10, 10)
-        Me.bottomPanel.Size = New System.Drawing.Size(557, 43)
+        Me.bottomPanel.Size = New System.Drawing.Size(559, 43)
         Me.bottomPanel.TabIndex = 15
         '
         'btnExecuteProcedure
@@ -91,7 +90,7 @@ Partial Class ProcedureExecutionForm
         Me.btnExecuteProcedure.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnExecuteProcedure.IconSize = 18
         Me.btnExecuteProcedure.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnExecuteProcedure.Location = New System.Drawing.Point(448, 0)
+        Me.btnExecuteProcedure.Location = New System.Drawing.Point(450, 0)
         Me.btnExecuteProcedure.Margin = New System.Windows.Forms.Padding(0, 0, 3, 3)
         Me.btnExecuteProcedure.Name = "btnExecuteProcedure"
         Me.btnExecuteProcedure.Size = New System.Drawing.Size(96, 30)
@@ -113,7 +112,7 @@ Partial Class ProcedureExecutionForm
         Me.btnCancel.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnCancel.IconSize = 18
         Me.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnCancel.Location = New System.Drawing.Point(349, 0)
+        Me.btnCancel.Location = New System.Drawing.Point(351, 0)
         Me.btnCancel.Margin = New System.Windows.Forms.Padding(0, 0, 3, 3)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(96, 30)
@@ -128,7 +127,7 @@ Partial Class ProcedureExecutionForm
         Me.bottomPanel.SetFlowBreak(Me.lblNoParams, True)
         Me.lblNoParams.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNoParams.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblNoParams.Location = New System.Drawing.Point(15, 0)
+        Me.lblNoParams.Location = New System.Drawing.Point(17, 0)
         Me.lblNoParams.Name = "lblNoParams"
         Me.lblNoParams.Size = New System.Drawing.Size(331, 30)
         Me.lblNoParams.TabIndex = 14
@@ -145,7 +144,7 @@ Partial Class ProcedureExecutionForm
         Me.lblProcedureName.Location = New System.Drawing.Point(0, 0)
         Me.lblProcedureName.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lblProcedureName.Name = "lblProcedureName"
-        Me.lblProcedureName.Size = New System.Drawing.Size(557, 38)
+        Me.lblProcedureName.Size = New System.Drawing.Size(559, 38)
         Me.lblProcedureName.TabIndex = 16
         Me.lblProcedureName.Text = "ProcedureName"
         Me.lblProcedureName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -158,7 +157,7 @@ Partial Class ProcedureExecutionForm
         Me.AutoSize = True
         Me.BackColor = System.Drawing.Color.DodgerBlue
         Me.CancelButton = Me.btnCancel
-        Me.ClientSize = New System.Drawing.Size(561, 86)
+        Me.ClientSize = New System.Drawing.Size(561, 85)
         Me.Controls.Add(Me.mainPanel)
         Me.ForeColor = System.Drawing.SystemColors.ControlText
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None

@@ -6,8 +6,16 @@ Public Class DatabaseLogic
     ''' <summary>
     ''' Sets the connection to the server.
     ''' </summary>
-    Public Sub SetConnection(server As String, user As String, pass As String, timeout As Integer)
+    Public Sub SetSqlServerLogin(server As String, user As String, pass As String, timeout As Integer)
         Dim ConnectionString As String = "Server=" & server & ";" & "User Id=" & user & ";" & "Password=" & pass & ";"
+        DatabaseConnection.SetConnectionString(ConnectionString, timeout)
+    End Sub
+
+    ''' <summary>
+    ''' Sets the connection to the server.
+    ''' </summary>
+    Public Sub SetWindowsLogin(server As String, timeout As Integer)
+        Dim ConnectionString As String = "Server=" & server & ";Integrated Security=true;"
         DatabaseConnection.SetConnectionString(ConnectionString, timeout)
     End Sub
 

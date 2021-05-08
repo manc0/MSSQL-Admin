@@ -136,6 +136,7 @@ Public Class MainForm
         AddHandler UserEditor.TextModified, AddressOf CurrentEditor_TextModified
 
         Log("Welcome " & Environment.UserName & ".")
+
         MyBase.OnLoad(e)
     End Sub
 
@@ -318,7 +319,12 @@ Public Class MainForm
         Dim user As String = tbUser.Text
         Dim pass As String = tbPass.Text
         Dim timeout As Integer = tbTimeout.Text
-        DatabaseLogic.SetConnection(server, user, pass, timeout)
+
+        If chbLoginMode.Checked Then
+            DatabaseLogic.SetWindowsLogin(server, timeout)
+        Else
+            DatabaseLogic.SetSqlServerLogin(server, user, pass, timeout)
+        End If
 
         Try
             lblConnStatus.Text = "Connecting..."
@@ -338,7 +344,7 @@ Public Class MainForm
             btnReload.Enabled = True
             cbDatabases.Enabled = True
             lblConnStatus.Text = "Connected"
-            lblConnStatus.ForeColor = Color.Lime
+            lblConnStatus.ForeColor = Color.SpringGreen
 
             CurrentStatus = ConnectionStatus.Connected
             Log("Connection established.")
@@ -1251,6 +1257,19 @@ Public Class MainForm
         If String.IsNullOrEmpty(tbUser.Text) Then
             tbUser.Text = "User"
         End If
+    End Sub
+
+    Private Sub MainForm_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
+        BackColor = Color.DodgerBlue
+    End Sub
+
+    Private Sub MainForm_Deactivate(sender As Object, e As EventArgs) Handles MyBase.Deactivate
+        BackColor = Color.OrangeRed
+    End Sub
+
+    Private Sub ChbLoginMode_CheckedChanged(sender As Object, e As EventArgs) Handles chbLoginMode.CheckedChanged
+        tbUser.Enabled = Not chbLoginMode.Checked
+        tbPass.Enabled = Not chbLoginMode.Checked
     End Sub
 
     Private Sub TbUser_TextChanged(sender As Object, e As EventArgs) Handles tbUser.TextChanged

@@ -1,8 +1,7 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class DatabaseConnection
-    Private Shared _connectionString As String = "Connection Timeout={0};"
-    Private Shared _connectionLogin As String
+    Private Shared _connectionString As String
 
     ''' <summary>
     ''' Sets the connection string for future connections.
@@ -10,9 +9,10 @@ Public Class DatabaseConnection
     ''' <param name="connectionLogin">String containing the login credentials.</param>
     ''' <param name="timeout">Connection timeout.</param>
     Public Shared Sub SetConnectionString(connectionLogin As String, timeout As Integer)
-        _connectionLogin = connectionLogin
-        _connectionString = String.Format(_connectionString, timeout)
-        _connectionString &= _connectionLogin
+        Dim timeoutString As String = String.Format("Connection Timeout={0};", timeout)
+
+        _connectionString = String.Empty
+        _connectionString = connectionLogin & timeoutString
     End Sub
 
     ''' <summary>
@@ -142,7 +142,7 @@ Public Class DatabaseConnection
     ''' <param name="timeout">Connection timeout</param>
     ''' <returns></returns>
     Public Shared Async Function Open(timeout As Integer) As Task
-        SetConnectionString(_connectionLogin, timeout)
+        SetConnectionString(_connectionString, timeout)
 
         Using conn As New SqlConnection(_connectionString)
             Await conn.OpenAsync()

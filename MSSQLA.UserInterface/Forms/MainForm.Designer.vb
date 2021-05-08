@@ -109,6 +109,7 @@ Partial Class MainForm
         Me.btnDropProcedure = New FontAwesome.Sharp.IconMenuItem()
         Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
+        Me.chbLoginMode = New System.Windows.Forms.CheckBox()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
@@ -565,6 +566,7 @@ Partial Class MainForm
         'leftPanel
         '
         Me.leftPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
+        Me.leftPanel.Controls.Add(Me.chbLoginMode)
         Me.leftPanel.Controls.Add(Me.tvObjectExplorer)
         Me.leftPanel.Controls.Add(Me.tbTimeout)
         Me.leftPanel.Controls.Add(Me.btnReload)
@@ -595,11 +597,12 @@ Partial Class MainForm
         Me.tvObjectExplorer.ForeColor = System.Drawing.Color.LightGray
         Me.tvObjectExplorer.ImageIndex = 0
         Me.tvObjectExplorer.ImageList = Me.NodeImageList
-        Me.tvObjectExplorer.LineColor = System.Drawing.Color.LightGray
+        Me.tvObjectExplorer.Indent = 15
+        Me.tvObjectExplorer.LineColor = System.Drawing.Color.Gray
         Me.tvObjectExplorer.Location = New System.Drawing.Point(0, 132)
         Me.tvObjectExplorer.Name = "tvObjectExplorer"
         Me.tvObjectExplorer.SelectedImageIndex = 0
-        Me.tvObjectExplorer.Size = New System.Drawing.Size(269, 395)
+        Me.tvObjectExplorer.Size = New System.Drawing.Size(269, 364)
         Me.tvObjectExplorer.TabIndex = 0
         '
         'NodeImageList
@@ -713,7 +716,7 @@ Partial Class MainForm
         Me.lblServer.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.lblServer.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblServer.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblServer.Location = New System.Drawing.Point(0, 527)
+        Me.lblServer.Location = New System.Drawing.Point(0, 496)
         Me.lblServer.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lblServer.Name = "lblServer"
         Me.lblServer.Size = New System.Drawing.Size(269, 20)
@@ -1192,6 +1195,22 @@ Partial Class MainForm
         Me.EditorsTabControl.TabIndex = 16
         Me.EditorsTabControl.Visible = False
         '
+        'chbLoginMode
+        '
+        Me.chbLoginMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chbLoginMode.AutoSize = True
+        Me.chbLoginMode.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
+        Me.chbLoginMode.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.chbLoginMode.ForeColor = System.Drawing.Color.LightGray
+        Me.chbLoginMode.Location = New System.Drawing.Point(15, 526)
+        Me.chbLoginMode.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
+        Me.chbLoginMode.Name = "chbLoginMode"
+        Me.chbLoginMode.Size = New System.Drawing.Size(166, 21)
+        Me.chbLoginMode.TabIndex = 15
+        Me.chbLoginMode.Text = "Windows Authentication"
+        Me.chbLoginMode.UseVisualStyleBackColor = True
+        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -1310,4 +1329,5 @@ Partial Class MainForm
     Friend WithEvents btnCloseWindow As IconMenuItem
     Friend WithEvents btnMaximizeRestoreWindow As IconMenuItem
     Friend WithEvents btnMinimizeWindow As IconMenuItem
+    Friend WithEvents chbLoginMode As CheckBox
 End Class

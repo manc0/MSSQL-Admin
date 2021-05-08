@@ -6,7 +6,7 @@ Public Class CustomTabControl
 
     Private Const TabTextOffset As String = "      "
 
-    Private Const TabTextOffsetWithAsterik As String = "*     "
+    Private Const TabTextOffsetWithAsterisk As String = "*     "
 
 #Region "Constructor"
 
@@ -124,7 +124,7 @@ Public Class CustomTabControl
     ''' <param name="edited">Indicates wether the tab has been edited or not.</param>
     Public Sub EditTabNameAndText(tab As TabPage, name As String, edited As Boolean)
         tab.Name = name
-        tab.Text = name & IIf(edited, TabTextOffsetWithAsterik, TabTextOffset)
+        tab.Text = name & IIf(edited, TabTextOffsetWithAsterisk, TabTextOffset)
     End Sub
 
     ''' <summary>
@@ -134,11 +134,11 @@ Public Class CustomTabControl
     ''' <param name="edited">Indicates wether the tab has been edited or not.</param>
     Public Sub SetTabEditMode(tab As TabPage, edited As Boolean)
         If (HasAddButton And TabPages.IndexOf(tab) < LastIndex) Or Not HasAddButton Then
-            If edited And Not tab.Text.Contains(TabTextOffsetWithAsterik) Then
-                tab.Text = tab.Text.Replace(TabTextOffset, TabTextOffsetWithAsterik)
-            ElseIf Not edited And tab.Text.Contains(TabTextOffsetWithAsterik) Then
-                Dim asteriskIndex As Integer = tab.Text.LastIndexOf(TabTextOffsetWithAsterik)
-                tab.Text = tab.Text.Replace(TabTextOffsetWithAsterik, TabTextOffset)
+            If edited And Not tab.Text.Contains(TabTextOffsetWithAsterisk) Then
+                tab.Text = tab.Text.Replace(TabTextOffset, TabTextOffsetWithAsterisk)
+            ElseIf Not edited And tab.Text.Contains(TabTextOffsetWithAsterisk) Then
+                Dim asteriskIndex As Integer = tab.Text.LastIndexOf(TabTextOffsetWithAsterisk)
+                tab.Text = tab.Text.Replace(TabTextOffsetWithAsterisk, TabTextOffset)
             End If
         End If
     End Sub

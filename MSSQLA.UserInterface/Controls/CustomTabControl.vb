@@ -291,7 +291,7 @@ Public Class CustomTabControl
             'Draw a border around TabPage
             Dim topRect = TabPages(index).Bounds
             Dim borderBrush = New SolidBrush(SelectedTabColor)
-            topRect.Inflate(2, 2)
+            topRect.Inflate(1, 1)
 
             e.Graphics.FillRectangle(borderBrush, topRect)
             ControlPaint.DrawBorder(e.Graphics, topRect, borderBrush.Color, bs)
@@ -301,15 +301,15 @@ Public Class CustomTabControl
                 Color.Empty, 0, ButtonBorderStyle.None,
                 Color.Empty, 0, ButtonBorderStyle.None,
                 Color.Empty, 0, ButtonBorderStyle.None,
-                borderBrush.Color, 4, ButtonBorderStyle.Solid)
+                borderBrush.Color, 3, ButtonBorderStyle.Solid)
 
             'Draw the text
             Dim rText As Rectangle = r
             If index = LastIndex And HasAddButton Then
-                rText.Offset(0, -5)
+                rText.Offset(0, -4)
                 DrawText(tab, rText, e.Graphics, brush)
             Else
-                rText.Offset(0, -2)
+                rText.Offset(0, -1)
                 DrawText(tab, rText, e.Graphics, brush)
             End If
 

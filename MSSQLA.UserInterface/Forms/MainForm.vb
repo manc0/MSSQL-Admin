@@ -3,6 +3,7 @@ Imports System.Xml
 Imports MSSQLA.UserInterface.ClassUtils
 Imports MSSQLA.BusinessLogicLayer
 Imports FontAwesome.Sharp
+Imports System.Runtime.InteropServices
 
 Public Class MainForm
     Private ReadOnly Property DatabaseLogic As New DatabaseLogic
@@ -14,6 +15,100 @@ Public Class MainForm
     Private _ignoreTabControlSelectedEvent As Boolean = False
 
 #Region "Form Initialization"
+
+    Public Sub New()
+        InitializeComponent()
+        Me.FormBorderStyle = FormBorderStyle.None
+        Me.DoubleBuffered = True
+        Me.SetStyle(ControlStyles.ResizeRedraw, True)
+    End Sub
+
+    Private Const HTLEFT As Integer = 10, HTRIGHT As Integer = 11, HTTOP As Integer = 12, HTTOPLEFT As Integer = 13, HTTOPRIGHT As Integer = 14,
+        HTBOTTOM As Integer = 15, HTBOTTOMLEFT As Integer = 16, HTBOTTOMRIGHT As Integer = 17, CS_DROPSHADOW As Integer = 131072
+
+    Const RESIZE_OFFSET As Integer = 10
+
+    Protected Overrides ReadOnly Property CreateParams() As CreateParams
+        Get
+            Dim cp As CreateParams = MyBase.CreateParams
+            cp.ClassStyle = cp.ClassStyle Or CS_DROPSHADOW
+            Return cp
+        End Get
+    End Property
+
+    Private Overloads ReadOnly Property Top As Rectangle
+        Get
+            Return New Rectangle(0, 0, Me.ClientSize.Width, RESIZE_OFFSET)
+        End Get
+    End Property
+
+    Private Overloads ReadOnly Property Left As Rectangle
+        Get
+            Return New Rectangle(0, 0, RESIZE_OFFSET, Me.ClientSize.Height)
+        End Get
+    End Property
+
+    Private Overloads ReadOnly Property Bottom As Rectangle
+        Get
+            Return New Rectangle(0, Me.ClientSize.Height - RESIZE_OFFSET, Me.ClientSize.Width, RESIZE_OFFSET)
+        End Get
+    End Property
+
+    Private Overloads ReadOnly Property Right As Rectangle
+        Get
+            Return New Rectangle(Me.ClientSize.Width - RESIZE_OFFSET, 0, RESIZE_OFFSET, Me.ClientSize.Height)
+        End Get
+    End Property
+
+    Private ReadOnly Property TopLeft As Rectangle
+        Get
+            Return New Rectangle(0, 0, RESIZE_OFFSET, RESIZE_OFFSET)
+        End Get
+    End Property
+
+    Private ReadOnly Property TopRight As Rectangle
+        Get
+            Return New Rectangle(Me.ClientSize.Width - RESIZE_OFFSET, 0, RESIZE_OFFSET, RESIZE_OFFSET)
+        End Get
+    End Property
+
+    Private ReadOnly Property BottomLeft As Rectangle
+        Get
+            Return New Rectangle(0, Me.ClientSize.Height - RESIZE_OFFSET, RESIZE_OFFSET, RESIZE_OFFSET)
+        End Get
+    End Property
+
+    Private ReadOnly Property BottomRight As Rectangle
+        Get
+            Return New Rectangle(Me.ClientSize.Width - RESIZE_OFFSET, Me.ClientSize.Height - RESIZE_OFFSET, RESIZE_OFFSET, RESIZE_OFFSET)
+        End Get
+    End Property
+
+    Protected Overrides Sub WndProc(ByRef message As Message)
+        MyBase.WndProc(message)
+
+        If message.Msg = &H84 Then
+            Dim cursorPosition = Me.PointToClient(Cursor.Position)
+
+            If TopLeft.Contains(cursorPosition) Then
+                message.Result = CType(HTTOPLEFT, IntPtr)
+            ElseIf TopRight.Contains(cursorPosition) Then
+                message.Result = CType(HTTOPRIGHT, IntPtr)
+            ElseIf BottomLeft.Contains(cursorPosition) Then
+                message.Result = CType(HTBOTTOMLEFT, IntPtr)
+            ElseIf BottomRight.Contains(cursorPosition) Then
+                message.Result = CType(HTBOTTOMRIGHT, IntPtr)
+            ElseIf Top.Contains(cursorPosition) Then
+                message.Result = CType(HTTOP, IntPtr)
+            ElseIf Left.Contains(cursorPosition) Then
+                message.Result = CType(HTLEFT, IntPtr)
+            ElseIf Right.Contains(cursorPosition) Then
+                message.Result = CType(HTRIGHT, IntPtr)
+            ElseIf Bottom.Contains(cursorPosition) Then
+                message.Result = CType(HTBOTTOM, IntPtr)
+            End If
+        End If
+    End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         LoadConnectionSettings()
@@ -30,11 +125,11 @@ Public Class MainForm
         TablesAndViewsMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
         ProceduresMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
 
-        TablesTabControl.ItemSize = New Size(0, 25)
+        TablesTabControl.ItemSize = New Size(0, 32)
         TablesTabControl.SizeMode = TabSizeMode.Normal
         TablesTabControl.DrawMode = DrawMode.OwnerDrawFixed
 
-        EditorsTabControl.ItemSize = New Size(0, 25)
+        EditorsTabControl.ItemSize = New Size(0, 32)
         EditorsTabControl.SizeMode = TabSizeMode.Normal
         EditorsTabControl.DrawMode = DrawMode.OwnerDrawFixed
 
@@ -243,7 +338,7 @@ Public Class MainForm
             btnReload.Enabled = True
             cbDatabases.Enabled = True
             lblConnStatus.Text = "Connected"
-            lblConnStatus.ForeColor = Color.PaleGreen
+            lblConnStatus.ForeColor = Color.Lime
 
             CurrentStatus = ConnectionStatus.Connected
             Log("Connection established.")
@@ -840,6 +935,15 @@ Public Class MainForm
         End If
     End Sub
 
+
+    Private Sub MyMenuStrip_MouseDown(sender As Object, e As MouseEventArgs) Handles MyMenuStrip.MouseDown
+        If (e.Button = MouseButtons.Left) Then
+            ReleaseCapture()
+            SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0)
+            btnMaximizeRestoreWindow.IconChar = IconChar.WindowMaximize
+        End If
+    End Sub
+
     Private Sub BtnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
         Connect()
     End Sub
@@ -890,6 +994,25 @@ Public Class MainForm
     Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
         CloseSession()
         Application.Exit()
+    End Sub
+
+    Private Sub BtnCloseWindow_Click(sender As Object, e As EventArgs) Handles btnCloseWindow.Click
+        CloseSession()
+        Application.Exit()
+    End Sub
+
+    Private Sub BtnMaximizeRestoreWindow_Click(sender As Object, e As EventArgs) Handles btnMaximizeRestoreWindow.Click
+        If WindowState = FormWindowState.Normal Then
+            WindowState = FormWindowState.Maximized
+            btnMaximizeRestoreWindow.IconChar = IconChar.WindowRestore
+        Else
+            WindowState = FormWindowState.Normal
+            btnMaximizeRestoreWindow.IconChar = IconChar.WindowMaximize
+        End If
+    End Sub
+
+    Private Sub BtnMinimizeWindow_Click(sender As Object, e As EventArgs) Handles btnMinimizeWindow.Click
+        WindowState = FormWindowState.Minimized
     End Sub
 
     Private Sub BtnUndo_Click(sender As Object, e As EventArgs) Handles btnUndo.Click
@@ -1078,16 +1201,6 @@ Public Class MainForm
         If CurrentTable IsNot Nothing Then CurrentTable.ColumnsMode = CurrentColumnsMode
     End Sub
 
-    Private Sub BtnFullscreen_Click(sender As Object, e As EventArgs) Handles btnFullscreen.Click
-        If btnFullscreen.Checked Then
-            FormBorderStyle = FormBorderStyle.None
-            WindowState = FormWindowState.Maximized
-        Else
-            FormBorderStyle = FormBorderStyle.Sizable
-            WindowState = FormWindowState.Normal
-        End If
-    End Sub
-
     Private Sub TbServer_Enter(sender As Object, e As EventArgs) Handles tbServer.Enter
         If tbServer.Text = "Server" Then
             tbServer.Text = String.Empty
@@ -1169,6 +1282,20 @@ Public Class MainForm
             tbPass.UseSystemPasswordChar = True
         End If
     End Sub
+
+#End Region
+
+#Region "Interop"
+
+    Private Const WM_NCLBUTTONDOWN As Integer = &HA1
+    Public Const HT_CAPTION As Integer = &H2
+
+    <DllImport("user32.dll")>
+    Private Shared Function SendMessage(hWnd As IntPtr, msg As Int32, wParam As IntPtr, lParam As IntPtr) As IntPtr
+    End Function
+    <DllImport("user32.dll")>
+    Public Shared Function ReleaseCapture() As Boolean
+    End Function
 
 #End Region
 

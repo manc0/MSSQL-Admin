@@ -6,7 +6,7 @@
     End Sub
 
     Protected Overrides Sub OnRenderMenuItemBackground(e As ToolStripItemRenderEventArgs)
-        If e.Item.Text <> String.Empty Then
+        If e.Item.Tag <> "NoHighLight" Then
             MyBase.OnRenderMenuItemBackground(e)
         End If
     End Sub

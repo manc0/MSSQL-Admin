@@ -41,15 +41,15 @@ Partial Class ProcedureExecutionForm
         Me.mainPanel.Controls.Add(Me.bottomPanel)
         Me.mainPanel.Controls.Add(Me.lblProcedureName)
         Me.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.mainPanel.Location = New System.Drawing.Point(0, 0)
+        Me.mainPanel.Location = New System.Drawing.Point(1, 1)
         Me.mainPanel.Name = "mainPanel"
-        Me.mainPanel.Size = New System.Drawing.Size(561, 82)
+        Me.mainPanel.Size = New System.Drawing.Size(559, 84)
         Me.mainPanel.TabIndex = 0
         '
         'paramsTable
         '
         Me.paramsTable.AutoSize = True
-        Me.paramsTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.paramsTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
         Me.paramsTable.ColumnCount = 2
         Me.paramsTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.paramsTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -59,29 +59,29 @@ Partial Class ProcedureExecutionForm
         Me.paramsTable.Padding = New System.Windows.Forms.Padding(10)
         Me.paramsTable.RowCount = 1
         Me.paramsTable.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.paramsTable.Size = New System.Drawing.Size(559, 0)
+        Me.paramsTable.Size = New System.Drawing.Size(557, 1)
         Me.paramsTable.TabIndex = 17
         '
         'bottomPanel
         '
         Me.bottomPanel.AutoSize = True
         Me.bottomPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.bottomPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.bottomPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
         Me.bottomPanel.Controls.Add(Me.btnExecuteProcedure)
         Me.bottomPanel.Controls.Add(Me.btnCancel)
         Me.bottomPanel.Controls.Add(Me.lblNoParams)
         Me.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.bottomPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.bottomPanel.Location = New System.Drawing.Point(0, 37)
+        Me.bottomPanel.Location = New System.Drawing.Point(0, 39)
         Me.bottomPanel.Margin = New System.Windows.Forms.Padding(0)
         Me.bottomPanel.Name = "bottomPanel"
         Me.bottomPanel.Padding = New System.Windows.Forms.Padding(0, 0, 10, 10)
-        Me.bottomPanel.Size = New System.Drawing.Size(559, 43)
+        Me.bottomPanel.Size = New System.Drawing.Size(557, 43)
         Me.bottomPanel.TabIndex = 15
         '
         'btnExecuteProcedure
         '
-        Me.btnExecuteProcedure.BackColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.btnExecuteProcedure.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
         Me.btnExecuteProcedure.FlatAppearance.BorderSize = 0
         Me.btnExecuteProcedure.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnExecuteProcedure.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -91,7 +91,7 @@ Partial Class ProcedureExecutionForm
         Me.btnExecuteProcedure.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnExecuteProcedure.IconSize = 18
         Me.btnExecuteProcedure.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnExecuteProcedure.Location = New System.Drawing.Point(450, 0)
+        Me.btnExecuteProcedure.Location = New System.Drawing.Point(448, 0)
         Me.btnExecuteProcedure.Margin = New System.Windows.Forms.Padding(0, 0, 3, 3)
         Me.btnExecuteProcedure.Name = "btnExecuteProcedure"
         Me.btnExecuteProcedure.Size = New System.Drawing.Size(96, 30)
@@ -102,7 +102,7 @@ Partial Class ProcedureExecutionForm
         '
         'btnCancel
         '
-        Me.btnCancel.BackColor = System.Drawing.Color.FromArgb(CType(CType(77, Byte), Integer), CType(CType(122, Byte), Integer), CType(CType(200, Byte), Integer))
+        Me.btnCancel.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnCancel.FlatAppearance.BorderSize = 0
         Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -113,7 +113,7 @@ Partial Class ProcedureExecutionForm
         Me.btnCancel.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnCancel.IconSize = 18
         Me.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnCancel.Location = New System.Drawing.Point(351, 0)
+        Me.btnCancel.Location = New System.Drawing.Point(349, 0)
         Me.btnCancel.Margin = New System.Windows.Forms.Padding(0, 0, 3, 3)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(96, 30)
@@ -128,9 +128,9 @@ Partial Class ProcedureExecutionForm
         Me.bottomPanel.SetFlowBreak(Me.lblNoParams, True)
         Me.lblNoParams.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblNoParams.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblNoParams.Location = New System.Drawing.Point(10, 0)
+        Me.lblNoParams.Location = New System.Drawing.Point(15, 0)
         Me.lblNoParams.Name = "lblNoParams"
-        Me.lblNoParams.Size = New System.Drawing.Size(338, 30)
+        Me.lblNoParams.Size = New System.Drawing.Size(331, 30)
         Me.lblNoParams.TabIndex = 14
         Me.lblNoParams.Text = "No parameters found"
         Me.lblNoParams.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -145,7 +145,7 @@ Partial Class ProcedureExecutionForm
         Me.lblProcedureName.Location = New System.Drawing.Point(0, 0)
         Me.lblProcedureName.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.lblProcedureName.Name = "lblProcedureName"
-        Me.lblProcedureName.Size = New System.Drawing.Size(559, 38)
+        Me.lblProcedureName.Size = New System.Drawing.Size(557, 38)
         Me.lblProcedureName.TabIndex = 16
         Me.lblProcedureName.Text = "ProcedureName"
         Me.lblProcedureName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -156,13 +156,14 @@ Partial Class ProcedureExecutionForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
-        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.BackColor = System.Drawing.Color.DodgerBlue
         Me.CancelButton = Me.btnCancel
-        Me.ClientSize = New System.Drawing.Size(561, 82)
+        Me.ClientSize = New System.Drawing.Size(561, 86)
         Me.Controls.Add(Me.mainPanel)
         Me.ForeColor = System.Drawing.SystemColors.ControlText
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "ProcedureExecutionForm"
+        Me.Padding = New System.Windows.Forms.Padding(1)
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "ProcedureExecutionForm"

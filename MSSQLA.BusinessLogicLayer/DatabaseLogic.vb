@@ -181,30 +181,21 @@ Public Class DatabaseLogic
 
 
     ''' <summary>
-    ''' Truncates the given table.
+    ''' Truncates the given object.
     ''' </summary>
-    ''' <param name="table">Name of the table.</param>
+    ''' <param name="itemName">Name of the table.</param>
     ''' <param name="database">Name of the database.</param>
-    Public Sub TruncateTable(table As String, database As String)
-        DatabaseConnection.PerformAction("TRUNCATE TABLE " & table, database)
+    Public Sub Truncate(itemName As String, itemType As String, database As String)
+        DatabaseConnection.PerformAction("TRUNCATE " & itemType & " " & itemName, database)
     End Sub
 
     ''' <summary>
-    ''' Drops the given table.
+    ''' Drops the given object.
     ''' </summary>
-    ''' <param name="table">Name of the table.</param>
+    ''' <param name="itemName">Name of the table.</param>
     ''' <param name="database">Name of the database.</param>
-    Public Sub DropTable(table As String, database As String)
-        DatabaseConnection.PerformAction("DROP TABLE " & table, database)
-    End Sub
-
-    ''' <summary>
-    ''' Drops the given procedure.
-    ''' </summary>
-    ''' <param name="procedureName">Name of the procedure.</param>
-    ''' <param name="database">Name of the database.</param>
-    Public Sub DropProcedure(procedureName As String, database As String)
-        DatabaseConnection.PerformAction("DROP PROCEDURE " & procedureName, database)
+    Public Sub Drop(itemName As String, itemType As String, database As String)
+        DatabaseConnection.PerformAction("DROP " & itemType & " " & itemName, database)
     End Sub
 
     ''' <summary>
@@ -215,6 +206,10 @@ Public Class DatabaseLogic
     ''' <returns>A string object containing the definition.</returns>
     Public Function GetProcedureDefinition(procedureName As String, database As String) As String
         Return DatabaseConnection.PerformScalar("SELECT OBJECT_DEFINITION (OBJECT_ID('" & procedureName & "'))", database).ToString()
+    End Function
+
+    Public Function GetScalar(sqlQuery As String, database As String) As Object
+        Return DatabaseConnection.PerformScalar(sqlQuery, database)
     End Function
 
     ''' <summary>

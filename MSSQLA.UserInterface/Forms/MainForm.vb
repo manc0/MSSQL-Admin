@@ -122,6 +122,7 @@ Public Class MainForm
         MyMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
         MyToolStrip.RenderMode = ToolStripRenderMode.System
         MyToolStrip.Renderer = New CustomToolStripSystemRenderer()
+        DatabaseMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
         TablesAndViewsMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
         ProceduresMenuStrip.Renderer = New CustomToolStripProfessionalRenderer(New MenuColorTable())
 
@@ -403,10 +404,10 @@ Public Class MainForm
             Dim viewsList As List(Of String) = DatabaseLogic.GetViewsListFromDatabase(databaseName)
 
             Dim rootNode As New TreeNode(databaseName, 0, 0)
-            Dim tablesNode As New TreeNode("Tables", 1, 1)
-            Dim viewsNode As New TreeNode("Views", 2, 2)
-            Dim proceduresNode As New TreeNode("Procedures", 3, 3)
-            Dim functionsNode As New TreeNode("Functions", 4, 4)
+            Dim tablesNode As New TreeNode("Tables", 5, 5)
+            Dim viewsNode As New TreeNode("Views", 5, 5)
+            Dim proceduresNode As New TreeNode("Procedures", 5, 5)
+            Dim functionsNode As New TreeNode("Functions", 5, 5)
             Dim treeNodeArray() = New TreeNode() {tablesNode, viewsNode, proceduresNode, functionsNode}
 
             For Each table In tablesList
@@ -432,6 +433,11 @@ Public Class MainForm
                     functionsNode.Nodes.Add(func, func, 4, 4)
                 End If
             Next
+
+            If tablesNode.Nodes.Count = 0 Then tablesNode.ForeColor = Color.Gray
+            If viewsNode.Nodes.Count = 0 Then viewsNode.ForeColor = Color.Gray
+            If proceduresNode.Nodes.Count = 0 Then proceduresNode.ForeColor = Color.Gray
+            If functionsNode.Nodes.Count = 0 Then functionsNode.ForeColor = Color.Gray
 
             tvObjectExplorer.Nodes.Clear()
             tvObjectExplorer.Nodes.Add(rootNode)
@@ -480,7 +486,9 @@ Public Class MainForm
 
                 Try
                     DatabaseLogic.UpdateDataTable(tableName, databaseName, CurrentTable.DataTable)
+
                     Log("Changes submitted to server.")
+                    UpdateAllTables()
                 Catch ex As Exception
                     Log(ex.Message)
                 End Try
@@ -554,6 +562,19 @@ Public Class MainForm
                 Catch ex As Exception
                     Log(ex.Message)
                 End Try
+            End If
+        End Using
+    End Sub
+
+    Private Sub OpenDesignMode(tableName As String)
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        If IsNothing(databaseName) Or IsNothing(tableName) Then Return
+
+        Using form As New TableDesignForm(tableName, databaseName, True)
+            Dim result = form.ShowDialog()
+
+            If result = DialogResult.OK Then
+
             End If
         End Using
     End Sub
@@ -724,7 +745,7 @@ Public Class MainForm
     Private Sub TvObjectExplorer_NodeMouseDoubleClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles tvObjectExplorer.NodeMouseDoubleClick
         Dim myNode As TreeNode = tvObjectExplorer.SelectedNode
 
-        If myNode IsNot Nothing And myNode.Parent IsNot Nothing Then
+        If myNode IsNot Nothing AndAlso myNode.Parent IsNot Nothing Then
             If myNode.Parent.Text = "Tables" Or myNode.Parent.Text = "Views" Then
                 _ignoreTabControlSelectedEvent = True
                 SetSelectedTable(e.Node)
@@ -740,13 +761,36 @@ Public Class MainForm
             tvObjectExplorer.SelectedNode = tvObjectExplorer.GetNodeAt(e.X, e.Y)
             Dim myNode As TreeNode = tvObjectExplorer.SelectedNode
 
-            If myNode IsNot Nothing And myNode.Parent IsNot Nothing Then
+            If myNode IsNot Nothing AndAlso myNode.Parent IsNot Nothing Then
                 If myNode.Parent.Text = "Tables" Or myNode.Parent.Text = "Views" Then
+                    btnDesign.Visible = Not myNode.Parent.Text = "Views"
                     TablesAndViewsMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y)
                 ElseIf myNode.Parent.Text = "Procedures" Then
                     ProceduresMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y)
                 End If
+            ElseIf myNode IsNot Nothing AndAlso myNode.Parent Is Nothing Then
+                DatabaseMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y)
             End If
+        End If
+    End Sub
+
+    Private Sub TvObjectExplorer_BeforeSelect(sender As Object, e As TreeViewCancelEventArgs) Handles tvObjectExplorer.BeforeSelect
+        If e.Node.ForeColor = Color.Gray Then
+            e.Cancel = True
+        End If
+    End Sub
+
+    Private Sub TvObjectExplorer_AfterExpand(sender As Object, e As TreeViewEventArgs) Handles tvObjectExplorer.AfterExpand
+        If e.Node.ImageIndex = 5 Then
+            e.Node.SelectedImageIndex = 6
+            e.Node.ImageIndex = 6
+        End If
+    End Sub
+
+    Private Sub TvObjectExplorer_AfterCollapse(sender As Object, e As TreeViewEventArgs) Handles tvObjectExplorer.AfterCollapse
+        If e.Node.ImageIndex = 6 Then
+            e.Node.SelectedImageIndex = 5
+            e.Node.ImageIndex = 5
         End If
     End Sub
 
@@ -1116,21 +1160,58 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnEditTable_Click(sender As Object, e As EventArgs) Handles btnEditTable.Click
-        SetSelectedTable(tvObjectExplorer.SelectedNode)
+        Dim myNode = tvObjectExplorer.SelectedNode
+
+        If myNode IsNot Nothing Then
+            SetSelectedTable(myNode)
+
+        End If
+    End Sub
+
+    Private Sub BtnDesign_Click(sender As Object, e As EventArgs) Handles btnDesign.Click
+        Dim myNode = tvObjectExplorer.SelectedNode
+
+        If myNode IsNot Nothing Then
+            OpenDesignMode(myNode.Text)
+        End If
+    End Sub
+
+    Private Sub BtnDropDatabase_Click(sender As Object, e As EventArgs) Handles btnDropDatabase.Click
+        Dim myNode As TreeNode = tvObjectExplorer.SelectedNode
+        Dim databaseName As String = myNode?.Text
+        If IsNothing(databaseName) Then Return
+
+        Try
+            Dim dr As DialogResult = MessageBox.Show("Are you really sure to drop " & databaseName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+
+            If dr = DialogResult.Yes Then
+                DatabaseLogic.Drop(databaseName, "DATABASE", "MASTER")
+
+                cbDatabases.SelectedIndex = -1
+                tvObjectExplorer.Nodes.Clear()
+                ClearTables()
+                FillDatabasesComboBox()
+                FillObjectExplorer()
+
+                Log(databaseName & " was successfuly dropped.")
+            End If
+        Catch ex As Exception
+            Log(ex.Message)
+        End Try
     End Sub
 
     Private Sub BtnTruncateTable_Click(sender As Object, e As EventArgs) Handles btnTruncateTable.Click
+        Dim myNode As TreeNode = tvObjectExplorer.SelectedNode
         Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
-        Dim tableName As String = tvObjectExplorer.SelectedNode?.Text
+        Dim tableName As String = myNode?.Text
         If IsNothing(databaseName) Or IsNothing(tableName) Then Return
 
         Try
             Dim dr As DialogResult = MessageBox.Show("Are you sure to truncate " & tableName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
 
             If dr = DialogResult.Yes Then
-                DatabaseLogic.TruncateTable(tableName, databaseName)
+                DatabaseLogic.Truncate(tableName, If(myNode.Parent.Text = "Tables", "TABLE", "VIEW"), databaseName)
                 FillObjectExplorer()
-                UpdateAllTables()
 
                 Log(tableName & " was successfuly truncated.")
             End If
@@ -1140,17 +1221,17 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnDropTable_Click(sender As Object, e As EventArgs) Handles btnDropTable.Click
+        Dim myNode As TreeNode = tvObjectExplorer.SelectedNode
         Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
-        Dim tableName As String = tvObjectExplorer.SelectedNode?.Text
+        Dim tableName As String = myNode?.Text
         If IsNothing(databaseName) Or IsNothing(tableName) Then Return
 
         Try
             Dim dr As DialogResult = MessageBox.Show("Are you sure to drop " & tableName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
 
             If dr = DialogResult.Yes Then
-                DatabaseLogic.DropTable(tableName, databaseName)
+                DatabaseLogic.Drop(tableName, If(myNode.Parent.Text = "Tables", "TABLE", "VIEW"), databaseName)
                 FillObjectExplorer()
-                UpdateAllTables()
 
                 Log(tableName & " was successfuly dropped.")
             End If
@@ -1160,12 +1241,17 @@ Public Class MainForm
     End Sub
 
     Private Sub BtnExecuteProcedure_Click(sender As Object, e As EventArgs) Handles btnExecuteProcedure.Click
-        ExecuteProcedure(tvObjectExplorer.SelectedNode.Text)
+        Dim myNode = tvObjectExplorer.SelectedNode
+
+        If myNode IsNot Nothing Then
+            ExecuteProcedure(myNode.Text)
+        End If
     End Sub
 
     Private Sub BtnShowProcedureDefinition_Click(sender As Object, e As EventArgs) Handles btnShowProcedureDefinition.Click
+        Dim myNode As TreeNode = tvObjectExplorer.SelectedNode
         Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
-        Dim procedureName As String = tvObjectExplorer.SelectedNode?.Text
+        Dim procedureName As String = myNode?.Text
         If IsNothing(databaseName) Or IsNothing(procedureName) Then Return
 
         Try
@@ -1185,7 +1271,7 @@ Public Class MainForm
             Dim dr As DialogResult = MessageBox.Show("Are you sure to drop " & procedureName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
 
             If dr = DialogResult.Yes Then
-                DatabaseLogic.DropProcedure(procedureName, databaseName)
+                DatabaseLogic.Drop(procedureName, "PROCEDURE", databaseName)
                 FillObjectExplorer()
 
                 Log(procedureName & " was successfuly dropped.")

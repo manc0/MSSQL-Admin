@@ -67,6 +67,7 @@ Partial Class MainForm
         Me.btnMaximizeRestoreWindow = New FontAwesome.Sharp.IconMenuItem()
         Me.btnMinimizeWindow = New FontAwesome.Sharp.IconMenuItem()
         Me.leftPanel = New System.Windows.Forms.Panel()
+        Me.chbLoginMode = New System.Windows.Forms.CheckBox()
         Me.tvObjectExplorer = New System.Windows.Forms.TreeView()
         Me.NodeImageList = New System.Windows.Forms.ImageList(Me.components)
         Me.tbTimeout = New System.Windows.Forms.TextBox()
@@ -99,6 +100,7 @@ Partial Class MainForm
         Me.mainPanel = New System.Windows.Forms.Panel()
         Me.TablesAndViewsMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.btnEditTable = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnDesign = New FontAwesome.Sharp.IconMenuItem()
         Me.tsSeparator10 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnTruncateTable = New FontAwesome.Sharp.IconMenuItem()
         Me.btnDropTable = New FontAwesome.Sharp.IconMenuItem()
@@ -109,7 +111,13 @@ Partial Class MainForm
         Me.btnDropProcedure = New FontAwesome.Sharp.IconMenuItem()
         Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
-        Me.chbLoginMode = New System.Windows.Forms.CheckBox()
+        Me.DatabaseMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.btnBackupDatabase = New FontAwesome.Sharp.IconMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnDropDatabase = New FontAwesome.Sharp.IconMenuItem()
+        Me.tsmiTools = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnCreateTable = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnBackupDatabase2 = New FontAwesome.Sharp.IconMenuItem()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
@@ -119,12 +127,13 @@ Partial Class MainForm
         Me.mainPanel.SuspendLayout()
         Me.TablesAndViewsMenuStrip.SuspendLayout()
         Me.ProceduresMenuStrip.SuspendLayout()
+        Me.DatabaseMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'MyMenuStrip
         '
         Me.MyMenuStrip.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
-        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsLogo, Me.tsmiFile, Me.tsmiEdit, Me.tsmiView, Me.btnCloseWindow, Me.btnMaximizeRestoreWindow, Me.btnMinimizeWindow})
+        Me.MyMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsLogo, Me.tsmiFile, Me.tsmiEdit, Me.tsmiView, Me.btnCloseWindow, Me.btnMaximizeRestoreWindow, Me.btnMinimizeWindow, Me.tsmiTools})
         Me.MyMenuStrip.Location = New System.Drawing.Point(1, 1)
         Me.MyMenuStrip.Name = "MyMenuStrip"
         Me.MyMenuStrip.Padding = New System.Windows.Forms.Padding(0)
@@ -587,6 +596,22 @@ Partial Class MainForm
         Me.leftPanel.Size = New System.Drawing.Size(269, 706)
         Me.leftPanel.TabIndex = 1
         '
+        'chbLoginMode
+        '
+        Me.chbLoginMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chbLoginMode.AutoSize = True
+        Me.chbLoginMode.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
+        Me.chbLoginMode.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.chbLoginMode.ForeColor = System.Drawing.Color.LightGray
+        Me.chbLoginMode.Location = New System.Drawing.Point(15, 526)
+        Me.chbLoginMode.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
+        Me.chbLoginMode.Name = "chbLoginMode"
+        Me.chbLoginMode.Size = New System.Drawing.Size(166, 21)
+        Me.chbLoginMode.TabIndex = 15
+        Me.chbLoginMode.Text = "Windows Authentication"
+        Me.chbLoginMode.UseVisualStyleBackColor = True
+        '
         'tvObjectExplorer
         '
         Me.tvObjectExplorer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -602,6 +627,8 @@ Partial Class MainForm
         Me.tvObjectExplorer.Location = New System.Drawing.Point(0, 132)
         Me.tvObjectExplorer.Name = "tvObjectExplorer"
         Me.tvObjectExplorer.SelectedImageIndex = 0
+        Me.tvObjectExplorer.ShowPlusMinus = False
+        Me.tvObjectExplorer.ShowRootLines = False
         Me.tvObjectExplorer.Size = New System.Drawing.Size(269, 364)
         Me.tvObjectExplorer.TabIndex = 0
         '
@@ -609,11 +636,13 @@ Partial Class MainForm
         '
         Me.NodeImageList.ImageStream = CType(resources.GetObject("NodeImageList.ImageStream"), System.Windows.Forms.ImageListStreamer)
         Me.NodeImageList.TransparentColor = System.Drawing.Color.Transparent
-        Me.NodeImageList.Images.SetKeyName(0, "root.png")
-        Me.NodeImageList.Images.SetKeyName(1, "table.png")
-        Me.NodeImageList.Images.SetKeyName(2, "view.png")
-        Me.NodeImageList.Images.SetKeyName(3, "procedure.png")
-        Me.NodeImageList.Images.SetKeyName(4, "function.png")
+        Me.NodeImageList.Images.SetKeyName(0, "database")
+        Me.NodeImageList.Images.SetKeyName(1, "table-grid")
+        Me.NodeImageList.Images.SetKeyName(2, "view")
+        Me.NodeImageList.Images.SetKeyName(3, "engineering")
+        Me.NodeImageList.Images.SetKeyName(4, "function")
+        Me.NodeImageList.Images.SetKeyName(5, "folder_closed")
+        Me.NodeImageList.Images.SetKeyName(6, "folder_opened")
         '
         'tbTimeout
         '
@@ -1047,9 +1076,9 @@ Partial Class MainForm
         '
         'TablesAndViewsMenuStrip
         '
-        Me.TablesAndViewsMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnEditTable, Me.tsSeparator10, Me.btnTruncateTable, Me.btnDropTable})
+        Me.TablesAndViewsMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnEditTable, Me.btnDesign, Me.tsSeparator10, Me.btnTruncateTable, Me.btnDropTable})
         Me.TablesAndViewsMenuStrip.Name = "TablesAndViewsMenuStrip"
-        Me.TablesAndViewsMenuStrip.Size = New System.Drawing.Size(125, 82)
+        Me.TablesAndViewsMenuStrip.Size = New System.Drawing.Size(125, 106)
         '
         'btnEditTable
         '
@@ -1064,6 +1093,20 @@ Partial Class MainForm
         Me.btnEditTable.ShortcutKeyDisplayString = ""
         Me.btnEditTable.Size = New System.Drawing.Size(128, 24)
         Me.btnEditTable.Text = "Edit"
+        '
+        'btnDesign
+        '
+        Me.btnDesign.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnDesign.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnDesign.ForeColor = System.Drawing.Color.White
+        Me.btnDesign.IconChar = FontAwesome.Sharp.IconChar.Wrench
+        Me.btnDesign.IconColor = System.Drawing.Color.White
+        Me.btnDesign.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnDesign.Name = "btnDesign"
+        Me.btnDesign.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnDesign.ShortcutKeyDisplayString = ""
+        Me.btnDesign.Size = New System.Drawing.Size(128, 24)
+        Me.btnDesign.Text = "Design"
         '
         'tsSeparator10
         '
@@ -1195,21 +1238,83 @@ Partial Class MainForm
         Me.EditorsTabControl.TabIndex = 16
         Me.EditorsTabControl.Visible = False
         '
-        'chbLoginMode
+        'DatabaseMenuStrip
         '
-        Me.chbLoginMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chbLoginMode.AutoSize = True
-        Me.chbLoginMode.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
-        Me.chbLoginMode.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.chbLoginMode.ForeColor = System.Drawing.Color.LightGray
-        Me.chbLoginMode.Location = New System.Drawing.Point(15, 526)
-        Me.chbLoginMode.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
-        Me.chbLoginMode.Name = "chbLoginMode"
-        Me.chbLoginMode.Size = New System.Drawing.Size(166, 21)
-        Me.chbLoginMode.TabIndex = 15
-        Me.chbLoginMode.Text = "Windows Authentication"
-        Me.chbLoginMode.UseVisualStyleBackColor = True
+        Me.DatabaseMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnBackupDatabase, Me.ToolStripSeparator1, Me.btnDropDatabase})
+        Me.DatabaseMenuStrip.Name = "TablesAndViewsMenuStrip"
+        Me.DatabaseMenuStrip.Size = New System.Drawing.Size(117, 58)
+        '
+        'btnBackupDatabase
+        '
+        Me.btnBackupDatabase.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnBackupDatabase.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnBackupDatabase.ForeColor = System.Drawing.Color.White
+        Me.btnBackupDatabase.IconChar = FontAwesome.Sharp.IconChar.Database
+        Me.btnBackupDatabase.IconColor = System.Drawing.Color.White
+        Me.btnBackupDatabase.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnBackupDatabase.Name = "btnBackupDatabase"
+        Me.btnBackupDatabase.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnBackupDatabase.ShortcutKeyDisplayString = ""
+        Me.btnBackupDatabase.Size = New System.Drawing.Size(120, 24)
+        Me.btnBackupDatabase.Text = "Backup"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.ToolStripSeparator1.ForeColor = System.Drawing.Color.White
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Padding = New System.Windows.Forms.Padding(2)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(113, 6)
+        '
+        'btnDropDatabase
+        '
+        Me.btnDropDatabase.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnDropDatabase.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.btnDropDatabase.ForeColor = System.Drawing.Color.White
+        Me.btnDropDatabase.IconChar = FontAwesome.Sharp.IconChar.Trash
+        Me.btnDropDatabase.IconColor = System.Drawing.Color.White
+        Me.btnDropDatabase.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnDropDatabase.Name = "btnDropDatabase"
+        Me.btnDropDatabase.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnDropDatabase.ShortcutKeyDisplayString = ""
+        Me.btnDropDatabase.Size = New System.Drawing.Size(184, 24)
+        Me.btnDropDatabase.Text = "Drop"
+        '
+        'tsmiTools
+        '
+        Me.tsmiTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnCreateTable, Me.btnBackupDatabase2})
+        Me.tsmiTools.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.tsmiTools.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.tsmiTools.Name = "tsmiTools"
+        Me.tsmiTools.Padding = New System.Windows.Forms.Padding(15, 5, 15, 5)
+        Me.tsmiTools.Size = New System.Drawing.Size(73, 31)
+        Me.tsmiTools.Text = "&Tools"
+        '
+        'btnCreateTable
+        '
+        Me.btnCreateTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnCreateTable.ForeColor = System.Drawing.Color.White
+        Me.btnCreateTable.IconChar = FontAwesome.Sharp.IconChar.Table
+        Me.btnCreateTable.IconColor = System.Drawing.Color.White
+        Me.btnCreateTable.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnCreateTable.Name = "btnCreateTable"
+        Me.btnCreateTable.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnCreateTable.ShortcutKeyDisplayString = ""
+        Me.btnCreateTable.Size = New System.Drawing.Size(184, 24)
+        Me.btnCreateTable.Text = "New Table"
+        '
+        'btnBackupDatabase2
+        '
+        Me.btnBackupDatabase2.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnBackupDatabase2.ForeColor = System.Drawing.Color.White
+        Me.btnBackupDatabase2.IconChar = FontAwesome.Sharp.IconChar.Database
+        Me.btnBackupDatabase2.IconColor = System.Drawing.Color.White
+        Me.btnBackupDatabase2.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnBackupDatabase2.Name = "btnBackupDatabase2"
+        Me.btnBackupDatabase2.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnBackupDatabase2.ShortcutKeyDisplayString = ""
+        Me.btnBackupDatabase2.Size = New System.Drawing.Size(184, 24)
+        Me.btnBackupDatabase2.Text = "Backup Database"
         '
         'MainForm
         '
@@ -1243,6 +1348,7 @@ Partial Class MainForm
         Me.mainPanel.PerformLayout()
         Me.TablesAndViewsMenuStrip.ResumeLayout(False)
         Me.ProceduresMenuStrip.ResumeLayout(False)
+        Me.DatabaseMenuStrip.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1330,4 +1436,12 @@ Partial Class MainForm
     Friend WithEvents btnMaximizeRestoreWindow As IconMenuItem
     Friend WithEvents btnMinimizeWindow As IconMenuItem
     Friend WithEvents chbLoginMode As CheckBox
+    Friend WithEvents btnDesign As IconMenuItem
+    Friend WithEvents DatabaseMenuStrip As ContextMenuStrip
+    Friend WithEvents btnBackupDatabase As IconMenuItem
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents btnDropDatabase As IconMenuItem
+    Friend WithEvents tsmiTools As ToolStripMenuItem
+    Friend WithEvents btnCreateTable As IconMenuItem
+    Friend WithEvents btnBackupDatabase2 As IconMenuItem
 End Class

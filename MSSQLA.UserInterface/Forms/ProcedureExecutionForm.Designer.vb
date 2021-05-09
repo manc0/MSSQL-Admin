@@ -48,7 +48,7 @@ Partial Class ProcedureExecutionForm
         'paramsTable
         '
         Me.paramsTable.AutoSize = True
-        Me.paramsTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
+        Me.paramsTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.paramsTable.ColumnCount = 2
         Me.paramsTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.paramsTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -65,7 +65,7 @@ Partial Class ProcedureExecutionForm
         '
         Me.bottomPanel.AutoSize = True
         Me.bottomPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.bottomPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
+        Me.bottomPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.bottomPanel.Controls.Add(Me.btnExecuteProcedure)
         Me.bottomPanel.Controls.Add(Me.btnCancel)
         Me.bottomPanel.Controls.Add(Me.lblNoParams)
@@ -137,7 +137,7 @@ Partial Class ProcedureExecutionForm
         '
         'lblProcedureName
         '
-        Me.lblProcedureName.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblProcedureName.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
         Me.lblProcedureName.Dock = System.Windows.Forms.DockStyle.Top
         Me.lblProcedureName.Font = New System.Drawing.Font("Segoe UI Semibold", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblProcedureName.ForeColor = System.Drawing.Color.Gainsboro

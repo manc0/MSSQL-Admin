@@ -28,7 +28,7 @@ Public Class TableDesignForm
 
                     SELECT 
                          CASE 
-                            WHEN (SELECT COLUMN_NAME FROM CTE) = SC.NAME THEN
+                            WHEN (SELECT COLUMN_NAME FROM CTE WHERE COLUMN_NAME = SC.NAME) = SC.NAME THEN
                                 'True'
                             ELSE
                                 'False'

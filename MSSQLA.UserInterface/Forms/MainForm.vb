@@ -1255,7 +1255,7 @@ Public Class MainForm
         If IsNothing(databaseName) Or IsNothing(procedureName) Then Return
 
         Try
-            Dim definition As String = DatabaseLogic.GetProcedureDefinition(procedureName, databaseName)
+            Dim definition As String = DatabaseLogic.GetScalar("SELECT OBJECT_DEFINITION (OBJECT_ID('" & procedureName & "'))", databaseName).ToString()
             AddNewEditor(definition)
         Catch ex As Exception
             Log(ex.Message)

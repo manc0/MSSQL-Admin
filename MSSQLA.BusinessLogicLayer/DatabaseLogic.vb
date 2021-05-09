@@ -199,15 +199,11 @@ Public Class DatabaseLogic
     End Sub
 
     ''' <summary>
-    ''' Returns the definition of the given procedure.
+    ''' Executes a query that only returns a row with one column.
     ''' </summary>
-    ''' <param name="procedureName">Name of the procedure.</param>
+    ''' <param name="sqlQuery">Query to execute.</param>
     ''' <param name="database">Name of the database.</param>
-    ''' <returns>A string object containing the definition.</returns>
-    Public Function GetProcedureDefinition(procedureName As String, database As String) As String
-        Return DatabaseConnection.PerformScalar("SELECT OBJECT_DEFINITION (OBJECT_ID('" & procedureName & "'))", database).ToString()
-    End Function
-
+    ''' <returns>Value contained in the row.</returns>
     Public Function GetScalar(sqlQuery As String, database As String) As Object
         Return DatabaseConnection.PerformScalar(sqlQuery, database)
     End Function

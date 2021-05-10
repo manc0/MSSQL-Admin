@@ -28,14 +28,14 @@ Partial Class TableDesignForm
         Me.mainPanel = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.DataGridView = New System.Windows.Forms.DataGridView()
-        Me.bottomPanel = New System.Windows.Forms.FlowLayoutPanel()
-        Me.btnOk = New FontAwesome.Sharp.IconButton()
-        Me.btnCancel = New FontAwesome.Sharp.IconButton()
-        Me.lblTableName = New System.Windows.Forms.Label()
         Me.PK_Column = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Name_Column = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Type_Column = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AllowNulls_Columns = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.bottomPanel = New System.Windows.Forms.FlowLayoutPanel()
+        Me.btnOk = New FontAwesome.Sharp.IconButton()
+        Me.btnCancel = New FontAwesome.Sharp.IconButton()
+        Me.lblTableName = New System.Windows.Forms.Label()
         Me.mainPanel.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.DataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -112,6 +112,33 @@ Partial Class TableDesignForm
         Me.DataGridView.TabIndex = 17
         Me.DataGridView.TabStop = False
         '
+        'PK_Column
+        '
+        Me.PK_Column.HeaderText = "PK"
+        Me.PK_Column.Name = "PK_Column"
+        Me.PK_Column.Width = 35
+        '
+        'Name_Column
+        '
+        Me.Name_Column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Name_Column.HeaderText = "Column Name"
+        Me.Name_Column.Name = "Name_Column"
+        '
+        'Type_Column
+        '
+        Me.Type_Column.HeaderText = "Type"
+        Me.Type_Column.Name = "Type_Column"
+        Me.Type_Column.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Type_Column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Type_Column.Width = 127
+        '
+        'AllowNulls_Columns
+        '
+        Me.AllowNulls_Columns.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader
+        Me.AllowNulls_Columns.HeaderText = "Allow Nulls"
+        Me.AllowNulls_Columns.Name = "AllowNulls_Columns"
+        Me.AllowNulls_Columns.Width = 80
+        '
         'bottomPanel
         '
         Me.bottomPanel.AutoSize = True
@@ -183,33 +210,6 @@ Partial Class TableDesignForm
         Me.lblTableName.TabIndex = 16
         Me.lblTableName.Text = "TableName"
         Me.lblTableName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'PK_Column
-        '
-        Me.PK_Column.HeaderText = "PK"
-        Me.PK_Column.Name = "PK_Column"
-        Me.PK_Column.Width = 35
-        '
-        'Name_Column
-        '
-        Me.Name_Column.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Name_Column.HeaderText = "Column Name"
-        Me.Name_Column.Name = "Name_Column"
-        '
-        'Type_Column
-        '
-        Me.Type_Column.HeaderText = "Type"
-        Me.Type_Column.Name = "Type_Column"
-        Me.Type_Column.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Type_Column.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Type_Column.Width = 127
-        '
-        'AllowNulls_Columns
-        '
-        Me.AllowNulls_Columns.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader
-        Me.AllowNulls_Columns.HeaderText = "Allow Nulls"
-        Me.AllowNulls_Columns.Name = "AllowNulls_Columns"
-        Me.AllowNulls_Columns.Width = 80
         '
         'TableDesignForm
         '

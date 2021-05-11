@@ -13,7 +13,7 @@ Simple database administrator for SQL Server. The main purpose of this project i
 - XPath evaluator
 - Find and replace
 
-**Deleting and updating rows from tables without primary does not work. It must be done manually in the SQL editor**
+**Deleting and updating rows from tables without primary key does not work. It must be done manually in the SQL editor.**
 
 ![MSSQL-Admin](Screenshots/screenshot2.png)
 

@@ -170,7 +170,7 @@ Partial Class MainForm
         Me.btnOpen.Name = "btnOpen"
         Me.btnOpen.Padding = New System.Windows.Forms.Padding(2)
         Me.btnOpen.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
-        Me.btnOpen.Size = New System.Drawing.Size(246, 24)
+        Me.btnOpen.Size = New System.Drawing.Size(230, 24)
         Me.btnOpen.Text = "Open File..."
         '
         'btnNew
@@ -183,7 +183,7 @@ Partial Class MainForm
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Padding = New System.Windows.Forms.Padding(2)
         Me.btnNew.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.N), System.Windows.Forms.Keys)
-        Me.btnNew.Size = New System.Drawing.Size(246, 24)
+        Me.btnNew.Size = New System.Drawing.Size(230, 24)
         Me.btnNew.Text = "New File"
         '
         'tsSeparator7
@@ -192,7 +192,7 @@ Partial Class MainForm
         Me.tsSeparator7.ForeColor = System.Drawing.Color.White
         Me.tsSeparator7.Name = "tsSeparator7"
         Me.tsSeparator7.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator7.Size = New System.Drawing.Size(239, 6)
+        Me.tsSeparator7.Size = New System.Drawing.Size(223, 6)
         '
         'btnSaveSql
         '
@@ -204,7 +204,7 @@ Partial Class MainForm
         Me.btnSaveSql.Name = "btnSaveSql"
         Me.btnSaveSql.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSaveSql.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.btnSaveSql.Size = New System.Drawing.Size(246, 24)
+        Me.btnSaveSql.Size = New System.Drawing.Size(230, 24)
         Me.btnSaveSql.Text = "Save "
         '
         'btnSaveAs
@@ -215,7 +215,7 @@ Partial Class MainForm
         Me.btnSaveAs.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSaveAs.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
             Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.btnSaveAs.Size = New System.Drawing.Size(246, 24)
+        Me.btnSaveAs.Size = New System.Drawing.Size(230, 24)
         Me.btnSaveAs.Text = "Save As..."
         '
         'btnSaveAll
@@ -226,7 +226,7 @@ Partial Class MainForm
         Me.btnSaveAll.Padding = New System.Windows.Forms.Padding(2)
         Me.btnSaveAll.ShortcutKeys = CType(((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.Shift) _
             Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.btnSaveAll.Size = New System.Drawing.Size(246, 24)
+        Me.btnSaveAll.Size = New System.Drawing.Size(230, 24)
         Me.btnSaveAll.Text = "Save All"
         '
         'btnExport
@@ -239,7 +239,7 @@ Partial Class MainForm
         Me.btnExport.Name = "btnExport"
         Me.btnExport.Padding = New System.Windows.Forms.Padding(2)
         Me.btnExport.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
-        Me.btnExport.Size = New System.Drawing.Size(246, 24)
+        Me.btnExport.Size = New System.Drawing.Size(230, 24)
         Me.btnExport.Text = "Export Table..."
         '
         'tsSeparator6
@@ -248,7 +248,7 @@ Partial Class MainForm
         Me.tsSeparator6.ForeColor = System.Drawing.Color.White
         Me.tsSeparator6.Name = "tsSeparator6"
         Me.tsSeparator6.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator6.Size = New System.Drawing.Size(239, 6)
+        Me.tsSeparator6.Size = New System.Drawing.Size(223, 6)
         '
         'btnClearOutput
         '
@@ -260,7 +260,7 @@ Partial Class MainForm
         Me.btnClearOutput.Name = "btnClearOutput"
         Me.btnClearOutput.Padding = New System.Windows.Forms.Padding(2)
         Me.btnClearOutput.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
-        Me.btnClearOutput.Size = New System.Drawing.Size(246, 24)
+        Me.btnClearOutput.Size = New System.Drawing.Size(230, 24)
         Me.btnClearOutput.Text = "Clear Output"
         '
         'btnClearXpath
@@ -271,7 +271,7 @@ Partial Class MainForm
         Me.btnClearXpath.Padding = New System.Windows.Forms.Padding(2)
         Me.btnClearXpath.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
             Or System.Windows.Forms.Keys.Q), System.Windows.Forms.Keys)
-        Me.btnClearXpath.Size = New System.Drawing.Size(246, 24)
+        Me.btnClearXpath.Size = New System.Drawing.Size(230, 24)
         Me.btnClearXpath.Text = "Clear XPath"
         '
         'tsSeparator1
@@ -280,7 +280,7 @@ Partial Class MainForm
         Me.tsSeparator1.ForeColor = System.Drawing.Color.White
         Me.tsSeparator1.Name = "tsSeparator1"
         Me.tsSeparator1.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator1.Size = New System.Drawing.Size(239, 6)
+        Me.tsSeparator1.Size = New System.Drawing.Size(223, 6)
         '
         'btnCloseAllEditors
         '
@@ -292,7 +292,7 @@ Partial Class MainForm
         Me.btnCloseAllEditors.Name = "btnCloseAllEditors"
         Me.btnCloseAllEditors.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCloseAllEditors.ShortcutKeys = CType((System.Windows.Forms.Keys.Shift Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
-        Me.btnCloseAllEditors.Size = New System.Drawing.Size(246, 24)
+        Me.btnCloseAllEditors.Size = New System.Drawing.Size(230, 24)
         Me.btnCloseAllEditors.Text = "Close All Editors"
         '
         'btnCloseAllTables
@@ -302,7 +302,7 @@ Partial Class MainForm
         Me.btnCloseAllTables.Name = "btnCloseAllTables"
         Me.btnCloseAllTables.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCloseAllTables.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F4), System.Windows.Forms.Keys)
-        Me.btnCloseAllTables.Size = New System.Drawing.Size(246, 24)
+        Me.btnCloseAllTables.Size = New System.Drawing.Size(230, 24)
         Me.btnCloseAllTables.Text = "Close All Tables"
         '
         'tsSeparator5
@@ -311,7 +311,7 @@ Partial Class MainForm
         Me.tsSeparator5.ForeColor = System.Drawing.Color.White
         Me.tsSeparator5.Name = "tsSeparator5"
         Me.tsSeparator5.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator5.Size = New System.Drawing.Size(239, 6)
+        Me.tsSeparator5.Size = New System.Drawing.Size(223, 6)
         '
         'btnExit
         '
@@ -322,7 +322,7 @@ Partial Class MainForm
         Me.btnExit.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnExit.Name = "btnExit"
         Me.btnExit.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnExit.Size = New System.Drawing.Size(246, 24)
+        Me.btnExit.Size = New System.Drawing.Size(230, 24)
         Me.btnExit.Text = "Exit"
         '
         'tsmiEdit
@@ -579,7 +579,7 @@ Partial Class MainForm
         Me.tsmiTools.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.tsmiTools.Name = "tsmiTools"
         Me.tsmiTools.Padding = New System.Windows.Forms.Padding(15, 5, 15, 5)
-        Me.tsmiTools.Size = New System.Drawing.Size(74, 31)
+        Me.tsmiTools.Size = New System.Drawing.Size(73, 31)
         Me.tsmiTools.Text = "&Tools"
         '
         'btnCreateTable
@@ -672,10 +672,10 @@ Partial Class MainForm
         '
         Me.NodeImageList.ImageStream = CType(resources.GetObject("NodeImageList.ImageStream"), System.Windows.Forms.ImageListStreamer)
         Me.NodeImageList.TransparentColor = System.Drawing.Color.Transparent
-        Me.NodeImageList.Images.SetKeyName(0, "database.png")
-        Me.NodeImageList.Images.SetKeyName(1, "table-grid")
+        Me.NodeImageList.Images.SetKeyName(0, "database")
+        Me.NodeImageList.Images.SetKeyName(1, "table")
         Me.NodeImageList.Images.SetKeyName(2, "view")
-        Me.NodeImageList.Images.SetKeyName(3, "engineering")
+        Me.NodeImageList.Images.SetKeyName(3, "procedure")
         Me.NodeImageList.Images.SetKeyName(4, "function")
         Me.NodeImageList.Images.SetKeyName(5, "folder_closed")
         Me.NodeImageList.Images.SetKeyName(6, "folder_opened")
@@ -1152,7 +1152,7 @@ Partial Class MainForm
         '
         Me.TablesAndViewsMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnEditTable, Me.btnDesign, Me.tsSeparator10, Me.btnTruncateTable, Me.btnDropTable})
         Me.TablesAndViewsMenuStrip.Name = "TablesAndViewsMenuStrip"
-        Me.TablesAndViewsMenuStrip.Size = New System.Drawing.Size(181, 128)
+        Me.TablesAndViewsMenuStrip.Size = New System.Drawing.Size(125, 106)
         '
         'btnEditTable
         '
@@ -1165,7 +1165,7 @@ Partial Class MainForm
         Me.btnEditTable.Name = "btnEditTable"
         Me.btnEditTable.Padding = New System.Windows.Forms.Padding(2)
         Me.btnEditTable.ShortcutKeyDisplayString = ""
-        Me.btnEditTable.Size = New System.Drawing.Size(184, 24)
+        Me.btnEditTable.Size = New System.Drawing.Size(128, 24)
         Me.btnEditTable.Text = "Edit"
         '
         'btnDesign
@@ -1179,7 +1179,7 @@ Partial Class MainForm
         Me.btnDesign.Name = "btnDesign"
         Me.btnDesign.Padding = New System.Windows.Forms.Padding(2)
         Me.btnDesign.ShortcutKeyDisplayString = ""
-        Me.btnDesign.Size = New System.Drawing.Size(184, 24)
+        Me.btnDesign.Size = New System.Drawing.Size(128, 24)
         Me.btnDesign.Text = "Design"
         '
         'tsSeparator10
@@ -1188,7 +1188,7 @@ Partial Class MainForm
         Me.tsSeparator10.ForeColor = System.Drawing.Color.White
         Me.tsSeparator10.Name = "tsSeparator10"
         Me.tsSeparator10.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator10.Size = New System.Drawing.Size(177, 6)
+        Me.tsSeparator10.Size = New System.Drawing.Size(121, 6)
         '
         'btnTruncateTable
         '
@@ -1201,7 +1201,7 @@ Partial Class MainForm
         Me.btnTruncateTable.Name = "btnTruncateTable"
         Me.btnTruncateTable.Padding = New System.Windows.Forms.Padding(2)
         Me.btnTruncateTable.ShortcutKeyDisplayString = ""
-        Me.btnTruncateTable.Size = New System.Drawing.Size(184, 24)
+        Me.btnTruncateTable.Size = New System.Drawing.Size(128, 24)
         Me.btnTruncateTable.Text = "Truncate"
         Me.btnTruncateTable.Visible = False
         '
@@ -1216,7 +1216,7 @@ Partial Class MainForm
         Me.btnDropTable.Name = "btnDropTable"
         Me.btnDropTable.Padding = New System.Windows.Forms.Padding(2)
         Me.btnDropTable.ShortcutKeyDisplayString = ""
-        Me.btnDropTable.Size = New System.Drawing.Size(184, 24)
+        Me.btnDropTable.Size = New System.Drawing.Size(128, 24)
         Me.btnDropTable.Text = "Drop"
         '
         'ProceduresMenuStrip

@@ -150,6 +150,11 @@ Public Class MainForm
         tbPass.Text = My.Settings.Pass
         tbTimeout.Text = My.Settings.Timeout
         chbLoginMode.Checked = My.Settings.WindowsAuthentication
+
+        If String.IsNullOrEmpty(tbServer.Text) Then tbServer.Text = "Server"
+        If String.IsNullOrEmpty(tbUser.Text) Then tbUser.Text = "User"
+        If String.IsNullOrEmpty(tbPass.Text) Then tbPass.Text = "Password"
+        If String.IsNullOrEmpty(tbTimeout.Text) Then tbTimeout.Text = "Timeout"
     End Sub
 
 #End Region

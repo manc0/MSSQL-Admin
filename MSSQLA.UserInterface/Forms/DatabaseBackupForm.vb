@@ -37,7 +37,7 @@ Public Class DatabaseBackupForm
     End Sub
 
     Private Sub BtnBackup_Click(sender As Object, e As EventArgs) Handles btnBackup.Click
-        Dim sqlQuery As String = "BACKUP DATABASE " & Database & " TO DISK = '" & Path & "'"
+        Dim sqlQuery As String = "BACKUP DATABASE [" & Database & "] TO DISK = '" & Path & "'"
 
         If chbDifferentialMode.Checked Then
             sqlQuery &= " WITH DIFFERENTIAL"

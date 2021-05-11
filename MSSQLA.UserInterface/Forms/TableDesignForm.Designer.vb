@@ -22,31 +22,33 @@ Partial Class TableDesignForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.mainPanel = New System.Windows.Forms.Panel()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.topPanel = New System.Windows.Forms.Panel()
         Me.DataGridView = New System.Windows.Forms.DataGridView()
         Me.PK_Column = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Name_Column = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Type_Column = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AllowNulls_Columns = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.bottomPanelBorder = New System.Windows.Forms.Panel()
         Me.bottomPanel = New System.Windows.Forms.FlowLayoutPanel()
         Me.btnOk = New FontAwesome.Sharp.IconButton()
         Me.btnCancel = New FontAwesome.Sharp.IconButton()
         Me.lblTableName = New System.Windows.Forms.Label()
+        Me.tbTableName = New System.Windows.Forms.TextBox()
         Me.mainPanel.SuspendLayout()
-        Me.Panel1.SuspendLayout()
+        Me.topPanel.SuspendLayout()
         CType(Me.DataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.bottomPanelBorder.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
         Me.SuspendLayout()
         '
         'mainPanel
         '
         Me.mainPanel.AutoSize = True
-        Me.mainPanel.Controls.Add(Me.Panel1)
-        Me.mainPanel.Controls.Add(Me.bottomPanel)
+        Me.mainPanel.Controls.Add(Me.topPanel)
         Me.mainPanel.Controls.Add(Me.lblTableName)
         Me.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.mainPanel.Location = New System.Drawing.Point(1, 1)
@@ -54,15 +56,16 @@ Partial Class TableDesignForm
         Me.mainPanel.Size = New System.Drawing.Size(559, 371)
         Me.mainPanel.TabIndex = 0
         '
-        'Panel1
+        'topPanel
         '
-        Me.Panel1.AutoSize = True
-        Me.Panel1.Controls.Add(Me.DataGridView)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(0, 38)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(559, 280)
-        Me.Panel1.TabIndex = 18
+        Me.topPanel.AutoSize = True
+        Me.topPanel.Controls.Add(Me.DataGridView)
+        Me.topPanel.Controls.Add(Me.bottomPanelBorder)
+        Me.topPanel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.topPanel.Location = New System.Drawing.Point(0, 38)
+        Me.topPanel.Name = "topPanel"
+        Me.topPanel.Size = New System.Drawing.Size(559, 333)
+        Me.topPanel.TabIndex = 18
         '
         'DataGridView
         '
@@ -72,43 +75,43 @@ Partial Class TableDesignForm
         Me.DataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText
         Me.DataGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gainsboro
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle31.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
+        DataGridViewCellStyle31.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle31.ForeColor = System.Drawing.Color.Gainsboro
+        DataGridViewCellStyle31.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle31
         Me.DataGridView.ColumnHeadersHeight = 34
         Me.DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.DataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.PK_Column, Me.Name_Column, Me.Type_Column, Me.AllowNulls_Columns})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.LightGray
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle32.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        DataGridViewCellStyle32.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        DataGridViewCellStyle32.ForeColor = System.Drawing.Color.LightGray
+        DataGridViewCellStyle32.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
+        DataGridViewCellStyle32.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView.DefaultCellStyle = DataGridViewCellStyle32
         Me.DataGridView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridView.EnableHeadersVisualStyles = False
         Me.DataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.DataGridView.Location = New System.Drawing.Point(0, 0)
         Me.DataGridView.Name = "DataGridView"
         Me.DataGridView.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.Gainsboro
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle33.BackColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(79, Byte), Integer))
+        DataGridViewCellStyle33.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle33.ForeColor = System.Drawing.Color.Gainsboro
+        DataGridViewCellStyle33.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
+        DataGridViewCellStyle33.SelectionForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle33
         Me.DataGridView.RowHeadersWidth = 48
         Me.DataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.DataGridView.RowTemplate.Height = 28
-        Me.DataGridView.Size = New System.Drawing.Size(559, 280)
+        Me.DataGridView.Size = New System.Drawing.Size(559, 281)
         Me.DataGridView.TabIndex = 17
         Me.DataGridView.TabStop = False
         '
@@ -139,35 +142,49 @@ Partial Class TableDesignForm
         Me.AllowNulls_Columns.Name = "AllowNulls_Columns"
         Me.AllowNulls_Columns.Width = 80
         '
+        'bottomPanelBorder
+        '
+        Me.bottomPanelBorder.AutoSize = True
+        Me.bottomPanelBorder.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.bottomPanelBorder.Controls.Add(Me.bottomPanel)
+        Me.bottomPanelBorder.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.bottomPanelBorder.Location = New System.Drawing.Point(0, 281)
+        Me.bottomPanelBorder.Name = "bottomPanelBorder"
+        Me.bottomPanelBorder.Padding = New System.Windows.Forms.Padding(0, 2, 0, 0)
+        Me.bottomPanelBorder.Size = New System.Drawing.Size(559, 52)
+        Me.bottomPanelBorder.TabIndex = 18
+        '
         'bottomPanel
         '
         Me.bottomPanel.AutoSize = True
         Me.bottomPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
         Me.bottomPanel.Controls.Add(Me.btnOk)
         Me.bottomPanel.Controls.Add(Me.btnCancel)
-        Me.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.bottomPanel.Controls.Add(Me.tbTableName)
+        Me.bottomPanel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.bottomPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.bottomPanel.Location = New System.Drawing.Point(0, 318)
+        Me.bottomPanel.Location = New System.Drawing.Point(0, 2)
         Me.bottomPanel.Margin = New System.Windows.Forms.Padding(0)
         Me.bottomPanel.Name = "bottomPanel"
         Me.bottomPanel.Padding = New System.Windows.Forms.Padding(0, 10, 10, 10)
-        Me.bottomPanel.Size = New System.Drawing.Size(559, 53)
+        Me.bottomPanel.Size = New System.Drawing.Size(559, 50)
         Me.bottomPanel.TabIndex = 15
         '
         'btnOk
         '
         Me.btnOk.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
+        Me.btnOk.Enabled = False
         Me.btnOk.FlatAppearance.BorderSize = 0
         Me.btnOk.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnOk.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnOk.ForeColor = System.Drawing.Color.White
         Me.btnOk.IconChar = FontAwesome.Sharp.IconChar.CheckDouble
-        Me.btnOk.IconColor = System.Drawing.Color.White
+        Me.btnOk.IconColor = System.Drawing.Color.Gray
         Me.btnOk.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnOk.IconSize = 18
         Me.btnOk.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnOk.Location = New System.Drawing.Point(450, 10)
-        Me.btnOk.Margin = New System.Windows.Forms.Padding(0, 0, 3, 3)
+        Me.btnOk.Location = New System.Drawing.Point(453, 10)
+        Me.btnOk.Margin = New System.Windows.Forms.Padding(5, 0, 0, 0)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(96, 30)
         Me.btnOk.TabIndex = 3
@@ -188,8 +205,8 @@ Partial Class TableDesignForm
         Me.btnCancel.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnCancel.IconSize = 18
         Me.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnCancel.Location = New System.Drawing.Point(351, 10)
-        Me.btnCancel.Margin = New System.Windows.Forms.Padding(0, 0, 3, 3)
+        Me.btnCancel.Location = New System.Drawing.Point(352, 10)
+        Me.btnCancel.Margin = New System.Windows.Forms.Padding(5, 0, 0, 0)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(96, 30)
         Me.btnCancel.TabIndex = 15
@@ -211,6 +228,20 @@ Partial Class TableDesignForm
         Me.lblTableName.Text = "TableName"
         Me.lblTableName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'tbTableName
+        '
+        Me.tbTableName.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.tbTableName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.tbTableName.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tbTableName.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbTableName.ForeColor = System.Drawing.Color.Gray
+        Me.tbTableName.Location = New System.Drawing.Point(11, 13)
+        Me.tbTableName.Name = "tbTableName"
+        Me.tbTableName.Size = New System.Drawing.Size(333, 25)
+        Me.tbTableName.TabIndex = 16
+        Me.tbTableName.Text = "Introduce a name..."
+        Me.tbTableName.Visible = False
+        '
         'TableDesignForm
         '
         Me.AcceptButton = Me.btnOk
@@ -230,9 +261,13 @@ Partial Class TableDesignForm
         Me.Text = "ProcedureExecutionForm"
         Me.mainPanel.ResumeLayout(False)
         Me.mainPanel.PerformLayout()
-        Me.Panel1.ResumeLayout(False)
+        Me.topPanel.ResumeLayout(False)
+        Me.topPanel.PerformLayout()
         CType(Me.DataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.bottomPanelBorder.ResumeLayout(False)
+        Me.bottomPanelBorder.PerformLayout()
         Me.bottomPanel.ResumeLayout(False)
+        Me.bottomPanel.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -244,9 +279,11 @@ Partial Class TableDesignForm
     Friend WithEvents btnCancel As FontAwesome.Sharp.IconButton
     Friend WithEvents lblTableName As Label
     Friend WithEvents DataGridView As DataGridView
-    Friend WithEvents Panel1 As Panel
+    Friend WithEvents topPanel As Panel
     Friend WithEvents PK_Column As DataGridViewCheckBoxColumn
     Friend WithEvents Name_Column As DataGridViewTextBoxColumn
     Friend WithEvents Type_Column As DataGridViewTextBoxColumn
     Friend WithEvents AllowNulls_Columns As DataGridViewCheckBoxColumn
+    Friend WithEvents bottomPanelBorder As Panel
+    Friend WithEvents tbTableName As TextBox
 End Class

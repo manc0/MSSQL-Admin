@@ -66,6 +66,9 @@ Partial Class MainForm
         Me.btnCloseWindow = New FontAwesome.Sharp.IconMenuItem()
         Me.btnMaximizeRestoreWindow = New FontAwesome.Sharp.IconMenuItem()
         Me.btnMinimizeWindow = New FontAwesome.Sharp.IconMenuItem()
+        Me.tsmiTools = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnCreateTable = New FontAwesome.Sharp.IconMenuItem()
+        Me.btnBackupDatabase2 = New FontAwesome.Sharp.IconMenuItem()
         Me.leftPanel = New System.Windows.Forms.Panel()
         Me.chbLoginMode = New System.Windows.Forms.CheckBox()
         Me.tvObjectExplorer = New System.Windows.Forms.TreeView()
@@ -98,6 +101,8 @@ Partial Class MainForm
         Me.btnXpath = New FontAwesome.Sharp.IconToolStripButton()
         Me.splitter1 = New System.Windows.Forms.Splitter()
         Me.mainPanel = New System.Windows.Forms.Panel()
+        Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
+        Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.TablesAndViewsMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.btnEditTable = New FontAwesome.Sharp.IconMenuItem()
         Me.btnDesign = New FontAwesome.Sharp.IconMenuItem()
@@ -109,15 +114,10 @@ Partial Class MainForm
         Me.btnShowProcedureDefinition = New FontAwesome.Sharp.IconMenuItem()
         Me.tsSeparator11 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnDropProcedure = New FontAwesome.Sharp.IconMenuItem()
-        Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
-        Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.DatabaseMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.btnBackupDatabase = New FontAwesome.Sharp.IconMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnDropDatabase = New FontAwesome.Sharp.IconMenuItem()
-        Me.tsmiTools = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnCreateTable = New FontAwesome.Sharp.IconMenuItem()
-        Me.btnBackupDatabase2 = New FontAwesome.Sharp.IconMenuItem()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
@@ -572,6 +572,42 @@ Partial Class MainForm
         Me.btnMinimizeWindow.ShowShortcutKeys = False
         Me.btnMinimizeWindow.Size = New System.Drawing.Size(50, 31)
         '
+        'tsmiTools
+        '
+        Me.tsmiTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnCreateTable, Me.btnBackupDatabase2})
+        Me.tsmiTools.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.tsmiTools.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.tsmiTools.Name = "tsmiTools"
+        Me.tsmiTools.Padding = New System.Windows.Forms.Padding(15, 5, 15, 5)
+        Me.tsmiTools.Size = New System.Drawing.Size(73, 31)
+        Me.tsmiTools.Text = "&Tools"
+        '
+        'btnCreateTable
+        '
+        Me.btnCreateTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnCreateTable.ForeColor = System.Drawing.Color.White
+        Me.btnCreateTable.IconChar = FontAwesome.Sharp.IconChar.Table
+        Me.btnCreateTable.IconColor = System.Drawing.Color.White
+        Me.btnCreateTable.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnCreateTable.Name = "btnCreateTable"
+        Me.btnCreateTable.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnCreateTable.ShortcutKeyDisplayString = ""
+        Me.btnCreateTable.Size = New System.Drawing.Size(180, 24)
+        Me.btnCreateTable.Text = "New Table"
+        '
+        'btnBackupDatabase2
+        '
+        Me.btnBackupDatabase2.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
+        Me.btnBackupDatabase2.ForeColor = System.Drawing.Color.White
+        Me.btnBackupDatabase2.IconChar = FontAwesome.Sharp.IconChar.Database
+        Me.btnBackupDatabase2.IconColor = System.Drawing.Color.White
+        Me.btnBackupDatabase2.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnBackupDatabase2.Name = "btnBackupDatabase2"
+        Me.btnBackupDatabase2.Padding = New System.Windows.Forms.Padding(2)
+        Me.btnBackupDatabase2.ShortcutKeyDisplayString = ""
+        Me.btnBackupDatabase2.Size = New System.Drawing.Size(180, 24)
+        Me.btnBackupDatabase2.Text = "Backup Database"
+        '
         'leftPanel
         '
         Me.leftPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
@@ -636,7 +672,7 @@ Partial Class MainForm
         '
         Me.NodeImageList.ImageStream = CType(resources.GetObject("NodeImageList.ImageStream"), System.Windows.Forms.ImageListStreamer)
         Me.NodeImageList.TransparentColor = System.Drawing.Color.Transparent
-        Me.NodeImageList.Images.SetKeyName(0, "database")
+        Me.NodeImageList.Images.SetKeyName(0, "database.png")
         Me.NodeImageList.Images.SetKeyName(1, "table-grid")
         Me.NodeImageList.Images.SetKeyName(2, "view")
         Me.NodeImageList.Images.SetKeyName(3, "engineering")
@@ -1074,6 +1110,44 @@ Partial Class MainForm
         Me.mainPanel.Size = New System.Drawing.Size(951, 706)
         Me.mainPanel.TabIndex = 3
         '
+        'TablesTabControl
+        '
+        Me.TablesTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.TablesTabControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TablesTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
+        Me.TablesTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.TablesTabControl.HasAddButton = False
+        Me.TablesTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.TablesTabControl.Location = New System.Drawing.Point(0, 286)
+        Me.TablesTabControl.Margin = New System.Windows.Forms.Padding(0)
+        Me.TablesTabControl.Name = "TablesTabControl"
+        Me.TablesTabControl.Padding = New System.Drawing.Point(0, 0)
+        Me.TablesTabControl.SelectedIndex = 0
+        Me.TablesTabControl.SelectedTabColor = System.Drawing.Color.DodgerBlue
+        Me.TablesTabControl.Size = New System.Drawing.Size(951, 219)
+        Me.TablesTabControl.TabForeColor = System.Drawing.Color.White
+        Me.TablesTabControl.TabIndex = 14
+        Me.TablesTabControl.Visible = False
+        '
+        'EditorsTabControl
+        '
+        Me.EditorsTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.EditorsTabControl.Dock = System.Windows.Forms.DockStyle.Top
+        Me.EditorsTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
+        Me.EditorsTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.EditorsTabControl.HasAddButton = True
+        Me.EditorsTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.EditorsTabControl.Location = New System.Drawing.Point(0, 0)
+        Me.EditorsTabControl.Margin = New System.Windows.Forms.Padding(0)
+        Me.EditorsTabControl.Name = "EditorsTabControl"
+        Me.EditorsTabControl.Padding = New System.Drawing.Point(0, 0)
+        Me.EditorsTabControl.SelectedIndex = 0
+        Me.EditorsTabControl.SelectedTabColor = System.Drawing.Color.DodgerBlue
+        Me.EditorsTabControl.Size = New System.Drawing.Size(951, 284)
+        Me.EditorsTabControl.TabForeColor = System.Drawing.Color.White
+        Me.EditorsTabControl.TabIndex = 16
+        Me.EditorsTabControl.Visible = False
+        '
         'TablesAndViewsMenuStrip
         '
         Me.TablesAndViewsMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnEditTable, Me.btnDesign, Me.tsSeparator10, Me.btnTruncateTable, Me.btnDropTable})
@@ -1200,44 +1274,6 @@ Partial Class MainForm
         Me.btnDropProcedure.Size = New System.Drawing.Size(169, 24)
         Me.btnDropProcedure.Text = "Drop"
         '
-        'TablesTabControl
-        '
-        Me.TablesTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        Me.TablesTabControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TablesTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
-        Me.TablesTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
-        Me.TablesTabControl.HasAddButton = False
-        Me.TablesTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.TablesTabControl.Location = New System.Drawing.Point(0, 286)
-        Me.TablesTabControl.Margin = New System.Windows.Forms.Padding(0)
-        Me.TablesTabControl.Name = "TablesTabControl"
-        Me.TablesTabControl.Padding = New System.Drawing.Point(0, 0)
-        Me.TablesTabControl.SelectedIndex = 0
-        Me.TablesTabControl.SelectedTabColor = System.Drawing.Color.DodgerBlue
-        Me.TablesTabControl.Size = New System.Drawing.Size(951, 219)
-        Me.TablesTabControl.TabForeColor = System.Drawing.Color.White
-        Me.TablesTabControl.TabIndex = 14
-        Me.TablesTabControl.Visible = False
-        '
-        'EditorsTabControl
-        '
-        Me.EditorsTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        Me.EditorsTabControl.Dock = System.Windows.Forms.DockStyle.Top
-        Me.EditorsTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
-        Me.EditorsTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
-        Me.EditorsTabControl.HasAddButton = True
-        Me.EditorsTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.EditorsTabControl.Location = New System.Drawing.Point(0, 0)
-        Me.EditorsTabControl.Margin = New System.Windows.Forms.Padding(0)
-        Me.EditorsTabControl.Name = "EditorsTabControl"
-        Me.EditorsTabControl.Padding = New System.Drawing.Point(0, 0)
-        Me.EditorsTabControl.SelectedIndex = 0
-        Me.EditorsTabControl.SelectedTabColor = System.Drawing.Color.DodgerBlue
-        Me.EditorsTabControl.Size = New System.Drawing.Size(951, 284)
-        Me.EditorsTabControl.TabForeColor = System.Drawing.Color.White
-        Me.EditorsTabControl.TabIndex = 16
-        Me.EditorsTabControl.Visible = False
-        '
         'DatabaseMenuStrip
         '
         Me.DatabaseMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnBackupDatabase, Me.ToolStripSeparator1, Me.btnDropDatabase})
@@ -1277,44 +1313,8 @@ Partial Class MainForm
         Me.btnDropDatabase.Name = "btnDropDatabase"
         Me.btnDropDatabase.Padding = New System.Windows.Forms.Padding(2)
         Me.btnDropDatabase.ShortcutKeyDisplayString = ""
-        Me.btnDropDatabase.Size = New System.Drawing.Size(184, 24)
+        Me.btnDropDatabase.Size = New System.Drawing.Size(120, 24)
         Me.btnDropDatabase.Text = "Drop"
-        '
-        'tsmiTools
-        '
-        Me.tsmiTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnCreateTable, Me.btnBackupDatabase2})
-        Me.tsmiTools.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.tsmiTools.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.tsmiTools.Name = "tsmiTools"
-        Me.tsmiTools.Padding = New System.Windows.Forms.Padding(15, 5, 15, 5)
-        Me.tsmiTools.Size = New System.Drawing.Size(73, 31)
-        Me.tsmiTools.Text = "&Tools"
-        '
-        'btnCreateTable
-        '
-        Me.btnCreateTable.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
-        Me.btnCreateTable.ForeColor = System.Drawing.Color.White
-        Me.btnCreateTable.IconChar = FontAwesome.Sharp.IconChar.Table
-        Me.btnCreateTable.IconColor = System.Drawing.Color.White
-        Me.btnCreateTable.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnCreateTable.Name = "btnCreateTable"
-        Me.btnCreateTable.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnCreateTable.ShortcutKeyDisplayString = ""
-        Me.btnCreateTable.Size = New System.Drawing.Size(184, 24)
-        Me.btnCreateTable.Text = "New Table"
-        '
-        'btnBackupDatabase2
-        '
-        Me.btnBackupDatabase2.BackColor = System.Drawing.Color.FromArgb(CType(CType(53, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(67, Byte), Integer))
-        Me.btnBackupDatabase2.ForeColor = System.Drawing.Color.White
-        Me.btnBackupDatabase2.IconChar = FontAwesome.Sharp.IconChar.Database
-        Me.btnBackupDatabase2.IconColor = System.Drawing.Color.White
-        Me.btnBackupDatabase2.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnBackupDatabase2.Name = "btnBackupDatabase2"
-        Me.btnBackupDatabase2.Padding = New System.Windows.Forms.Padding(2)
-        Me.btnBackupDatabase2.ShortcutKeyDisplayString = ""
-        Me.btnBackupDatabase2.Size = New System.Drawing.Size(184, 24)
-        Me.btnBackupDatabase2.Text = "Backup Database"
         '
         'MainForm
         '

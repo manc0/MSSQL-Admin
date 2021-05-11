@@ -257,16 +257,20 @@ Public Class MainForm
     ''' </summary>
     Private Sub UpdateAllTables()
         For Each tab As TabPage In TablesTabControl.TabPages
-            Dim userTable As UserTable = CType(tab.Controls(0), UserTable)
+            Try
+                Dim userTable As UserTable = CType(tab.Controls(0), UserTable)
 
-            If userTable.CanBeUpdated Then
-                userTable.UpdateTable()
-            End If
+                If userTable.CanBeUpdated Then
+                    userTable.UpdateTable()
+                End If
 
-            If TablesTabControl.SelectedTab Is tab Then
-                SetCurrentTable(userTable)
-                btnSubmit.Enabled = userTable.CanBeUpdated
-            End If
+                If TablesTabControl.SelectedTab Is tab Then
+                    SetCurrentTable(userTable)
+                    btnSubmit.Enabled = userTable.CanBeUpdated
+                End If
+            Catch ex As Exception
+                Continue For
+            End Try
         Next
     End Sub
 
@@ -566,17 +570,27 @@ Public Class MainForm
         End Using
     End Sub
 
-    Private Sub OpenDesignMode(tableName As String)
+    Private Sub OpenDesignMode(alter As Boolean, Optional tableName As String = Nothing)
         Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
-        If IsNothing(databaseName) Or IsNothing(tableName) Then Return
+        If IsNothing(databaseName) Then Return
 
-        Using form As New TableDesignForm(tableName, databaseName, True)
-            Dim result = form.ShowDialog()
+        If Not String.IsNullOrEmpty(tableName) Then
+            Using Form As New TableDesignForm(tableName, databaseName, alter)
+                Dim result = Form.ShowDialog()
 
-            If result = DialogResult.OK Then
+                If result = DialogResult.OK Then
+                    UpdateAllTables()
+                End If
+            End Using
+        Else
+            Using form As New TableDesignForm(databaseName, alter)
+                Dim result = form.ShowDialog()
 
-            End If
-        End Using
+                If result = DialogResult.OK Then
+                    FillObjectExplorer()
+                End If
+            End Using
+        End If
     End Sub
 
 #End Region
@@ -1164,7 +1178,6 @@ Public Class MainForm
 
         If myNode IsNot Nothing Then
             SetSelectedTable(myNode)
-
         End If
     End Sub
 
@@ -1172,7 +1185,13 @@ Public Class MainForm
         Dim myNode = tvObjectExplorer.SelectedNode
 
         If myNode IsNot Nothing Then
-            OpenDesignMode(myNode.Text)
+            OpenDesignMode(True, myNode.Text)
+        End If
+    End Sub
+
+    Private Sub BtnCreateTable_Click(sender As Object, e As EventArgs) Handles btnCreateTable.Click
+        If cbDatabases.SelectedIndex <> -1 Then
+            OpenDesignMode(False)
         End If
     End Sub
 

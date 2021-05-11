@@ -1,14 +1,16 @@
-﻿Imports MSSQLA.BusinessLogicLayer
+﻿Imports System.Data.SqlClient
+Imports MSSQLA.BusinessLogicLayer
 
 Public Class TableDesignForm
 
     Private ReadOnly Property Database As String
-    Private ReadOnly Property TableName As String
+    Private Property TableName As String
     Private ReadOnly Property DatabaseLogic As New DatabaseLogic
     Private ReadOnly Property Alter As Boolean
     Private ReadOnly Property PrimaryKeyName As String
     Private ReadOnly Property OriginalPrimaryKeyList As New List(Of String)
     Private ReadOnly Property RemovedColumns As New List(Of String)
+    Public Property NewPrimaryKeyList As List(Of String)
 
     Private ReadOnly DictionaryOfQueries As New Dictionary(Of String, String) From
     {
@@ -66,6 +68,10 @@ Public Class TableDesignForm
     Public Sub New(tableName As String, database As String, alter As Boolean)
         InitializeComponent()
         lblTableName.Text = tableName
+        tbTableName.Visible = False
+        btnOk.Enabled = True
+        btnOk.IconColor = Color.White
+
         Me.Text = tableName
         Me.Database = database
         Me.TableName = tableName
@@ -93,95 +99,185 @@ Public Class TableDesignForm
         End Try
     End Sub
 
-    Private Sub BtnExecuteProcedure_Click(sender As Object, e As EventArgs) Handles btnOk.Click
-        If Alter Then
-            Dim newPrimaryKeyList As New List(Of String)()
-            Dim sqlQuery As String = String.Empty
+    Public Sub New(databaseName As String, alter As Boolean)
+        InitializeComponent()
+        lblTableName.Text = "Table Designer"
+        tbTableName.Visible = True
+        btnOk.Enabled = False
+        btnOk.IconColor = Color.Gray
 
-            ' Get the new primary key
-            For i = 0 To DataGridView.Rows.Count - 2
-                Dim row As DataGridViewRow = DataGridView.Rows(i)
-                Dim isPrimaryKey As Boolean = row.Cells("PK_Column").Value
-                Dim columnName As String = row.Cells("Name_Column").Value.ToString()
+        Me.Database = databaseName
+        Me.Alter = alter
+    End Sub
 
-                If isPrimaryKey Then
-                    newPrimaryKeyList.Add(columnName)
-                End If
-            Next
+    Private Function GetNewPrimaryKey() As List(Of String)
+        Dim newPrimaryKeyList As New List(Of String)()
 
-            ' Handle primary keys
-            If Not String.IsNullOrEmpty(PrimaryKeyName) Then
-                Try
-                    sqlQuery = "ALTER TABLE " & TableName & " DROP CONSTRAINT " & PrimaryKeyName
-                    DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
+        For i = 0 To DataGridView.Rows.Count - 2
+            Dim row As DataGridViewRow = DataGridView.Rows(i)
+            Dim isPrimaryKey As Boolean = row.Cells("PK_Column").Value
+            Dim columnName As String = row.Cells("Name_Column").Value.ToString()
 
-                    If newPrimaryKeyList.Count > 0 Then
-                        sqlQuery = "ALTER TABLE " & TableName & " ADD CONSTRAINT PK_" & TableName.Replace(".", "_") & " PRIMARY KEY (" & Join(newPrimaryKeyList.ToArray, ",") & ")"
-                        DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
-                    End If
-                Catch ex1 As Exception
-                    ' If adding a new primary key, restore the previous one.
-                    Try
-                        sqlQuery = "ALTER TABLE " & TableName & " ADD CONSTRAINT " & PrimaryKeyName & " PRIMARY KEY (" & Join(OriginalPrimaryKeyList.ToArray, ",") & ")"
-                        DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
-                    Catch ex2 As Exception
-                        MessageBox.Show(ex1.Message + vbNewLine + ex2.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End Try
-                End Try
-            Else
-                Try
-                    If newPrimaryKeyList.Count > 0 Then
-                        sqlQuery = "ALTER TABLE " & TableName & " ADD CONSTRAINT PK_" & TableName.Replace(".", "_") & " PRIMARY KEY (" & Join(newPrimaryKeyList.ToArray, ",") & ")"
-                        DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Try
+            If isPrimaryKey Then
+                newPrimaryKeyList.Add(columnName)
             End If
+        Next
 
-            ' Alter or add columns
-            For i = 0 To DataGridView.Rows.Count - 2
-                Dim row As DataGridViewRow = DataGridView.Rows(i)
-                Dim columnName As String = row.Cells("Name_Column").Value.ToString()
-                Dim type As String = row.Cells("Type_Column").Value.ToString()
-                Dim allowNulls As String = If(row.Cells("AllowNulls_Columns").Value = True, "NULL", "NOT NULL")
+        Return newPrimaryKeyList
+    End Function
 
+    Private Sub CreateTable()
+        Dim sqlQuery As String = "CREATE TABLE " & TableName & "("
+        Dim HasColumns As Boolean
+
+        For i = 0 To DataGridView.Rows.Count - 2
+            Dim row As DataGridViewRow = DataGridView.Rows(i)
+            Dim columnName As String = row.Cells("Name_Column").Value.ToString()
+            Dim type As String = row.Cells("Type_Column").Value.ToString()
+            Dim isNull As Boolean = row.Cells("AllowNulls_Columns").Value
+            Dim allowNulls As String = If(isNull = True, "NULL", "NOT NULL")
+
+            sqlQuery &= columnName & " " & type & " " & allowNulls & ","
+            HasColumns = True
+        Next
+
+        sqlQuery &= ");"
+
+        Try
+            DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
+        Catch ex As Exception
+            If HasColumns Then
+                MessageBox.Show(ex.Message, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Else
+                MessageBox.Show("Cannot create a table without columns", "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
+        End Try
+    End Sub
+
+    Private Sub AlterOrAddColumns()
+        Dim sqlQuery As String
+
+        For i = 0 To DataGridView.Rows.Count - 2
+            Dim row As DataGridViewRow = DataGridView.Rows(i)
+            Dim columnName As String = row.Cells("Name_Column").Value.ToString()
+            Dim type As String = row.Cells("Type_Column").Value.ToString()
+            Dim isNull As Boolean = row.Cells("AllowNulls_Columns").Value
+            Dim allowNulls As String = If(isNull = True, "NULL", "NOT NULL")
+
+            sqlQuery = String.Format(DictionaryOfQueries("CheckIfHasColumn"), TableName, columnName)
+            Dim hasColumn As Boolean = (DatabaseLogic.GetScalar(sqlQuery, Database) = columnName)
+
+            Try
+                sqlQuery = "ALTER TABLE " & TableName & If(hasColumn, " ALTER COLUMN ", " ADD ") & columnName & " " & type & " " & allowNulls
+                DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
+
+            Catch ex As Exception
+                MessageBox.Show(ex.Message, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Continue For
+            End Try
+        Next
+    End Sub
+
+    Private Sub DropColumns()
+        Dim sqlQuery As String
+
+        For Each columnName As String In RemovedColumns
+            Try
                 sqlQuery = String.Format(DictionaryOfQueries("CheckIfHasColumn"), TableName, columnName)
                 Dim hasColumn As Boolean = (DatabaseLogic.GetScalar(sqlQuery, Database) = columnName)
 
-                Try
-                    sqlQuery = "ALTER TABLE " & TableName & If(hasColumn, " ALTER COLUMN ", " ADD ") & columnName & " " & type & " " & allowNulls
+                If hasColumn Then
+                    sqlQuery = "ALTER TABLE " & TableName & " DROP COLUMN " & columnName
 
                     DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                    Continue For
-                End Try
-            Next
+                End If
+            Catch ex As Exception
+                MessageBox.Show(ex.Message, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Try
+        Next
+    End Sub
 
-            ' Drop columns if they exist
-            For Each columnName As String In RemovedColumns
-                Try
-                    sqlQuery = String.Format(DictionaryOfQueries("CheckIfHasColumn"), TableName, columnName)
-                    Dim hasColumn As Boolean = (DatabaseLogic.GetScalar(sqlQuery, Database) = columnName)
+    Private Sub DropPrimaryKey()
+        Dim sqlQuery As String
 
-                    If hasColumn Then
-                        sqlQuery = "ALTER TABLE " & TableName & " DROP COLUMN " & columnName
+        If Not String.IsNullOrEmpty(PrimaryKeyName) Then
+            Try
+                sqlQuery = "ALTER TABLE " & TableName & " DROP CONSTRAINT " & PrimaryKeyName
+                DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
+            Catch ex As Exception
+                MessageBox.Show(ex.Message, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Try
+        End If
+    End Sub
 
-                        DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                End Try
-            Next
+    Private Sub AddNewPrimaryKey()
+        Dim sqlQuery As String
 
+        Try
+            If NewPrimaryKeyList.Count > 0 Then
+                sqlQuery = "ALTER TABLE " & TableName & " ADD CONSTRAINT PK_" & TableName.Replace(".", "_") & " PRIMARY KEY (" & Join(NewPrimaryKeyList.ToArray, ",") & ")"
+                DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message + vbNewLine + "The previous primary key will be restored.", "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            RestorePrimaryKey()
+        End Try
+    End Sub
 
-        Else
+    Private Sub RestorePrimaryKey()
+        Dim sqlQuery As String
 
+        Try
+            sqlQuery = "ALTER TABLE " & TableName & " ADD CONSTRAINT " & PrimaryKeyName & " PRIMARY KEY (" & Join(OriginalPrimaryKeyList.ToArray, ",") & ")"
+            DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message + vbNewLine + "Failed restoring the previous primary key.", "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub BtnExecuteProcedure_Click(sender As Object, e As EventArgs) Handles btnOk.Click
+        Dim nullCells = (From row As DataGridViewRow In DataGridView.Rows
+                         Where row.Index < DataGridView.Rows.Count - 1
+                         From cell As DataGridViewCell In row.Cells
+                         Where cell.Value Is Nothing And (cell.ColumnIndex = 1 Or cell.ColumnIndex = 2)
+                         Select cell).ToList
+
+        If nullCells.Count > 0 Then
+            nullCells.ForEach(Sub(c)
+                                  If c.ColumnIndex = 1 Then
+                                      c.ErrorText = "Input a column name"
+                                  ElseIf c.ColumnIndex = 2 Then
+                                      c.ErrorText = "Input a type"
+                                  End If
+                              End Sub)
+            Return
         End If
 
-        Me.DialogResult = DialogResult.OK
-        Me.Close()
+        ' Get the new primary key
+        NewPrimaryKeyList = GetNewPrimaryKey()
+
+        If Alter Then
+            ' Drop primary key if exist
+            DropPrimaryKey()
+
+            ' Alter or add columns
+            AlterOrAddColumns()
+
+            ' Drop columns if they exist
+            DropColumns()
+
+            ' Add new primary key
+            AddNewPrimaryKey()
+        Else
+            ' Create the new table
+            CreateTable()
+
+            ' Add new primary key
+            AddNewPrimaryKey()
+        End If
+
+        DialogResult = DialogResult.OK
+        Close()
     End Sub
 
     Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -194,6 +290,79 @@ Public Class TableDesignForm
 
     Private Sub DataGridView_RowsRemoved(sender As Object, e As DataGridViewRowCancelEventArgs) Handles DataGridView.UserDeletingRow
         RemovedColumns.Add(e.Row.Cells("Name_Column").Value.ToString())
+    End Sub
+
+    Private Sub DataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView.CellContentClick
+        If e.RowIndex = -1 Then Return
+        Dim cell As DataGridViewCell = DataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+        Dim isChecked As Boolean
+
+        If e.ColumnIndex = 0 Then
+            isChecked = cell.EditedFormattedValue
+
+            If isChecked Then
+                DataGridView.Rows(e.RowIndex).Cells(3).Value = False
+            End If
+
+        ElseIf e.ColumnIndex = 3 Then
+            isChecked = cell.EditedFormattedValue
+
+            If isChecked Then
+                DataGridView.Rows(e.RowIndex).Cells(0).Value = False
+            End If
+        End If
+    End Sub
+
+    Private Sub DataGridView_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DataGridView.CellValidating
+        If e.RowIndex = -1 Then Return
+        Dim cell As DataGridViewCell = DataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+
+        If cell.IsInEditMode And (e.ColumnIndex = 1 Or e.ColumnIndex = 2) Then
+            If String.IsNullOrEmpty(e.FormattedValue.ToString()) Then
+                e.Cancel = True
+            End If
+        End If
+    End Sub
+
+    Private Sub DataGridView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView.CellEndEdit
+        If e.ColumnIndex = 1 Or e.ColumnIndex = 2 Then
+            Dim cell As DataGridViewCell = DataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+
+            If Not String.IsNullOrEmpty(cell.EditedFormattedValue.ToString()) Then
+                DataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex).ErrorText = ""
+            End If
+        End If
+    End Sub
+
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles tbTableName.TextChanged
+        If Alter Then Return
+        TableName = tbTableName.Text
+
+        If Not tbTableName.Text = "Introduce a name..." And Not tbTableName.Text = String.Empty Then
+            btnOk.IconColor = Color.White
+            btnOk.Enabled = True
+        Else
+            btnOk.IconColor = Color.Gray
+            btnOk.Enabled = False
+        End If
+    End Sub
+
+    Private Sub TbTableName_Enter(sender As Object, e As EventArgs) Handles tbTableName.Enter
+        If Alter Then Return
+
+        If tbTableName.Text = "Introduce a name..." Then
+            tbTableName.Text = String.Empty
+            tbTableName.ForeColor = Color.LightGray
+        End If
+    End Sub
+
+    Private Sub TbTableName_Leave(sender As Object, e As EventArgs) Handles tbTableName.Leave
+        If Alter Then Return
+
+        If String.IsNullOrEmpty(tbTableName.Text) Then
+            tbTableName.Text = "Introduce a name..."
+            tbTableName.ForeColor = Color.Gray
+        End If
     End Sub
 
 End Class

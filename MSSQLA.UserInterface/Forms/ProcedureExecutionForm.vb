@@ -31,13 +31,12 @@ Public Class ProcedureExecutionForm
         lblNoParams.Visible = dataTable.Rows.Count = 0
 
         If dataTable.Rows.Count > 0 Then
-            bottomPanel.Dock = DockStyle.Bottom
-            bottomPanel.Padding = New Padding(0, 0, 10, 10)
+            lblProcedureName.Dock = DockStyle.Top
+            lblProcedureName.SendToBack()
         Else
-            bottomPanel.Dock = DockStyle.Fill
-            bottomPanel.Padding = New Padding(5, 15, 5, 10)
+            lblProcedureName.Dock = DockStyle.Fill
+            lblProcedureName.BringToFront()
         End If
-
 
         For Each row As DataRow In dataTable.Rows
             AddNewRow(row(0).ToString(), row(1).ToString(), row(2))
@@ -82,7 +81,7 @@ Public Class ProcedureExecutionForm
         Dispose()
     End Sub
 
-    Private Sub BtnExecuteProcedure_Click(sender As Object, e As EventArgs) Handles btnExecuteProcedure.Click
+    Private Sub BtnExecuteProcedure_Click(sender As Object, e As EventArgs) Handles btnExecute.Click
         For Each textBox In paramsTable.Controls.OfType(Of TextBox).ToList()
             Dim paramOptions As New Dictionary(Of String, SqlDbType)
             Dim paramName As String = textBox.Name
@@ -98,7 +97,7 @@ Public Class ProcedureExecutionForm
             ParamsConfig.Add(paramOptions, textBox.Text)
         Next
 
-        Me.DialogResult = DialogResult.OK
-        Me.Close()
+        DialogResult = DialogResult.OK
+        Close()
     End Sub
 End Class

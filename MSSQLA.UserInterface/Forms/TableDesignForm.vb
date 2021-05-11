@@ -300,6 +300,10 @@ Public Class TableDesignForm
         RemovedColumns.Add("[" & e.Row.Cells("Name_Column").Value.ToString() & "]")
     End Sub
 
+    Private Sub DataGridView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView.CellValueChanged
+
+    End Sub
+
     Private Sub DataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView.CellContentClick
         If e.RowIndex = -1 Then Return
         Dim cell As DataGridViewCell = DataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
@@ -328,6 +332,21 @@ Public Class TableDesignForm
         If cell.IsInEditMode And (e.ColumnIndex = 1 Or e.ColumnIndex = 2) Then
             If String.IsNullOrEmpty(e.FormattedValue.ToString()) Then
                 e.Cancel = True
+            End If
+        End If
+
+        If e.RowIndex = -1 Or e.RowIndex = DataGridView.RowCount - 1 Then Return
+        cell = DataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex)
+        Dim cellValue = cell.Value
+        Dim cellFormattedValue = e.FormattedValue
+
+        If cell.ColumnIndex = 1 And cellValue IsNot Nothing And cellFormattedValue IsNot Nothing AndAlso Not cellValue.ToString() = cellFormattedValue.ToString() Then
+            cellValue = "[" & cellValue.ToString() & "]"
+            cellFormattedValue = "[" & cellFormattedValue.ToString() & "]"
+
+            RemovedColumns.Add(cellValue)
+            If RemovedColumns.Contains(cellFormattedValue) Then
+                RemovedColumns.Remove(cellFormattedValue)
             End If
         End If
     End Sub

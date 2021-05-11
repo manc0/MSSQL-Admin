@@ -149,6 +149,7 @@ Public Class MainForm
         tbUser.Text = My.Settings.User
         tbPass.Text = My.Settings.Pass
         tbTimeout.Text = My.Settings.Timeout
+        chbLoginMode.Checked = My.Settings.WindowsAuthentication
     End Sub
 
 #End Region
@@ -370,8 +371,9 @@ Public Class MainForm
         Dim user As String = tbUser.Text
         Dim pass As String = tbPass.Text
         Dim timeout As Integer = tbTimeout.Text
+        Dim winAuth As Boolean = chbLoginMode.Checked
 
-        If chbLoginMode.Checked Then
+        If winAuth Then
             DatabaseLogic.SetWindowsLogin(server, timeout)
         Else
             DatabaseLogic.SetSqlServerLogin(server, user, pass, timeout)
@@ -388,6 +390,7 @@ Public Class MainForm
             My.Settings.User = user
             My.Settings.Pass = pass
             My.Settings.Timeout = timeout
+            My.Settings.WindowsAuthentication = winAuth
             My.Settings.Save()
 
             btnExecute.Enabled = True

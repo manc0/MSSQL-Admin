@@ -230,8 +230,8 @@ Public Class TableDesignForm
         Try
             sqlQuery = "ALTER TABLE " & TableName & " ADD CONSTRAINT " & PrimaryKeyName & " PRIMARY KEY (" & Join(OriginalPrimaryKeyList.ToArray, ",") & ")"
             DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message + vbNewLine + "Failed restoring the previous primary key.", "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Catch
+            Return
         End Try
     End Sub
 
@@ -256,9 +256,17 @@ Public Class TableDesignForm
         ' Get the new primary key
         NewPrimaryKeyList = GetNewPrimaryKey()
 
+        ' Check if the primary has been modified
+        Dim hasNewPrimaryKey As Boolean
+        If NewPrimaryKeyList.Count > OriginalPrimaryKeyList.Count Then
+            hasNewPrimaryKey = NewPrimaryKeyList.Except(OriginalPrimaryKeyList).Any()
+        Else
+            hasNewPrimaryKey = OriginalPrimaryKeyList.Except(NewPrimaryKeyList).Any()
+        End If
+
         If Alter Then
             ' Drop primary key if exist
-            DropPrimaryKey()
+            If hasNewPrimaryKey Then DropPrimaryKey()
 
             ' Alter or add columns
             AlterOrAddColumns()
@@ -267,7 +275,7 @@ Public Class TableDesignForm
             DropColumns()
 
             ' Add new primary key
-            AddNewPrimaryKey()
+            If hasNewPrimaryKey Then AddNewPrimaryKey()
         Else
             ' Create the new table
             CreateTable()

@@ -274,6 +274,44 @@ Public Class MainForm
         Next
     End Sub
 
+    Private Sub OpenDesignMode(alter As Boolean, Optional tableName As String = Nothing)
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        If IsNothing(databaseName) Then Return
+
+        If Not String.IsNullOrEmpty(tableName) Then
+            Using form As New TableDesignForm(tableName, databaseName, alter)
+                Dim result = form.ShowDialog()
+
+                If result = DialogResult.OK Then
+                    UpdateAllTables()
+                End If
+            End Using
+        Else
+            Using form As New TableDesignForm(databaseName, alter)
+                Dim result = form.ShowDialog()
+
+                If result = DialogResult.OK Then
+                    FillObjectExplorer()
+                End If
+            End Using
+        End If
+    End Sub
+
+    Public Sub OpenBackupForm()
+        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
+        If IsNothing(databaseName) Then Return
+
+        Using form As New DatabaseBackupForm(databaseName)
+            Dim result = form.ShowDialog()
+
+            If result = DialogResult.OK Then
+                MessageBox.Show(databaseName & " backed up on " & form.Path, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ElseIf result = DialogResult.Abort Then
+                MessageBox.Show(form.ErrorMessage, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
+        End Using
+    End Sub
+
     ''' <summary>
     ''' Closes the current sesion and forces the user to connect again to the server.
     ''' </summary>
@@ -568,29 +606,6 @@ Public Class MainForm
                 End Try
             End If
         End Using
-    End Sub
-
-    Private Sub OpenDesignMode(alter As Boolean, Optional tableName As String = Nothing)
-        Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
-        If IsNothing(databaseName) Then Return
-
-        If Not String.IsNullOrEmpty(tableName) Then
-            Using Form As New TableDesignForm(tableName, databaseName, alter)
-                Dim result = Form.ShowDialog()
-
-                If result = DialogResult.OK Then
-                    UpdateAllTables()
-                End If
-            End Using
-        Else
-            Using form As New TableDesignForm(databaseName, alter)
-                Dim result = form.ShowDialog()
-
-                If result = DialogResult.OK Then
-                    FillObjectExplorer()
-                End If
-            End Using
-        End If
     End Sub
 
 #End Region
@@ -1298,6 +1313,14 @@ Public Class MainForm
         Catch ex As Exception
             Log(ex.Message)
         End Try
+    End Sub
+
+    Private Sub BtnBackupDatabase_Click(sender As Object, e As EventArgs) Handles btnBackupDatabase.Click
+        OpenBackupForm()
+    End Sub
+
+    Private Sub BtnBackupDatabase2_Click(sender As Object, e As EventArgs) Handles btnBackupDatabase2.Click
+        OpenBackupForm()
     End Sub
 
     Private Sub BtnTableMode_Click(sender As Object, e As EventArgs) Handles btnTableMode.Click

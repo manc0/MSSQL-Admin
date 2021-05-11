@@ -801,6 +801,7 @@ Public Class MainForm
             If myNode IsNot Nothing AndAlso myNode.Parent IsNot Nothing Then
                 If myNode.Parent.Text = "Tables" Or myNode.Parent.Text = "Views" Then
                     btnDesign.Visible = Not myNode.Parent.Text = "Views"
+                    btnTruncateTable.Visible = Not myNode.Parent.Text = "Views"
                     TablesAndViewsMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y)
                 ElseIf myNode.Parent.Text = "Procedures" Then
                     ProceduresMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y)
@@ -1252,7 +1253,7 @@ Public Class MainForm
             Dim dr As DialogResult = MessageBox.Show("Are you sure to truncate " & tableName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
 
             If dr = DialogResult.Yes Then
-                DatabaseLogic.Truncate(tableName, If(myNode.Parent.Text = "Tables", "TABLE", "VIEW"), databaseName)
+                DatabaseLogic.TruncateTable(tableName, databaseName)
                 FillObjectExplorer()
 
                 Log(tableName & " was successfuly truncated.")

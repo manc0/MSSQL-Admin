@@ -592,7 +592,7 @@ Partial Class MainForm
         Me.btnCreateTable.Name = "btnCreateTable"
         Me.btnCreateTable.Padding = New System.Windows.Forms.Padding(2)
         Me.btnCreateTable.ShortcutKeyDisplayString = ""
-        Me.btnCreateTable.Size = New System.Drawing.Size(184, 24)
+        Me.btnCreateTable.Size = New System.Drawing.Size(180, 24)
         Me.btnCreateTable.Text = "New Table"
         '
         'btnBackupDatabase2
@@ -605,7 +605,7 @@ Partial Class MainForm
         Me.btnBackupDatabase2.Name = "btnBackupDatabase2"
         Me.btnBackupDatabase2.Padding = New System.Windows.Forms.Padding(2)
         Me.btnBackupDatabase2.ShortcutKeyDisplayString = ""
-        Me.btnBackupDatabase2.Size = New System.Drawing.Size(184, 24)
+        Me.btnBackupDatabase2.Size = New System.Drawing.Size(180, 24)
         Me.btnBackupDatabase2.Text = "Backup Database"
         '
         'leftPanel
@@ -1152,7 +1152,7 @@ Partial Class MainForm
         '
         Me.TablesAndViewsMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnEditTable, Me.btnDesign, Me.tsSeparator10, Me.btnTruncateTable, Me.btnDropTable})
         Me.TablesAndViewsMenuStrip.Name = "TablesAndViewsMenuStrip"
-        Me.TablesAndViewsMenuStrip.Size = New System.Drawing.Size(126, 106)
+        Me.TablesAndViewsMenuStrip.Size = New System.Drawing.Size(181, 128)
         '
         'btnEditTable
         '
@@ -1165,7 +1165,7 @@ Partial Class MainForm
         Me.btnEditTable.Name = "btnEditTable"
         Me.btnEditTable.Padding = New System.Windows.Forms.Padding(2)
         Me.btnEditTable.ShortcutKeyDisplayString = ""
-        Me.btnEditTable.Size = New System.Drawing.Size(129, 24)
+        Me.btnEditTable.Size = New System.Drawing.Size(184, 24)
         Me.btnEditTable.Text = "Edit"
         '
         'btnDesign
@@ -1179,7 +1179,7 @@ Partial Class MainForm
         Me.btnDesign.Name = "btnDesign"
         Me.btnDesign.Padding = New System.Windows.Forms.Padding(2)
         Me.btnDesign.ShortcutKeyDisplayString = ""
-        Me.btnDesign.Size = New System.Drawing.Size(129, 24)
+        Me.btnDesign.Size = New System.Drawing.Size(184, 24)
         Me.btnDesign.Text = "Design"
         '
         'tsSeparator10
@@ -1188,7 +1188,7 @@ Partial Class MainForm
         Me.tsSeparator10.ForeColor = System.Drawing.Color.White
         Me.tsSeparator10.Name = "tsSeparator10"
         Me.tsSeparator10.Padding = New System.Windows.Forms.Padding(2)
-        Me.tsSeparator10.Size = New System.Drawing.Size(122, 6)
+        Me.tsSeparator10.Size = New System.Drawing.Size(177, 6)
         '
         'btnTruncateTable
         '
@@ -1201,8 +1201,9 @@ Partial Class MainForm
         Me.btnTruncateTable.Name = "btnTruncateTable"
         Me.btnTruncateTable.Padding = New System.Windows.Forms.Padding(2)
         Me.btnTruncateTable.ShortcutKeyDisplayString = ""
-        Me.btnTruncateTable.Size = New System.Drawing.Size(129, 24)
+        Me.btnTruncateTable.Size = New System.Drawing.Size(184, 24)
         Me.btnTruncateTable.Text = "Truncate"
+        Me.btnTruncateTable.Visible = False
         '
         'btnDropTable
         '
@@ -1215,7 +1216,7 @@ Partial Class MainForm
         Me.btnDropTable.Name = "btnDropTable"
         Me.btnDropTable.Padding = New System.Windows.Forms.Padding(2)
         Me.btnDropTable.ShortcutKeyDisplayString = ""
-        Me.btnDropTable.Size = New System.Drawing.Size(129, 24)
+        Me.btnDropTable.Size = New System.Drawing.Size(184, 24)
         Me.btnDropTable.Text = "Drop"
         '
         'ProceduresMenuStrip
@@ -1278,7 +1279,7 @@ Partial Class MainForm
         '
         Me.DatabaseMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnBackupDatabase, Me.ToolStripSeparator1, Me.btnDropDatabase})
         Me.DatabaseMenuStrip.Name = "TablesAndViewsMenuStrip"
-        Me.DatabaseMenuStrip.Size = New System.Drawing.Size(181, 80)
+        Me.DatabaseMenuStrip.Size = New System.Drawing.Size(117, 58)
         '
         'btnBackupDatabase
         '
@@ -1291,7 +1292,7 @@ Partial Class MainForm
         Me.btnBackupDatabase.Name = "btnBackupDatabase"
         Me.btnBackupDatabase.Padding = New System.Windows.Forms.Padding(2)
         Me.btnBackupDatabase.ShortcutKeyDisplayString = ""
-        Me.btnBackupDatabase.Size = New System.Drawing.Size(184, 24)
+        Me.btnBackupDatabase.Size = New System.Drawing.Size(120, 24)
         Me.btnBackupDatabase.Text = "Backup"
         '
         'ToolStripSeparator1
@@ -1300,7 +1301,7 @@ Partial Class MainForm
         Me.ToolStripSeparator1.ForeColor = System.Drawing.Color.White
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Padding = New System.Windows.Forms.Padding(2)
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(113, 6)
         '
         'btnDropDatabase
         '
@@ -1313,7 +1314,7 @@ Partial Class MainForm
         Me.btnDropDatabase.Name = "btnDropDatabase"
         Me.btnDropDatabase.Padding = New System.Windows.Forms.Padding(2)
         Me.btnDropDatabase.ShortcutKeyDisplayString = ""
-        Me.btnDropDatabase.Size = New System.Drawing.Size(184, 24)
+        Me.btnDropDatabase.Size = New System.Drawing.Size(120, 24)
         Me.btnDropDatabase.Text = "Drop"
         '
         'MainForm

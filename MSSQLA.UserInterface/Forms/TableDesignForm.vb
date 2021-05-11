@@ -22,7 +22,7 @@ Public Class TableDesignForm
                 COLUMN_NAME 
             FROM 
                 INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-            WHERE (TABLE_SCHEMA + '.' + TABLE_NAME) = '{0}' 
+            WHERE ('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']') = '{0}' 
             AND CONSTRAINT_NAME LIKE 'PK%'
         )
 
@@ -46,14 +46,14 @@ Public Class TableDesignForm
         FROM INFORMATION_SCHEMA.COLUMNS IC
         INNER JOIN SYS.COLUMNS SC
             ON IC.COLUMN_NAME = SC.NAME
-        WHERE (TABLE_SCHEMA + '.' + TABLE_NAME) = '{0}'
+        WHERE ('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']') = '{0}'
         AND SC.OBJECT_ID = OBJECT_ID('{0}')"
         },
         {
         "GetPrimaryKeyName",
         "SELECT C.CONSTRAINT_NAME FROM  
 	        INFORMATION_SCHEMA.TABLE_CONSTRAINTS C
-        WHERE (C.TABLE_SCHEMA + '.' + C.TABLE_NAME) = '{0}'
+        WHERE ('[' + C.TABLE_SCHEMA + '].[' + C.TABLE_NAME + ']') = '{0}'
         AND C.CONSTRAINT_TYPE='PRIMARY KEY'"
         },
         {
@@ -61,7 +61,7 @@ Public Class TableDesignForm
         "SELECT 
             COLUMN_NAME 
         FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE (TABLE_SCHEMA + '.' + TABLE_NAME) = '{0}' AND COLUMN_NAME = '{1}'"
+        WHERE ('[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']') = '{0}' AND ('[' + COLUMN_NAME + ']') = '{1}'"
         }
     }
 
@@ -87,7 +87,7 @@ Public Class TableDesignForm
                 DataGridView.Rows.Add(row.ItemArray)
 
                 If row.Item(0) = True Then
-                    OriginalPrimaryKeyList.Add(row.Item(1))
+                    OriginalPrimaryKeyList.Add("[" & row.Item(1) & "]")
                 End If
             Next
 
@@ -116,7 +116,7 @@ Public Class TableDesignForm
         For i = 0 To DataGridView.Rows.Count - 2
             Dim row As DataGridViewRow = DataGridView.Rows(i)
             Dim isPrimaryKey As Boolean = row.Cells("PK_Column").Value
-            Dim columnName As String = row.Cells("Name_Column").Value.ToString()
+            Dim columnName As String = "[" & row.Cells("Name_Column").Value.ToString() & "]"
 
             If isPrimaryKey Then
                 newPrimaryKeyList.Add(columnName)
@@ -132,7 +132,7 @@ Public Class TableDesignForm
 
         For i = 0 To DataGridView.Rows.Count - 2
             Dim row As DataGridViewRow = DataGridView.Rows(i)
-            Dim columnName As String = row.Cells("Name_Column").Value.ToString()
+            Dim columnName As String = "[" & row.Cells("Name_Column").Value.ToString() & "]"
             Dim type As String = row.Cells("Type_Column").Value.ToString()
             Dim isNull As Boolean = row.Cells("AllowNulls_Columns").Value
             Dim allowNulls As String = If(isNull = True, "NULL", "NOT NULL")
@@ -159,13 +159,13 @@ Public Class TableDesignForm
 
         For i = 0 To DataGridView.Rows.Count - 2
             Dim row As DataGridViewRow = DataGridView.Rows(i)
-            Dim columnName As String = row.Cells("Name_Column").Value.ToString()
+            Dim columnName As String = "[" & row.Cells("Name_Column").Value.ToString() & "]"
             Dim type As String = row.Cells("Type_Column").Value.ToString()
             Dim isNull As Boolean = row.Cells("AllowNulls_Columns").Value
             Dim allowNulls As String = If(isNull = True, "NULL", "NOT NULL")
 
             sqlQuery = String.Format(DictionaryOfQueries("CheckIfHasColumn"), TableName, columnName)
-            Dim hasColumn As Boolean = (DatabaseLogic.GetScalar(sqlQuery, Database) = columnName)
+            Dim hasColumn As Boolean = ("[" & DatabaseLogic.GetScalar(sqlQuery, Database) & "]" = columnName)
 
             Try
                 sqlQuery = "ALTER TABLE " & TableName & If(hasColumn, " ALTER COLUMN ", " ADD ") & columnName & " " & type & " " & allowNulls
@@ -184,7 +184,7 @@ Public Class TableDesignForm
         For Each columnName As String In RemovedColumns
             Try
                 sqlQuery = String.Format(DictionaryOfQueries("CheckIfHasColumn"), TableName, columnName)
-                Dim hasColumn As Boolean = (DatabaseLogic.GetScalar(sqlQuery, Database) = columnName)
+                Dim hasColumn As Boolean = ("[" & DatabaseLogic.GetScalar(sqlQuery, Database) & "]" = columnName)
 
                 If hasColumn Then
                     sqlQuery = "ALTER TABLE " & TableName & " DROP COLUMN " & columnName
@@ -215,12 +215,12 @@ Public Class TableDesignForm
 
         Try
             If NewPrimaryKeyList.Count > 0 Then
-                sqlQuery = "ALTER TABLE " & TableName & " ADD CONSTRAINT PK_" & TableName.Replace(".", "_") & " PRIMARY KEY (" & Join(NewPrimaryKeyList.ToArray, ",") & ")"
+                sqlQuery = "ALTER TABLE " & TableName & " ADD CONSTRAINT PK_" & TableName.Replace(".", "_").Replace("]", "").Replace("[", "").Replace(" ", "_") & " PRIMARY KEY (" & Join(NewPrimaryKeyList.ToArray, ",") & ")"
                 DatabaseLogic.ExecuteSqlCode(sqlQuery, Database)
             End If
         Catch ex As Exception
-            MessageBox.Show(ex.Message + vbNewLine + "The previous primary key will be restored.", "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            RestorePrimaryKey()
+            MessageBox.Show(ex.Message, "MSSQL Admin", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If Alter Then RestorePrimaryKey()
         End Try
     End Sub
 
@@ -297,7 +297,7 @@ Public Class TableDesignForm
     End Sub
 
     Private Sub DataGridView_RowsRemoved(sender As Object, e As DataGridViewRowCancelEventArgs) Handles DataGridView.UserDeletingRow
-        RemovedColumns.Add(e.Row.Cells("Name_Column").Value.ToString())
+        RemovedColumns.Add("[" & e.Row.Cells("Name_Column").Value.ToString() & "]")
     End Sub
 
     Private Sub DataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView.CellContentClick

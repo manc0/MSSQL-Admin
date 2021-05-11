@@ -1236,7 +1236,7 @@ Public Class MainForm
             Dim dr As DialogResult = MessageBox.Show("Are you really sure to drop " & databaseName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
 
             If dr = DialogResult.Yes Then
-                DatabaseLogic.Drop(databaseName, "DATABASE", "MASTER")
+                DatabaseLogic.Drop("[" & databaseName & "]", "DATABASE", "MASTER")
 
                 cbDatabases.SelectedIndex = -1
                 tvObjectExplorer.Nodes.Clear()
@@ -1247,7 +1247,7 @@ Public Class MainForm
                 Log(databaseName & " was successfuly dropped.")
             End If
         Catch ex As Exception
-            Log(ex.Message)
+            Log(ex.Message & vbNewLine & "Try again after closing all tables.")
         End Try
     End Sub
 

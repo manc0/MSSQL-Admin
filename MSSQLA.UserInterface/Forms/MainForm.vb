@@ -274,6 +274,11 @@ Public Class MainForm
         Next
     End Sub
 
+    ''' <summary>
+    ''' Opens the design mode.
+    ''' </summary>
+    ''' <param name="alter">Indicates wether the form should alter an existing table or create a new one.</param>
+    ''' <param name="tableName">Name of the new table.</param>
     Private Sub OpenDesignMode(alter As Boolean, Optional tableName As String = Nothing)
         Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
         If IsNothing(databaseName) Then Return
@@ -297,6 +302,9 @@ Public Class MainForm
         End If
     End Sub
 
+    ''' <summary>
+    ''' Opens a form to create a backup of the current database.
+    ''' </summary>
     Public Sub OpenBackupForm()
         Dim databaseName As String = cbDatabases.SelectedItem?.ToString()
         If IsNothing(databaseName) Then Return

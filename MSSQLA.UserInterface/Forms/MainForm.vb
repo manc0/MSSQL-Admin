@@ -581,7 +581,7 @@ Public Class MainForm
 
                 If recordsAffected = -1 Then recordsAffected = 0
 
-                Log("Execution succesful. " & recordsAffected & " record(s) affected.")
+                Log("Execution successful. " & recordsAffected & " record(s) affected.")
                 FillDatabasesComboBox()
                 FillObjectExplorer()
                 UpdateAllTables()
@@ -613,7 +613,7 @@ Public Class MainForm
                         AddNewTable(dt, "Table " & GlobalTableCounter, databaseName, False)
                     Next
 
-                    Log("Execution of " & procedureName & " was succesful.")
+                    Log("Execution of " & procedureName & " was successful.")
                     FillDatabasesComboBox()
                     FillObjectExplorer()
                     UpdateAllTables()

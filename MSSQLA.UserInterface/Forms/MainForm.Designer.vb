@@ -69,23 +69,25 @@ Partial Class MainForm
         Me.tsmiTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnCreateTable = New FontAwesome.Sharp.IconMenuItem()
         Me.btnBackupDatabase2 = New FontAwesome.Sharp.IconMenuItem()
-        Me.leftPanel = New System.Windows.Forms.Panel()
+        Me.leftPanel = New System.Windows.Forms.TableLayoutPanel()
+        Me.panelConnection = New System.Windows.Forms.Panel()
         Me.chbLoginMode = New System.Windows.Forms.CheckBox()
-        Me.tvObjectExplorer = New System.Windows.Forms.TreeView()
-        Me.NodeImageList = New System.Windows.Forms.ImageList(Me.components)
         Me.tbTimeout = New System.Windows.Forms.TextBox()
-        Me.btnReload = New FontAwesome.Sharp.IconButton()
-        Me.btnExecute = New FontAwesome.Sharp.IconButton()
-        Me.btnSubmit = New FontAwesome.Sharp.IconButton()
-        Me.lblTables = New System.Windows.Forms.Label()
-        Me.lblServer = New System.Windows.Forms.Label()
-        Me.lblDatabases = New System.Windows.Forms.Label()
         Me.tbServer = New System.Windows.Forms.TextBox()
         Me.tbUser = New System.Windows.Forms.TextBox()
         Me.btnConnect = New FontAwesome.Sharp.IconButton()
         Me.tbPass = New System.Windows.Forms.TextBox()
-        Me.cbDatabases = New System.Windows.Forms.ComboBox()
         Me.btnDisconnect = New FontAwesome.Sharp.IconButton()
+        Me.panelDatabases = New System.Windows.Forms.Panel()
+        Me.btnReload = New FontAwesome.Sharp.IconButton()
+        Me.btnExecute = New FontAwesome.Sharp.IconButton()
+        Me.btnSubmit = New FontAwesome.Sharp.IconButton()
+        Me.cbDatabases = New System.Windows.Forms.ComboBox()
+        Me.lblConnection = New FontAwesome.Sharp.IconButton()
+        Me.lblDatabases = New FontAwesome.Sharp.IconButton()
+        Me.lblTables = New FontAwesome.Sharp.IconButton()
+        Me.tvObjectExplorer = New System.Windows.Forms.TreeView()
+        Me.NodeImageList = New System.Windows.Forms.ImageList(Me.components)
         Me.splitter2 = New System.Windows.Forms.Splitter()
         Me.bottomPanel = New System.Windows.Forms.Panel()
         Me.xpathPanel = New System.Windows.Forms.Panel()
@@ -101,8 +103,6 @@ Partial Class MainForm
         Me.btnXpath = New FontAwesome.Sharp.IconToolStripButton()
         Me.splitter1 = New System.Windows.Forms.Splitter()
         Me.mainPanel = New System.Windows.Forms.Panel()
-        Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
-        Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.TablesAndViewsMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.btnEditTable = New FontAwesome.Sharp.IconMenuItem()
         Me.btnDesign = New FontAwesome.Sharp.IconMenuItem()
@@ -118,8 +118,12 @@ Partial Class MainForm
         Me.btnBackupDatabase = New FontAwesome.Sharp.IconMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnDropDatabase = New FontAwesome.Sharp.IconMenuItem()
+        Me.TablesTabControl = New MSSQLA.UserInterface.CustomTabControl()
+        Me.EditorsTabControl = New MSSQLA.UserInterface.CustomTabControl()
         Me.MyMenuStrip.SuspendLayout()
         Me.leftPanel.SuspendLayout()
+        Me.panelConnection.SuspendLayout()
+        Me.panelDatabases.SuspendLayout()
         Me.bottomPanel.SuspendLayout()
         Me.xpathPanel.SuspendLayout()
         Me.xpathEvaluatorPanel.SuspendLayout()
@@ -611,26 +615,42 @@ Partial Class MainForm
         'leftPanel
         '
         Me.leftPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
-        Me.leftPanel.Controls.Add(Me.chbLoginMode)
-        Me.leftPanel.Controls.Add(Me.tvObjectExplorer)
-        Me.leftPanel.Controls.Add(Me.tbTimeout)
-        Me.leftPanel.Controls.Add(Me.btnReload)
-        Me.leftPanel.Controls.Add(Me.btnExecute)
-        Me.leftPanel.Controls.Add(Me.btnSubmit)
-        Me.leftPanel.Controls.Add(Me.lblTables)
-        Me.leftPanel.Controls.Add(Me.lblServer)
-        Me.leftPanel.Controls.Add(Me.lblDatabases)
-        Me.leftPanel.Controls.Add(Me.tbServer)
-        Me.leftPanel.Controls.Add(Me.tbUser)
-        Me.leftPanel.Controls.Add(Me.btnConnect)
-        Me.leftPanel.Controls.Add(Me.tbPass)
-        Me.leftPanel.Controls.Add(Me.cbDatabases)
-        Me.leftPanel.Controls.Add(Me.btnDisconnect)
+        Me.leftPanel.ColumnCount = 1
+        Me.leftPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.leftPanel.Controls.Add(Me.panelConnection, 0, 5)
+        Me.leftPanel.Controls.Add(Me.panelDatabases, 0, 1)
+        Me.leftPanel.Controls.Add(Me.lblConnection, 0, 4)
+        Me.leftPanel.Controls.Add(Me.lblDatabases, 0, 0)
+        Me.leftPanel.Controls.Add(Me.lblTables, 0, 2)
+        Me.leftPanel.Controls.Add(Me.tvObjectExplorer, 0, 3)
         Me.leftPanel.Dock = System.Windows.Forms.DockStyle.Left
         Me.leftPanel.Location = New System.Drawing.Point(1, 32)
+        Me.leftPanel.Margin = New System.Windows.Forms.Padding(0)
         Me.leftPanel.Name = "leftPanel"
+        Me.leftPanel.RowCount = 6
+        Me.leftPanel.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.leftPanel.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.leftPanel.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.leftPanel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.leftPanel.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.leftPanel.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.leftPanel.Size = New System.Drawing.Size(269, 706)
         Me.leftPanel.TabIndex = 1
+        '
+        'panelConnection
+        '
+        Me.panelConnection.Controls.Add(Me.chbLoginMode)
+        Me.panelConnection.Controls.Add(Me.tbTimeout)
+        Me.panelConnection.Controls.Add(Me.tbServer)
+        Me.panelConnection.Controls.Add(Me.tbUser)
+        Me.panelConnection.Controls.Add(Me.btnConnect)
+        Me.panelConnection.Controls.Add(Me.tbPass)
+        Me.panelConnection.Controls.Add(Me.btnDisconnect)
+        Me.panelConnection.Location = New System.Drawing.Point(0, 517)
+        Me.panelConnection.Margin = New System.Windows.Forms.Padding(0)
+        Me.panelConnection.Name = "panelConnection"
+        Me.panelConnection.Size = New System.Drawing.Size(269, 189)
+        Me.panelConnection.TabIndex = 0
         '
         'chbLoginMode
         '
@@ -640,45 +660,13 @@ Partial Class MainForm
         Me.chbLoginMode.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
         Me.chbLoginMode.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.chbLoginMode.ForeColor = System.Drawing.Color.LightGray
-        Me.chbLoginMode.Location = New System.Drawing.Point(15, 526)
+        Me.chbLoginMode.Location = New System.Drawing.Point(15, 10)
         Me.chbLoginMode.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.chbLoginMode.Name = "chbLoginMode"
         Me.chbLoginMode.Size = New System.Drawing.Size(166, 21)
         Me.chbLoginMode.TabIndex = 15
         Me.chbLoginMode.Text = "Windows Authentication"
         Me.chbLoginMode.UseVisualStyleBackColor = True
-        '
-        'tvObjectExplorer
-        '
-        Me.tvObjectExplorer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.tvObjectExplorer.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
-        Me.tvObjectExplorer.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.tvObjectExplorer.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.tvObjectExplorer.ForeColor = System.Drawing.Color.LightGray
-        Me.tvObjectExplorer.ImageIndex = 0
-        Me.tvObjectExplorer.ImageList = Me.NodeImageList
-        Me.tvObjectExplorer.Indent = 15
-        Me.tvObjectExplorer.LineColor = System.Drawing.Color.Gray
-        Me.tvObjectExplorer.Location = New System.Drawing.Point(0, 132)
-        Me.tvObjectExplorer.Name = "tvObjectExplorer"
-        Me.tvObjectExplorer.SelectedImageIndex = 0
-        Me.tvObjectExplorer.ShowPlusMinus = False
-        Me.tvObjectExplorer.ShowRootLines = False
-        Me.tvObjectExplorer.Size = New System.Drawing.Size(269, 364)
-        Me.tvObjectExplorer.TabIndex = 0
-        '
-        'NodeImageList
-        '
-        Me.NodeImageList.ImageStream = CType(resources.GetObject("NodeImageList.ImageStream"), System.Windows.Forms.ImageListStreamer)
-        Me.NodeImageList.TransparentColor = System.Drawing.Color.Transparent
-        Me.NodeImageList.Images.SetKeyName(0, "database")
-        Me.NodeImageList.Images.SetKeyName(1, "table")
-        Me.NodeImageList.Images.SetKeyName(2, "view")
-        Me.NodeImageList.Images.SetKeyName(3, "procedure")
-        Me.NodeImageList.Images.SetKeyName(4, "function")
-        Me.NodeImageList.Images.SetKeyName(5, "folder_closed")
-        Me.NodeImageList.Images.SetKeyName(6, "folder_opened")
         '
         'tbTimeout
         '
@@ -688,13 +676,117 @@ Partial Class MainForm
         Me.tbTimeout.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tbTimeout.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tbTimeout.ForeColor = System.Drawing.Color.Gray
-        Me.tbTimeout.Location = New System.Drawing.Point(202, 627)
+        Me.tbTimeout.Location = New System.Drawing.Point(202, 111)
         Me.tbTimeout.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.tbTimeout.MaxLength = 2
         Me.tbTimeout.Name = "tbTimeout"
         Me.tbTimeout.Size = New System.Drawing.Size(53, 25)
         Me.tbTimeout.TabIndex = 14
         Me.tbTimeout.Text = "Timeout"
+        '
+        'tbServer
+        '
+        Me.tbServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tbServer.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.tbServer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.tbServer.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbServer.ForeColor = System.Drawing.Color.Gray
+        Me.tbServer.Location = New System.Drawing.Point(15, 41)
+        Me.tbServer.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
+        Me.tbServer.Name = "tbServer"
+        Me.tbServer.Size = New System.Drawing.Size(240, 25)
+        Me.tbServer.TabIndex = 5
+        Me.tbServer.Text = "Server"
+        '
+        'tbUser
+        '
+        Me.tbUser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tbUser.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.tbUser.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.tbUser.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbUser.ForeColor = System.Drawing.Color.Gray
+        Me.tbUser.Location = New System.Drawing.Point(15, 76)
+        Me.tbUser.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
+        Me.tbUser.Name = "tbUser"
+        Me.tbUser.Size = New System.Drawing.Size(240, 25)
+        Me.tbUser.TabIndex = 6
+        Me.tbUser.Text = "User"
+        '
+        'btnConnect
+        '
+        Me.btnConnect.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnConnect.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
+        Me.btnConnect.FlatAppearance.BorderSize = 0
+        Me.btnConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnConnect.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnConnect.ForeColor = System.Drawing.Color.White
+        Me.btnConnect.IconChar = FontAwesome.Sharp.IconChar.Database
+        Me.btnConnect.IconColor = System.Drawing.Color.White
+        Me.btnConnect.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnConnect.IconSize = 24
+        Me.btnConnect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnConnect.Location = New System.Drawing.Point(15, 146)
+        Me.btnConnect.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
+        Me.btnConnect.Name = "btnConnect"
+        Me.btnConnect.Size = New System.Drawing.Size(117, 30)
+        Me.btnConnect.TabIndex = 8
+        Me.btnConnect.Text = "CONNECT"
+        Me.btnConnect.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnConnect.UseVisualStyleBackColor = False
+        '
+        'tbPass
+        '
+        Me.tbPass.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tbPass.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.tbPass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.tbPass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbPass.ForeColor = System.Drawing.Color.Gray
+        Me.tbPass.Location = New System.Drawing.Point(15, 111)
+        Me.tbPass.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
+        Me.tbPass.Name = "tbPass"
+        Me.tbPass.Size = New System.Drawing.Size(182, 25)
+        Me.tbPass.TabIndex = 7
+        Me.tbPass.Text = "Password"
+        '
+        'btnDisconnect
+        '
+        Me.btnDisconnect.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDisconnect.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
+        Me.btnDisconnect.Enabled = False
+        Me.btnDisconnect.FlatAppearance.BorderSize = 0
+        Me.btnDisconnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDisconnect.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDisconnect.ForeColor = System.Drawing.Color.White
+        Me.btnDisconnect.IconChar = FontAwesome.Sharp.IconChar.Ban
+        Me.btnDisconnect.IconColor = System.Drawing.Color.White
+        Me.btnDisconnect.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.btnDisconnect.IconSize = 24
+        Me.btnDisconnect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnDisconnect.Location = New System.Drawing.Point(138, 146)
+        Me.btnDisconnect.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
+        Me.btnDisconnect.Name = "btnDisconnect"
+        Me.btnDisconnect.Size = New System.Drawing.Size(117, 30)
+        Me.btnDisconnect.TabIndex = 9
+        Me.btnDisconnect.Text = "DISCONNECT"
+        Me.btnDisconnect.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnDisconnect.UseVisualStyleBackColor = False
+        '
+        'panelDatabases
+        '
+        Me.panelDatabases.Controls.Add(Me.btnReload)
+        Me.panelDatabases.Controls.Add(Me.btnExecute)
+        Me.panelDatabases.Controls.Add(Me.btnSubmit)
+        Me.panelDatabases.Controls.Add(Me.cbDatabases)
+        Me.panelDatabases.Location = New System.Drawing.Point(0, 24)
+        Me.panelDatabases.Margin = New System.Windows.Forms.Padding(0)
+        Me.panelDatabases.Name = "panelDatabases"
+        Me.panelDatabases.Size = New System.Drawing.Size(269, 90)
+        Me.panelDatabases.TabIndex = 16
         '
         'btnReload
         '
@@ -708,7 +800,7 @@ Partial Class MainForm
         Me.btnReload.IconColor = System.Drawing.Color.White
         Me.btnReload.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnReload.IconSize = 24
-        Me.btnReload.Location = New System.Drawing.Point(227, 30)
+        Me.btnReload.Location = New System.Drawing.Point(228, 9)
         Me.btnReload.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
         Me.btnReload.Name = "btnReload"
         Me.btnReload.Size = New System.Drawing.Size(28, 25)
@@ -728,7 +820,7 @@ Partial Class MainForm
         Me.btnExecute.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnExecute.IconSize = 24
         Me.btnExecute.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnExecute.Location = New System.Drawing.Point(15, 68)
+        Me.btnExecute.Location = New System.Drawing.Point(15, 47)
         Me.btnExecute.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
         Me.btnExecute.Name = "btnExecute"
         Me.btnExecute.Size = New System.Drawing.Size(117, 30)
@@ -751,7 +843,7 @@ Partial Class MainForm
         Me.btnSubmit.IconFont = FontAwesome.Sharp.IconFont.[Auto]
         Me.btnSubmit.IconSize = 24
         Me.btnSubmit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnSubmit.Location = New System.Drawing.Point(138, 68)
+        Me.btnSubmit.Location = New System.Drawing.Point(139, 47)
         Me.btnSubmit.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
         Me.btnSubmit.Name = "btnSubmit"
         Me.btnSubmit.Size = New System.Drawing.Size(117, 30)
@@ -759,116 +851,6 @@ Partial Class MainForm
         Me.btnSubmit.Text = "SUBMIT"
         Me.btnSubmit.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSubmit.UseVisualStyleBackColor = False
-        '
-        'lblTables
-        '
-        Me.lblTables.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTables.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.lblTables.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTables.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblTables.Location = New System.Drawing.Point(0, 111)
-        Me.lblTables.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
-        Me.lblTables.Name = "lblTables"
-        Me.lblTables.Size = New System.Drawing.Size(269, 20)
-        Me.lblTables.TabIndex = 12
-        Me.lblTables.Text = "OBJECT EXPLORER"
-        '
-        'lblServer
-        '
-        Me.lblServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblServer.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.lblServer.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblServer.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblServer.Location = New System.Drawing.Point(0, 496)
-        Me.lblServer.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
-        Me.lblServer.Name = "lblServer"
-        Me.lblServer.Size = New System.Drawing.Size(269, 20)
-        Me.lblServer.TabIndex = 9
-        Me.lblServer.Text = "CONNECTION"
-        '
-        'lblDatabases
-        '
-        Me.lblDatabases.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblDatabases.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.lblDatabases.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDatabases.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblDatabases.Location = New System.Drawing.Point(0, 0)
-        Me.lblDatabases.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
-        Me.lblDatabases.Name = "lblDatabases"
-        Me.lblDatabases.Size = New System.Drawing.Size(269, 20)
-        Me.lblDatabases.TabIndex = 0
-        Me.lblDatabases.Text = "DATABASES"
-        '
-        'tbServer
-        '
-        Me.tbServer.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbServer.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        Me.tbServer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.tbServer.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbServer.ForeColor = System.Drawing.Color.Gray
-        Me.tbServer.Location = New System.Drawing.Point(15, 557)
-        Me.tbServer.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
-        Me.tbServer.Name = "tbServer"
-        Me.tbServer.Size = New System.Drawing.Size(240, 25)
-        Me.tbServer.TabIndex = 5
-        Me.tbServer.Text = "Server"
-        '
-        'tbUser
-        '
-        Me.tbUser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbUser.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        Me.tbUser.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.tbUser.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbUser.ForeColor = System.Drawing.Color.Gray
-        Me.tbUser.Location = New System.Drawing.Point(15, 592)
-        Me.tbUser.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
-        Me.tbUser.Name = "tbUser"
-        Me.tbUser.Size = New System.Drawing.Size(240, 25)
-        Me.tbUser.TabIndex = 6
-        Me.tbUser.Text = "User"
-        '
-        'btnConnect
-        '
-        Me.btnConnect.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnConnect.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
-        Me.btnConnect.FlatAppearance.BorderSize = 0
-        Me.btnConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnConnect.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnConnect.ForeColor = System.Drawing.Color.White
-        Me.btnConnect.IconChar = FontAwesome.Sharp.IconChar.Database
-        Me.btnConnect.IconColor = System.Drawing.Color.White
-        Me.btnConnect.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnConnect.IconSize = 24
-        Me.btnConnect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnConnect.Location = New System.Drawing.Point(15, 662)
-        Me.btnConnect.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
-        Me.btnConnect.Name = "btnConnect"
-        Me.btnConnect.Size = New System.Drawing.Size(117, 30)
-        Me.btnConnect.TabIndex = 8
-        Me.btnConnect.Text = "CONNECT"
-        Me.btnConnect.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnConnect.UseVisualStyleBackColor = False
-        '
-        'tbPass
-        '
-        Me.tbPass.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbPass.BackColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        Me.tbPass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.tbPass.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbPass.ForeColor = System.Drawing.Color.Gray
-        Me.tbPass.Location = New System.Drawing.Point(15, 627)
-        Me.tbPass.Margin = New System.Windows.Forms.Padding(8, 10, 8, 0)
-        Me.tbPass.Name = "tbPass"
-        Me.tbPass.Size = New System.Drawing.Size(182, 25)
-        Me.tbPass.TabIndex = 7
-        Me.tbPass.Text = "Password"
         '
         'cbDatabases
         '
@@ -880,35 +862,119 @@ Partial Class MainForm
         Me.cbDatabases.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cbDatabases.ForeColor = System.Drawing.Color.LightGoldenrodYellow
         Me.cbDatabases.FormattingEnabled = True
-        Me.cbDatabases.Location = New System.Drawing.Point(15, 30)
+        Me.cbDatabases.Location = New System.Drawing.Point(15, 9)
         Me.cbDatabases.Margin = New System.Windows.Forms.Padding(3, 10, 3, 3)
         Me.cbDatabases.Name = "cbDatabases"
-        Me.cbDatabases.Size = New System.Drawing.Size(206, 25)
+        Me.cbDatabases.Size = New System.Drawing.Size(207, 25)
         Me.cbDatabases.TabIndex = 1
         '
-        'btnDisconnect
+        'lblConnection
         '
-        Me.btnDisconnect.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.lblConnection.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblConnection.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.lblConnection.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.lblConnection.FlatAppearance.BorderSize = 0
+        Me.lblConnection.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.lblConnection.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblConnection.ForeColor = System.Drawing.Color.Gainsboro
+        Me.lblConnection.IconChar = FontAwesome.Sharp.IconChar.AngleDown
+        Me.lblConnection.IconColor = System.Drawing.Color.Gainsboro
+        Me.lblConnection.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.lblConnection.IconSize = 18
+        Me.lblConnection.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblConnection.Location = New System.Drawing.Point(0, 493)
+        Me.lblConnection.Margin = New System.Windows.Forms.Padding(0)
+        Me.lblConnection.Name = "lblConnection"
+        Me.lblConnection.Size = New System.Drawing.Size(269, 24)
+        Me.lblConnection.TabIndex = 9
+        Me.lblConnection.Text = "CONNECTION"
+        Me.lblConnection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblConnection.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
+        Me.lblConnection.UseVisualStyleBackColor = False
+        '
+        'lblDatabases
+        '
+        Me.lblDatabases.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblDatabases.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.lblDatabases.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.lblDatabases.FlatAppearance.BorderSize = 0
+        Me.lblDatabases.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.lblDatabases.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblDatabases.ForeColor = System.Drawing.Color.Gainsboro
+        Me.lblDatabases.IconChar = FontAwesome.Sharp.IconChar.AngleUp
+        Me.lblDatabases.IconColor = System.Drawing.Color.Gainsboro
+        Me.lblDatabases.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.lblDatabases.IconSize = 18
+        Me.lblDatabases.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblDatabases.Location = New System.Drawing.Point(0, 0)
+        Me.lblDatabases.Margin = New System.Windows.Forms.Padding(0)
+        Me.lblDatabases.Name = "lblDatabases"
+        Me.lblDatabases.Size = New System.Drawing.Size(269, 24)
+        Me.lblDatabases.TabIndex = 0
+        Me.lblDatabases.Text = "DATABASES"
+        Me.lblDatabases.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblDatabases.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
+        Me.lblDatabases.UseVisualStyleBackColor = False
+        '
+        'lblTables
+        '
+        Me.lblTables.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblTables.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.lblTables.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.lblTables.FlatAppearance.BorderSize = 0
+        Me.lblTables.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblTables.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.lblTables.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.lblTables.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTables.ForeColor = System.Drawing.Color.Gainsboro
+        Me.lblTables.IconChar = FontAwesome.Sharp.IconChar.None
+        Me.lblTables.IconColor = System.Drawing.Color.Gainsboro
+        Me.lblTables.IconFont = FontAwesome.Sharp.IconFont.[Auto]
+        Me.lblTables.IconSize = 18
+        Me.lblTables.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblTables.Location = New System.Drawing.Point(0, 114)
+        Me.lblTables.Margin = New System.Windows.Forms.Padding(0)
+        Me.lblTables.Name = "lblTables"
+        Me.lblTables.Size = New System.Drawing.Size(269, 24)
+        Me.lblTables.TabIndex = 12
+        Me.lblTables.Text = "OBJECT EXPLORER"
+        Me.lblTables.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblTables.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
+        Me.lblTables.UseVisualStyleBackColor = False
+        '
+        'tvObjectExplorer
+        '
+        Me.tvObjectExplorer.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDisconnect.BackColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(194, Byte), Integer))
-        Me.btnDisconnect.Enabled = False
-        Me.btnDisconnect.FlatAppearance.BorderSize = 0
-        Me.btnDisconnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnDisconnect.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDisconnect.ForeColor = System.Drawing.Color.White
-        Me.btnDisconnect.IconChar = FontAwesome.Sharp.IconChar.Ban
-        Me.btnDisconnect.IconColor = System.Drawing.Color.White
-        Me.btnDisconnect.IconFont = FontAwesome.Sharp.IconFont.[Auto]
-        Me.btnDisconnect.IconSize = 24
-        Me.btnDisconnect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnDisconnect.Location = New System.Drawing.Point(138, 662)
-        Me.btnDisconnect.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
-        Me.btnDisconnect.Name = "btnDisconnect"
-        Me.btnDisconnect.Size = New System.Drawing.Size(117, 30)
-        Me.btnDisconnect.TabIndex = 9
-        Me.btnDisconnect.Text = "DISCONNECT"
-        Me.btnDisconnect.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnDisconnect.UseVisualStyleBackColor = False
+        Me.tvObjectExplorer.BackColor = System.Drawing.Color.FromArgb(CType(CType(32, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(40, Byte), Integer))
+        Me.tvObjectExplorer.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.tvObjectExplorer.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.tvObjectExplorer.ForeColor = System.Drawing.Color.LightGray
+        Me.tvObjectExplorer.ImageIndex = 0
+        Me.tvObjectExplorer.ImageList = Me.NodeImageList
+        Me.tvObjectExplorer.Indent = 15
+        Me.tvObjectExplorer.LineColor = System.Drawing.Color.Gray
+        Me.tvObjectExplorer.Location = New System.Drawing.Point(0, 138)
+        Me.tvObjectExplorer.Margin = New System.Windows.Forms.Padding(0)
+        Me.tvObjectExplorer.Name = "tvObjectExplorer"
+        Me.tvObjectExplorer.SelectedImageIndex = 0
+        Me.tvObjectExplorer.ShowPlusMinus = False
+        Me.tvObjectExplorer.ShowRootLines = False
+        Me.tvObjectExplorer.Size = New System.Drawing.Size(269, 355)
+        Me.tvObjectExplorer.TabIndex = 0
+        '
+        'NodeImageList
+        '
+        Me.NodeImageList.ImageStream = CType(resources.GetObject("NodeImageList.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.NodeImageList.TransparentColor = System.Drawing.Color.Transparent
+        Me.NodeImageList.Images.SetKeyName(0, "database")
+        Me.NodeImageList.Images.SetKeyName(1, "table")
+        Me.NodeImageList.Images.SetKeyName(2, "view")
+        Me.NodeImageList.Images.SetKeyName(3, "procedure")
+        Me.NodeImageList.Images.SetKeyName(4, "function")
+        Me.NodeImageList.Images.SetKeyName(5, "folder_closed")
+        Me.NodeImageList.Images.SetKeyName(6, "folder_opened")
         '
         'splitter2
         '
@@ -1110,44 +1176,6 @@ Partial Class MainForm
         Me.mainPanel.Size = New System.Drawing.Size(951, 706)
         Me.mainPanel.TabIndex = 3
         '
-        'TablesTabControl
-        '
-        Me.TablesTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        Me.TablesTabControl.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TablesTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
-        Me.TablesTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
-        Me.TablesTabControl.HasAddButton = False
-        Me.TablesTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.TablesTabControl.Location = New System.Drawing.Point(0, 286)
-        Me.TablesTabControl.Margin = New System.Windows.Forms.Padding(0)
-        Me.TablesTabControl.Name = "TablesTabControl"
-        Me.TablesTabControl.Padding = New System.Drawing.Point(0, 0)
-        Me.TablesTabControl.SelectedIndex = 0
-        Me.TablesTabControl.SelectedTabColor = System.Drawing.Color.DodgerBlue
-        Me.TablesTabControl.Size = New System.Drawing.Size(951, 219)
-        Me.TablesTabControl.TabForeColor = System.Drawing.Color.White
-        Me.TablesTabControl.TabIndex = 14
-        Me.TablesTabControl.Visible = False
-        '
-        'EditorsTabControl
-        '
-        Me.EditorsTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
-        Me.EditorsTabControl.Dock = System.Windows.Forms.DockStyle.Top
-        Me.EditorsTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
-        Me.EditorsTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
-        Me.EditorsTabControl.HasAddButton = True
-        Me.EditorsTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.EditorsTabControl.Location = New System.Drawing.Point(0, 0)
-        Me.EditorsTabControl.Margin = New System.Windows.Forms.Padding(0)
-        Me.EditorsTabControl.Name = "EditorsTabControl"
-        Me.EditorsTabControl.Padding = New System.Drawing.Point(0, 0)
-        Me.EditorsTabControl.SelectedIndex = 0
-        Me.EditorsTabControl.SelectedTabColor = System.Drawing.Color.DodgerBlue
-        Me.EditorsTabControl.Size = New System.Drawing.Size(951, 284)
-        Me.EditorsTabControl.TabForeColor = System.Drawing.Color.White
-        Me.EditorsTabControl.TabIndex = 16
-        Me.EditorsTabControl.Visible = False
-        '
         'TablesAndViewsMenuStrip
         '
         Me.TablesAndViewsMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnEditTable, Me.btnDesign, Me.tsSeparator10, Me.btnTruncateTable, Me.btnDropTable})
@@ -1317,6 +1345,44 @@ Partial Class MainForm
         Me.btnDropDatabase.Size = New System.Drawing.Size(120, 24)
         Me.btnDropDatabase.Text = "Drop"
         '
+        'TablesTabControl
+        '
+        Me.TablesTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.TablesTabControl.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TablesTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
+        Me.TablesTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.TablesTabControl.HasAddButton = False
+        Me.TablesTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.TablesTabControl.Location = New System.Drawing.Point(0, 286)
+        Me.TablesTabControl.Margin = New System.Windows.Forms.Padding(0)
+        Me.TablesTabControl.Name = "TablesTabControl"
+        Me.TablesTabControl.Padding = New System.Drawing.Point(0, 0)
+        Me.TablesTabControl.SelectedIndex = 0
+        Me.TablesTabControl.SelectedTabColor = System.Drawing.Color.DodgerBlue
+        Me.TablesTabControl.Size = New System.Drawing.Size(951, 219)
+        Me.TablesTabControl.TabForeColor = System.Drawing.Color.White
+        Me.TablesTabControl.TabIndex = 14
+        Me.TablesTabControl.Visible = False
+        '
+        'EditorsTabControl
+        '
+        Me.EditorsTabControl.DefaultTabColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.EditorsTabControl.Dock = System.Windows.Forms.DockStyle.Top
+        Me.EditorsTabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
+        Me.EditorsTabControl.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
+        Me.EditorsTabControl.HasAddButton = True
+        Me.EditorsTabControl.HotTabColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.EditorsTabControl.Location = New System.Drawing.Point(0, 0)
+        Me.EditorsTabControl.Margin = New System.Windows.Forms.Padding(0)
+        Me.EditorsTabControl.Name = "EditorsTabControl"
+        Me.EditorsTabControl.Padding = New System.Drawing.Point(0, 0)
+        Me.EditorsTabControl.SelectedIndex = 0
+        Me.EditorsTabControl.SelectedTabColor = System.Drawing.Color.DodgerBlue
+        Me.EditorsTabControl.Size = New System.Drawing.Size(951, 284)
+        Me.EditorsTabControl.TabForeColor = System.Drawing.Color.White
+        Me.EditorsTabControl.TabIndex = 16
+        Me.EditorsTabControl.Visible = False
+        '
         'MainForm
         '
         Me.AllowDrop = True
@@ -1338,7 +1404,9 @@ Partial Class MainForm
         Me.MyMenuStrip.ResumeLayout(False)
         Me.MyMenuStrip.PerformLayout()
         Me.leftPanel.ResumeLayout(False)
-        Me.leftPanel.PerformLayout()
+        Me.panelConnection.ResumeLayout(False)
+        Me.panelConnection.PerformLayout()
+        Me.panelDatabases.ResumeLayout(False)
         Me.bottomPanel.ResumeLayout(False)
         Me.xpathPanel.ResumeLayout(False)
         Me.xpathEvaluatorPanel.ResumeLayout(False)
@@ -1357,17 +1425,17 @@ Partial Class MainForm
 
     Friend WithEvents MyMenuStrip As MenuStrip
     Friend WithEvents tsmiFile As ToolStripMenuItem
-    Friend WithEvents leftPanel As Panel
+    Friend WithEvents leftPanel As TableLayoutPanel
     Friend WithEvents tsmiEdit As ToolStripMenuItem
     Friend WithEvents btnConnect As IconButton
     Friend WithEvents tbPass As TextBox
     Friend WithEvents cbDatabases As ComboBox
-    Friend WithEvents lblDatabases As Label
-    Friend WithEvents lblServer As Label
+    Friend WithEvents lblDatabases As IconButton
+    Friend WithEvents lblConnection As IconButton
     Friend WithEvents tbServer As TextBox
     Friend WithEvents tbUser As TextBox
     Friend WithEvents btnExecute As IconButton
-    Friend WithEvents lblTables As Label
+    Friend WithEvents lblTables As IconButton
     Friend WithEvents splitter2 As Splitter
     Friend WithEvents bottomPanel As Panel
     Friend WithEvents splitter1 As Splitter
@@ -1421,7 +1489,6 @@ Partial Class MainForm
     Friend WithEvents tbTimeout As TextBox
     Friend WithEvents btnOutput As IconToolStripButton
     Friend WithEvents btnXpath As IconToolStripButton
-    Friend WithEvents tvObjectExplorer As TreeView
     Friend WithEvents NodeImageList As ImageList
     Friend WithEvents TablesAndViewsMenuStrip As ContextMenuStrip
     Friend WithEvents ProceduresMenuStrip As ContextMenuStrip
@@ -1445,4 +1512,7 @@ Partial Class MainForm
     Friend WithEvents tsmiTools As ToolStripMenuItem
     Friend WithEvents btnCreateTable As IconMenuItem
     Friend WithEvents btnBackupDatabase2 As IconMenuItem
+    Friend WithEvents panelConnection As Panel
+    Friend WithEvents panelDatabases As Panel
+    Friend WithEvents tvObjectExplorer As TreeView
 End Class

@@ -25,7 +25,7 @@ Public Class DatabaseConnection
         Using conn As New SqlConnection(_connectionString)
             conn.Open()
 
-            Dim cmd As SqlCommand = New SqlCommand("USE [" & database & "]", conn)
+            Dim cmd As SqlCommand = New SqlCommand("USE " & database, conn)
             cmd.ExecuteNonQuery()
 
             Dim dataAdapter As New SqlDataAdapter("SELECT * FROM " & table, conn)
@@ -45,7 +45,7 @@ Public Class DatabaseConnection
         Using conn As New SqlConnection(_connectionString)
             conn.Open()
 
-            Using cmd As New SqlCommand("USE [" & database & "] " & sqlQuery, conn)
+            Using cmd As New SqlCommand("USE " & database & " " & sqlQuery, conn)
                 cmd.ExecuteNonQuery()
             End Using
         End Using
@@ -61,7 +61,7 @@ Public Class DatabaseConnection
         Using conn As New SqlConnection(_connectionString)
             conn.Open()
 
-            Using cmd As New SqlCommand("USE [" & database & "] " & sqlQuery, conn)
+            Using cmd As New SqlCommand("USE " & database & " " & sqlQuery, conn)
                 Return cmd.ExecuteScalar()
             End Using
         End Using
@@ -77,7 +77,7 @@ Public Class DatabaseConnection
         Using conn As New SqlConnection(_connectionString)
             conn.Open()
 
-            Dim cmd As SqlCommand = New SqlCommand("USE [" & database & "]", conn)
+            Dim cmd As SqlCommand = New SqlCommand("USE " & database, conn)
             cmd.ExecuteNonQuery()
 
             Dim dataAdapter As New SqlDataAdapter("SELECT * FROM " & table, conn)
@@ -97,7 +97,7 @@ Public Class DatabaseConnection
         conn.Open()
 
         If database IsNot Nothing Then
-            Dim cmd As SqlCommand = New SqlCommand("USE [" & database & "]", conn)
+            Dim cmd As SqlCommand = New SqlCommand("USE " & database, conn)
             cmd.ExecuteNonQuery()
         End If
 
@@ -117,7 +117,7 @@ Public Class DatabaseConnection
         Dim conn As New SqlConnection(_connectionString)
         conn.Open()
 
-        Dim cmd1 As SqlCommand = New SqlCommand("USE [" & database & "]", conn)
+        Dim cmd1 As SqlCommand = New SqlCommand("USE " & database, conn)
         cmd1.ExecuteNonQuery()
 
         Using cmd2 As New SqlCommand(procedureName, conn)

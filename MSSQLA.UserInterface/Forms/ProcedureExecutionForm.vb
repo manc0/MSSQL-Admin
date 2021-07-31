@@ -51,28 +51,28 @@ Public Class ProcedureExecutionForm
 
         paramsTable.Controls.Add(
             New Label() With
-                        {
-                            .Text = paramName & " " & If(paramLength = Nothing Or paramLength <= 0, paramType, paramType & "(" & paramLength & ")"),
-                            .ForeColor = Color.Gainsboro,
-                            .Dock = DockStyle.Fill,
-                            .Font = New Font("Segoe UI", 9.75!, FontStyle.Bold, GraphicsUnit.Point, 0),
-                            .TextAlign = ContentAlignment.MiddleLeft
-                        },
+            {
+                .Text = paramName & " " & If(paramLength = Nothing Or paramLength <= 0, paramType, paramType & "(" & paramLength & ")"),
+                .ForeColor = Color.Gainsboro,
+                .Dock = DockStyle.Fill,
+                .Font = New Font("Segoe UI", 9.75!, FontStyle.Bold, GraphicsUnit.Point, 0),
+                .TextAlign = ContentAlignment.MiddleLeft
+            },
             0,
             paramsTable.RowCount - 1)
 
         paramsTable.Controls.Add(
             New TextBox() With
-                          {
-                            .Name = paramName,
-                            .Tag = paramType,
-                            .ForeColor = Color.LightGray,
-                            .BorderStyle = BorderStyle.FixedSingle,
-                            .BackColor = Color.FromArgb(40, 44, 52),
-                            .Dock = DockStyle.Fill,
-                            .Font = New Font("Segoe UI", 9.75!, FontStyle.Regular, GraphicsUnit.Point, 0),
-                            .WordWrap = True
-                          },
+            {
+                .Name = paramName,
+                .Tag = paramType,
+                .ForeColor = Color.LightGray,
+                .BorderStyle = BorderStyle.FixedSingle,
+                .BackColor = Color.FromArgb(40, 44, 52),
+                .Dock = DockStyle.Fill,
+                .Font = New Font("Segoe UI", 9.75!, FontStyle.Regular, GraphicsUnit.Point, 0),
+                .WordWrap = True
+            },
             1,
             paramsTable.RowCount - 1)
     End Sub

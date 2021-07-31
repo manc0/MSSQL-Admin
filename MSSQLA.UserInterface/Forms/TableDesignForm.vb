@@ -239,7 +239,7 @@ Public Class TableDesignForm
         End Try
     End Sub
 
-    Private Sub BtnExecuteProcedure_Click(sender As Object, e As EventArgs) Handles btnOk.Click
+    Private Sub BtnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         Dim nullCells = (From row As DataGridViewRow In DataGridView.Rows
                          Where row.Index < DataGridView.Rows.Count - 1
                          From cell As DataGridViewCell In row.Cells

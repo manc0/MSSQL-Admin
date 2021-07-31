@@ -28,7 +28,7 @@ Public Class DatabaseLogic
         Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
 
         While (reader.Read())
-            databaseList.Add(reader.GetString(0))
+            databaseList.Add("[" & reader.GetString(0) & "]")
         End While
 
         reader.Close()
@@ -42,7 +42,7 @@ Public Class DatabaseLogic
     ''' <returns>A list containing all the table names from the given database.</returns>
     Public Function GetTablesListFromDatabase(database As String) As List(Of String)
         Dim tablesList As New List(Of String)()
-        Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM [" & database & "].INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'"
+        Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM " & database & ".INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME <> 'sysdiagrams'"
         Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
 
         While (reader.Read())
@@ -60,7 +60,7 @@ Public Class DatabaseLogic
     ''' <returns>A list containing all the procedure names from the given database.</returns>
     Public Function GetProceduresListFromDatabase(database As String) As List(Of String)
         Dim proceduresList As New List(Of String)()
-        Dim sqlQuery = "SELECT SPECIFIC_SCHEMA, SPECIFIC_NAME FROM [" & database & "].INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'  "
+        Dim sqlQuery = "SELECT SPECIFIC_SCHEMA, SPECIFIC_NAME FROM " & database & ".INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'  "
         Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
 
         While (reader.Read())
@@ -78,7 +78,7 @@ Public Class DatabaseLogic
     ''' <returns>A list containing all the function names from the given database.</returns>
     Public Function GetFunctionsListFromDatabase(database As String) As List(Of String)
         Dim functionsList As New List(Of String)()
-        Dim sqlQuery = "SELECT SPECIFIC_SCHEMA, SPECIFIC_NAME FROM [" & database & "].INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'FUNCTION'  "
+        Dim sqlQuery = "SELECT SPECIFIC_SCHEMA, SPECIFIC_NAME FROM " & database & ".INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'FUNCTION'  "
         Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
 
         While (reader.Read())
@@ -96,7 +96,7 @@ Public Class DatabaseLogic
     ''' <returns>A list containing all the view names from the given database.</returns>
     Public Function GetViewsListFromDatabase(database As String) As List(Of String)
         Dim viewsList As New List(Of String)()
-        Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM [" & database & "].INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME <> 'sysdiagrams'"
+        Dim sqlQuery = "SELECT TABLE_SCHEMA, TABLE_NAME FROM " & database & ".INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME <> 'sysdiagrams'"
         Dim reader As SqlDataReader = DatabaseConnection.GetDataReader(sqlQuery)
 
         While (reader.Read())

@@ -408,6 +408,7 @@ Public Class MainForm
             CurrentStatus = ConnectionStatus.Connected
             Log("Connection established.")
             FillDatabasesComboBox()
+            cbDatabases.SelectedItem = "[master]"
         Catch ex As Exception
             btnConnect.Enabled = True
             btnExecute.Enabled = False
@@ -1031,6 +1032,12 @@ Public Class MainForm
         End If
     End Sub
 
+    Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        EditorsTabControl.TabPages.Cast(Of TabPage).ToList() _
+            .FindAll(Function(tab) tab.Controls.Count > 0 And tab.Text.Contains("*")) _
+            .ForEach(Sub(tab) SaveQuery(tab))
+    End Sub
+
 
     Private Sub MyMenuStrip_MouseDown(sender As Object, e As MouseEventArgs) Handles MyMenuStrip.MouseDown
         If (e.Button = MouseButtons.Left) Then
@@ -1099,9 +1106,13 @@ Public Class MainForm
 
     Private Sub BtnMaximizeRestoreWindow_Click(sender As Object, e As EventArgs) Handles btnMaximizeRestoreWindow.Click
         If WindowState = FormWindowState.Normal Then
+            Dim wa As Rectangle = Screen.FromControl(Me).WorkingArea
+            MaximumSize = New Size(wa.Width, wa.Height)
             WindowState = FormWindowState.Maximized
             btnMaximizeRestoreWindow.IconChar = IconChar.WindowRestore
         Else
+            Dim wa As Rectangle = Screen.FromControl(Me).Bounds
+            MaximumSize = New Size(wa.Width, wa.Height)
             WindowState = FormWindowState.Normal
             btnMaximizeRestoreWindow.IconChar = IconChar.WindowMaximize
         End If
@@ -1236,7 +1247,7 @@ Public Class MainForm
             Dim dr As DialogResult = MessageBox.Show("Are you really sure to drop " & databaseName & "?", "MSSQL Admin", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
 
             If dr = DialogResult.Yes Then
-                DatabaseLogic.Drop("[" & databaseName & "]", "DATABASE", "MASTER")
+                DatabaseLogic.Drop(databaseName, "DATABASE", "MASTER")
 
                 cbDatabases.SelectedIndex = -1
                 tvObjectExplorer.Nodes.Clear()
@@ -1415,6 +1426,26 @@ Public Class MainForm
     Private Sub ChbLoginMode_CheckedChanged(sender As Object, e As EventArgs) Handles chbLoginMode.CheckedChanged
         tbUser.Enabled = Not chbLoginMode.Checked
         tbPass.Enabled = Not chbLoginMode.Checked
+    End Sub
+
+    Private Sub LblServer_Click(sender As Object, e As EventArgs) Handles lblConnection.Click
+        panelConnection.Visible = Not panelConnection.Visible
+
+        If panelConnection.Visible Then
+            lblConnection.IconChar = IconChar.AngleDown
+        Else
+            lblConnection.IconChar = IconChar.AngleUp
+        End If
+    End Sub
+
+    Private Sub LblDatabases_Click(sender As Object, e As EventArgs) Handles lblDatabases.Click
+        panelDatabases.Visible = Not panelDatabases.Visible
+
+        If panelDatabases.Visible Then
+            lblDatabases.IconChar = IconChar.AngleUp
+        Else
+            lblDatabases.IconChar = IconChar.AngleDown
+        End If
     End Sub
 
     Private Sub TbUser_TextChanged(sender As Object, e As EventArgs) Handles tbUser.TextChanged
